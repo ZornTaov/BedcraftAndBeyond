@@ -1,0 +1,47 @@
+# Blocks
+tile.CbedBlock.name=Colored Bed
+tile.CCbedBlock.name=Colored Chest Bed
+tile.SbedBlock.name=Stone Bed
+tile.rugBlock.Black.name=Black rug
+tile.rugBlock.Red.name=Red rug
+tile.rugBlock.Green.name=Green rug
+tile.rugBlock.Brown.name=Brown rug
+tile.rugBlock.Blue.name=Blue rug
+tile.rugBlock.Purple.name=Purple rug
+tile.rugBlock.Cyan.name=Cyan rug
+tile.rugBlock.LightGray.name=LightGray rug
+tile.rugBlock.Gray.name=Gray rug
+tile.rugBlock.Pink.name=Pink rug
+tile.rugBlock.Lime.name=Lime rug
+tile.rugBlock.Yellow.name=Yellow rug
+tile.rugBlock.LightBlue.name=LightBlue rug
+tile.rugBlock.Magenta.name=Magenta rug
+tile.rugBlock.Orange.name=Orange rug
+tile.rugBlock.White.name=White rug
+
+# Items
+item.CbedItem.name=Colored Bed
+item.CCbedItem.name=Colored Chest Bed
+item.SbedItem.name=Stone Bed
+item.scissorsItem.name=Scissors
+item.rugItem.Black.name=Black rug
+item.rugItem.Red.name=Red rug
+item.rugItem.Green.name=Green rug
+item.rugItem.Brown.name=Brown rug
+item.rugItem.Blue.name=Blue rug
+item.rugItem.Purple.name=Purple rug
+item.rugItem.Cyan.name=Cyan rug
+item.rugItem.LightGray.name=LightGray rug
+item.rugItem.Gray.name=Gray rug
+item.rugItem.Pink.name=Pink rug
+item.rugItem.Lime.name=Lime rug
+item.rugItem.Yellow.name=Yellow rug
+item.rugItem.LightBlue.name=LightBlue rug
+item.rugItem.Magenta.name=Magenta rug
+item.rugItem.Orange.name=Orange rug
+item.rugItem.White.name=White rug
+
+# GUI
+
+# Other
+itemGroup.BedCraftBeyond=Bed Craft & Beyond
