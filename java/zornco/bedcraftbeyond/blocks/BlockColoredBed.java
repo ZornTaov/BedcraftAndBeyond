@@ -54,7 +54,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		return par1;
 	}
     @Override 
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z)
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
     {
 
     	TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
