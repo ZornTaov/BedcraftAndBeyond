@@ -7,7 +7,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileColoredBed extends TileEntity {
-	public int colorCombo;
+	private int colorCombo;
 	private boolean firstRun = true;
 	public TileColoredBed() {
 		super();
@@ -28,6 +28,11 @@ public class TileColoredBed extends TileEntity {
 	public void setColorCombo(int combo)
 	{
 		this.colorCombo = combo;
+		updateClients();
+	}
+	public int getColorCombo()
+	{
+		return this.colorCombo;
 	}
 
 	@Override

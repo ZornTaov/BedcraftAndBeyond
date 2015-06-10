@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -60,7 +61,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
     	TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
     	if (tile != null)
     	{
-    		colorCombo = tile.colorCombo;
+    		colorCombo = tile.getColorCombo();
     	}
         return world.setBlockToAir(x, y, z);
     }
@@ -111,24 +112,75 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
         par0World.setBlockMetadataWithNotify(par1, par2, par3, l, 4);
     }
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9) {
-		boolean flag = super.onBlockActivated(par1World, par2, par3, par4, par5EntityPlayer, par6, par7, par8, par9);
-		
-			par1World.markBlockForUpdate(par2, par3, par4);
-		return flag;
+	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		if (player.getHeldItem() == null || (player.getHeldItem() != null && player.getHeldItem().getItem() != null && !(player.getHeldItem().getItem() instanceof ItemDye)))
+		{
+			super.onBlockActivated(world, par2, par3, par4, player, par6, par7, par8, par9);
+	        world.markBlockForUpdate(par2, par3, par4);
+			return true;
+		}
+		TileColoredBed tile = (TileColoredBed)world.getTileEntity(par2, par3, par4);
+
+        if (tile == null)
+        {
+            return true;
+        }
+
+        if (world.isRemote)
+        {
+            return true;
+        }
+        boolean foot = this.isBedFoot(world, par2, par3, par4);
+        ItemStack dye = player.getHeldItem();
+        int color = dye.getItemDamage();
+        int combo = tile.getColorCombo();
+        int meta = world.getBlockMetadata(par2, par3, par4);
+
+        tile.setColorCombo(BlockColoredBed.setColorToInt(combo, color, foot?1:2));
+        world.markBlockForUpdate(par2, par3, par4);
+        int i1 = getDirection(meta);
+        if(isBlockHeadOfBed(meta))
+        {
+        	par2 -= field_149981_a[i1][0];
+        	par4 -= field_149981_a[i1][1];
+        }
+        else
+        {
+            par2 += field_149981_a[i1][0];
+            par4 += field_149981_a[i1][1];
+        }
+    	tile = (TileColoredBed)world.getTileEntity(par2, par3, par4);
+        tile.setColorCombo(BlockColoredBed.setColorToInt(combo, color, foot?1:2));
+        
+        
+        world.markBlockForUpdate(par2, par3, par4);
+		return true;
 	}
 	public static int getColorFromInt(int meta, int color)
 	{
 		switch (color)
 		{
 		case 0:
-			return meta >> 8 & 0xF;
+			return meta >> 8;
 		case 1:
 			return meta >> 4 & 0xF;
 		case 2:
 			return meta & 0xF;
 		}
 		return 0;
+	}
+	public static int setColorToInt(int combo, int newColor, int offset)
+	{
+		switch (offset)
+		{
+		case 0:
+			return (combo & (0xFF)) | (newColor << 8); // will lose top 8 bits
+		case 1:
+			return (combo & ~(0xF << 4)) | (newColor << 4);
+		case 2:
+			return (combo & ~0xF) | newColor;
+		}
+		return combo;
 	}
 	
 	@Override
@@ -147,7 +199,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		TileColoredBed tile = (TileColoredBed)par1World.getTileEntity(par2, par3, par4);
     	if (tile != null)
     	{
-    	    return tile.colorCombo;
+    	    return tile.getColorCombo();
     	}
     	return 241;
 	}
@@ -245,7 +297,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
     	TileColoredBed tile = (TileColoredBed)par1World.getTileEntity(i, j, k);
     	if (tile != null)
     	{
-    	    return tile.colorCombo;
+    	    return tile.getColorCombo();
     	}
         return 241;
     }

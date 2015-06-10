@@ -59,7 +59,7 @@ public class ItemColoredBed extends Item
 		switch (color)
 		{
 		case 0:
-			return meta >> 8 & 0xF;
+			return meta >> 8;
 		case 1:
 			return meta >> 4 & 0xF;
 		case 2:
@@ -101,9 +101,9 @@ public class ItemColoredBed extends Item
 	 */
 	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int var4 = 0; var4 < 1024; ++var4)
+		for (int var4 = 0; var4 < 4; ++var4)
 		{
-			par3List.add(new ItemStack(par1, 1, var4));
+			par3List.add(new ItemStack(par1, 1, 241 + 256* var4));
 		}
 	}
 

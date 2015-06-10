@@ -78,7 +78,7 @@ public class ContainerColoredChestBed extends Container {
         int i = (this.numRows - 4) * 18;
         int j;
 
-        byte b0 = 51;
+        byte b0 = 52;
 
         for (i = 0; i < chestInventory.getSizeInventory(); ++i)
         {

@@ -10,7 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-
+@Deprecated
 public class BlockBedRenderer implements ISimpleBlockRenderingHandler {
 
 	@Override

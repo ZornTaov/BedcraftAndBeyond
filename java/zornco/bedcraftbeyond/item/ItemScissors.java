@@ -5,9 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.TileColoredBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,15 +30,23 @@ public class ItemScissors extends Item {
 		/*BedCraftBeyond.logger.info(""+par4+" "+par5+" "+par6);
 		BedCraftBeyond.logger.info(""+(par3World.getClass().toString()));
 		BedCraftBeyond.logger.info(""+par3World.getBlockId(par4, par5, par6));*/
+		par2EntityPlayer.addChatMessage(new ChatComponentText(FMLCommonHandler.instance().getEffectiveSide() + " " + par3World.getBlockMetadata(par4, par5, par6)));
 		BedCraftBeyond.logger.info(""+par3World.getBlockMetadata(par4, par5, par6));
 		TileEntity tile = par3World.getTileEntity(par4, par5, par6);
 		if (tile != null)
 		{
 			
+			if(tile instanceof TileColoredBed)
+			{
+				TileColoredBed tilebed = (TileColoredBed)tile;
+				par2EntityPlayer.addChatMessage(new ChatComponentText(tilebed.getColorCombo()+""));
+			}
+			
 			if(tile instanceof TileColoredChestBed)
 			{
 				TileColoredChestBed tilebed = (TileColoredChestBed)tile;
 				BedCraftBeyond.logger.info(tilebed.ownerName+"");
+				par2EntityPlayer.addChatMessage(new ChatComponentText(tilebed.ownerName+""));
 			}
 		}
 		else

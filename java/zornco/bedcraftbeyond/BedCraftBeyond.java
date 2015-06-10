@@ -237,7 +237,7 @@ public class BedCraftBeyond {
 	
 	public static int getFreqFromColours(int colour1, int colour2, int colour3)
     {
-        return ((colour1 & 0xF) << 8) + ((colour2 & 0xF) << 4) + (colour3 & 0xF);
+        return (colour1 << 8) + ((colour2 & 0xF) << 4) + (colour3 & 0xF);
     }
 	
 	@SuppressWarnings("unchecked")

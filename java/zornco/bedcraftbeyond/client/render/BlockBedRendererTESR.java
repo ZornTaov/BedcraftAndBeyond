@@ -1,30 +1,38 @@
 package zornco.bedcraftbeyond.client.render;
 
-import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.blocks.BlockColoredBed;
-import zornco.bedcraftbeyond.blocks.BlockColoredChestBed;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.tileentity.*;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
+import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.BlockColoredBed;
+import zornco.bedcraftbeyond.blocks.TileColoredBed;
+import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import zornco.bedcraftbeyond.blocks.TileStoneBed;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-@Deprecated
-public class BlockChestBedRenderer implements
-		ISimpleBlockRenderingHandler {
 
-	@Override
+public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
+
+	/*@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID,
 			RenderBlocks renderer) {
+	}*/
 
-	}
-
-	@Override
+	/*@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z,
 			Block block1, int modelId, RenderBlocks renderer) {
+
 		Tessellator tessellator = Tessellator.instance;
-		BlockColoredChestBed block = (BlockColoredChestBed)block1; 
+		BlockColoredBed block = (BlockColoredBed)block1; 
 		int i1 = block.getBedDirection(world, x, y, z);
 		boolean flag = block.isBedFoot(world, x, y, z);
 		float f = 0.5F;
@@ -44,7 +52,7 @@ public class BlockChestBedRenderer implements
 		double d3 = icon.getMaxV();
 		double d4 = x + renderer.renderMinX;
 		double d5 = x + renderer.renderMaxX;
-		double d6 = y + renderer.renderMinY;
+		double d6 = y + renderer.renderMinY + 0.1875D;
 		double d7 = z + renderer.renderMinZ;
 		double d8 = z + renderer.renderMaxZ;
 		tessellator.addVertexWithUV(d4, d6, d8, d0, d3);
@@ -177,16 +185,107 @@ public class BlockChestBedRenderer implements
 
 		renderer.flipTexture = false;
 		return true;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public boolean shouldRender3DInInventory(int modelID) {
 		return false;
 	}
 
 	@Override
 	public int getRenderId() {
-		return BedCraftBeyond.chestBedRI;
-	}
+		return BedCraftBeyond.bedRI;
+	}*/
 
+	private static final ResourceLocation[] bedTextures = new ResourceLocation[] {
+		new ResourceLocation("bedcraftbeyond","textures/blocks/bed0.png"),
+		new ResourceLocation("bedcraftbeyond","textures/blocks/bed1.png"),
+		new ResourceLocation("bedcraftbeyond","textures/blocks/bed2.png"),
+		new ResourceLocation("bedcraftbeyond","textures/blocks/bed3.png")
+		};
+
+	private ModelColoredBed coloredBedModel = new ModelColoredBed();
+
+	public void renderWorldBlock(TileEntity tile, IBlockAccess world, int i, int j, int k,
+			Block block, double x, double y, double z) {
+
+		Tessellator tessellator = Tessellator.instance;
+		boolean flag = block.isBedFoot(world, i, j, k);
+
+
+		/*This will rotate your model corresponding to player direction that was when you placed the block. If you want this to work,
+        	add these lines to onBlockPlacedBy method in your block class.
+        	int dir = MathHelper.floor_double((double)((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+        	world.setBlockMetadataWithNotify(x, y, z, dir, 0);*/
+
+		int dir = block.getBedDirection(world, i, j, k);		
+
+		GL11.glPushMatrix();
+		switch(dir)
+		{
+		case 0:
+		case 2:
+			GL11.glTranslated(x+1, y, z);
+			GL11.glScalef(-1.0F, -1.0F, 1.0F);
+			break;
+		case 1:
+		case 3:
+			GL11.glTranslated(x, y, z+1);
+			GL11.glScalef(1.0F, -1.0F, -1.0F);
+			break;
+
+		}
+		GL11.glTranslatef(0.5F, 0, 0.5F);
+		//This line actually rotates the renderer.
+		GL11.glRotatef(dir * (-90F), 0F, 1F, 0F);
+		//GL11.glTranslatef(-0.5F, 0, -0.5F);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		for (int m = 0; m < bedTextures.length; m++) {
+			if (!(tile instanceof TileColoredChestBed) && m == 3) {
+				break;
+			}
+			//This will make your block brightness dependent from surroundings lighting.
+			float f = block.getMixedBrightnessForBlock(world, i, j, k);
+			int l = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
+			int l1 = l % 65536;
+			int l2 = l / 65536;
+			tessellator.setColorOpaque_F(f, f, f);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, l1, l2);
+			setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, i, j, k, m));
+			//BedCraftBeyond.logger.info(BlockColoredBed.getColorFromTilePerPass(world, i, j, k, m));
+			if (tile instanceof TileColoredChestBed && m == 3) {
+				setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, i, j, k, m-1));
+				this.bindTexture(bedTextures[m]);
+				this.coloredBedModel.render((Entity)null, (flag?1:0), m, -0.1F, 0.0F, 0.0F, 0.0625F);
+			}
+			if (m == 2) {
+				this.bindTexture(bedTextures[m]);
+				this.coloredBedModel.renderPlank(0.0625F);
+			}
+			this.bindTexture(bedTextures[m]);
+			this.coloredBedModel.render((Entity)null, (flag?1:0), m, -0.1F, 0.0F, 0.0F, 0.0625F);
+		}
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glPopMatrix();
+	}
+	/**
+     * Sets the color to the given opaque value (stored as byte values packed in an integer).
+     */
+    public void setColorOpaque_I(int j)
+    {
+    	float f1 = (float)(j >> 16 & 255) / 255.0F;
+        float f2 = (float)(j >> 8 & 255) / 255.0F;
+        float f3 = (float)(j & 255) / 255.0F;
+        GL11.glColor3f(f1, f2, f3);
+    }
+	@Override
+	public void renderTileEntityAt(TileEntity tileEntity, double d0, double d1,
+			double d2, float f) {
+		GL11.glPushMatrix();
+		//This will move our renderer so that it will be on proper place in the world
+		TileColoredBed tileEntityYour = (TileColoredBed)tileEntity;
+		/*Note that true tile entity coordinates (tileEntity.xCoord, etc) do not match to render coordinates (d, etc) that are calculated as [true coordinates] - [player coordinates (camera coordinates)]*/
+		renderWorldBlock(tileEntityYour, tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, BedCraftBeyond.stoneBedBlock, (float)d0, (float)d1, (float)d2);
+		GL11.glPopMatrix();
+	}
 }

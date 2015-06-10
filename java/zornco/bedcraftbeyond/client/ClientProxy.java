@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
 import zornco.bedcraftbeyond.client.render.BlockBedRenderer;
+import zornco.bedcraftbeyond.client.render.BlockBedRendererTESR;
 import zornco.bedcraftbeyond.client.render.BlockChestBedRenderer;
 import zornco.bedcraftbeyond.client.render.BlockRugRenderer;
 import zornco.bedcraftbeyond.client.render.TileStoneBedRenderer;
@@ -25,9 +26,10 @@ public class ClientProxy extends CommonProxy {
 		BedCraftBeyond.stoneBedRI = RenderingRegistry.getNextAvailableRenderId();
 
 		RenderingRegistry.registerBlockHandler(new BlockRugRenderer());
-		RenderingRegistry.registerBlockHandler(new BlockBedRenderer());
-		RenderingRegistry.registerBlockHandler(new BlockChestBedRenderer());
+		//RenderingRegistry.registerBlockHandler(new BlockBedRenderer());
+		//RenderingRegistry.registerBlockHandler(new BlockChestBedRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(zornco.bedcraftbeyond.blocks.TileStoneBed.class, new TileStoneBedRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(zornco.bedcraftbeyond.blocks.TileColoredBed.class, new BlockBedRendererTESR());
 
 	}
 	@Override
