@@ -20,8 +20,8 @@ import zornco.bedcraftbeyond.blocks.TileColoredBed;
 public class ItemColoredBed extends Item
 {
 
-	public static final int[] woodColors = new int[] {0xaf8f58, 0x745733, 0xd0c084, 0xac7c58};
-	public static final String[] woodType = new String[] {"Oak", "Spruce", "Birch", "Jungle"};
+	public static final int[] woodColors = new int[] {0xaf8f58, 0x745733, 0xd0c084, 0xac7c58, 0xb46237, 0x442c15};
+	public static final String[] woodType = new String[] {"Oak", "Spruce", "Birch", "Jungle", "Acacia", "Dark Oak"};
 	public static final String[] colorNames = new String[] {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
 	
 	@SideOnly(Side.CLIENT)
@@ -101,7 +101,7 @@ public class ItemColoredBed extends Item
 	 */
 	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int var4 = 0; var4 < 4; ++var4)
+		for (int var4 = 0; var4 < ItemColoredBed.woodColors.length; ++var4)
 		{
 			par3List.add(new ItemStack(par1, 1, 241 + 256* var4));
 		}

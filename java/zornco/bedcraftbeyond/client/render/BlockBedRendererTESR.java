@@ -203,6 +203,7 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 		new ResourceLocation("bedcraftbeyond","textures/blocks/bed2.png"),
 		new ResourceLocation("bedcraftbeyond","textures/blocks/bed3.png")
 		};
+	private static final ResourceLocation plankTextures = new ResourceLocation("bedcraftbeyond","textures/blocks/planks.png");
 
 	private ModelColoredBed coloredBedModel = new ModelColoredBed();
 
@@ -239,8 +240,8 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 		//This line actually rotates the renderer.
 		GL11.glRotatef(dir * (-90F), 0F, 1F, 0F);
 		//GL11.glTranslatef(-0.5F, 0, -0.5F);
-		GL11.glDisable(GL11.GL_CULL_FACE);
 		for (int m = 0; m < bedTextures.length; m++) {
+			GL11.glDisable(GL11.GL_CULL_FACE);
 			if (!(tile instanceof TileColoredChestBed) && m == 3) {
 				break;
 			}
@@ -253,19 +254,23 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, l1, l2);
 			setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, i, j, k, m));
 			//BedCraftBeyond.logger.info(BlockColoredBed.getColorFromTilePerPass(world, i, j, k, m));
+			this.bindTexture(bedTextures[m]);
+			this.coloredBedModel.render((Entity)null, (flag?1:0), m, 0.0F, 0.0F, 0.0F, 0.0625F);
 			if (tile instanceof TileColoredChestBed && m == 3) {
 				setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, i, j, k, m-1));
 				this.bindTexture(bedTextures[m]);
-				this.coloredBedModel.render((Entity)null, (flag?1:0), m, -0.1F, 0.0F, 0.0F, 0.0625F);
+				this.coloredBedModel.render((Entity)null, (flag?1:0), m, 0.0F, 0.0F, 0.0F, 0.0625F);
 			}
+			GL11.glEnable(GL11.GL_CULL_FACE);
 			if (m == 2) {
-				this.bindTexture(bedTextures[m]);
+				this.bindTexture(plankTextures);
+				if(tile instanceof TileColoredChestBed && m == 2) 
+					GL11.glTranslatef(0, (3.0F/16.0F), 0);
 				this.coloredBedModel.renderPlank(0.0625F);
+				if(tile instanceof TileColoredChestBed && m == 2) 
+					GL11.glTranslatef(0, -(3.0F/16.0F), 0);
 			}
-			this.bindTexture(bedTextures[m]);
-			this.coloredBedModel.render((Entity)null, (flag?1:0), m, -0.1F, 0.0F, 0.0F, 0.0625F);
 		}
-		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glPopMatrix();
 	}
 	/**

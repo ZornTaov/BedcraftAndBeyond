@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
@@ -139,6 +140,7 @@ public class BedCraftBeyond {
 
 
 		/** Recipes **/
+		int recipesAdded = 0;
 		// This will be made into an option as soon as someone shows me a recipe that requires the vanilla bed!
 		Iterator<IRecipe> iterator = CraftingManager.getInstance().getRecipeList().iterator();
         while(iterator.hasNext())
@@ -164,6 +166,7 @@ public class BedCraftBeyond {
 			'y', Items.gold_ingot
 				}
 			);
+        recipesAdded++;
 		String[] dyes = 
 			{
 				"dyeBlack",
@@ -183,19 +186,27 @@ public class BedCraftBeyond {
 				"dyeOrange",
 				"dyeWhite"
 			};
-		for(int i = 0; i < 16; i++)
+		for(int i = 0; i < ItemDye.field_150922_c.length; i++)
+		{
 			GameRegistry.addRecipe(new ItemStack(rugBlock, 4, i),
 				new Object[] { "xxx", 
 					Character.valueOf('x'), new ItemStack(Blocks.wool, 1, i)
 				}
 			);
-		for(int i = 0; i < 16; i++)
-			for(int j = 0; j < 16; j++)
+			recipesAdded++;
+		}
+		for(int i = 0; i < ItemDye.field_150922_c.length; i++)
+		{
+			for(int j = 0; j < ItemDye.field_150922_c.length; j++)
+			{
 				addShapelessOreRecipe(new ItemStack(rugBlock, 1, 15-i), // blue plate
 						new Object[]{new ItemStack(rugBlock, 1, j), dyes[i] } );
-		for (int i = 0; i < 16; i++) {
-			for (int j = 0; j < 16; j++) {
-				for (int k = 0; k < 4; k++) {
+				recipesAdded++;
+			}
+		}
+		for (int i = 0; i < ItemDye.field_150922_c.length; i++) {
+			for (int j = 0; j < ItemDye.field_150922_c.length; j++) {
+				for (int k = 0; k < ItemColoredBed.woodColors.length; k++) {
 					GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.bedItem, 1, getFreqFromColours(k, BlockColored.func_150032_b(j), BlockColored.func_150032_b(i))), new Object[]{
 						"bbp",
 						"fff",
@@ -204,6 +215,7 @@ public class BedCraftBeyond {
 						'f', new ItemStack(Blocks.planks, 1, k)
 						}
 					);
+					recipesAdded++;
 					GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.chestBedItem, 1, getFreqFromColours(k, BlockColored.func_150032_b(j), BlockColored.func_150032_b(i))), new Object[]{
 						"bbp",
 						"fcf",
@@ -213,6 +225,7 @@ public class BedCraftBeyond {
 						'c', new ItemStack(Blocks.chest, 1)
 						}
 					);
+					recipesAdded++;
 				}
 			}
 		}
@@ -222,6 +235,8 @@ public class BedCraftBeyond {
 			'S', new ItemStack(Blocks.stone, 1),
 			's', new ItemStack(Blocks.stone_slab, 1, 0)
 		});
+		recipesAdded++;
+		BedCraftBeyond.logger.info(this.MODID + " has added " + recipesAdded + " Recipes! That's a lot!");
 		/** Registers **/
 		proxy.registerRenderInformation();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);

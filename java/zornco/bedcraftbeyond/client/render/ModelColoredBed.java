@@ -21,6 +21,7 @@ public class ModelColoredBed extends ModelBase {
         this.textureWidth = 64;
         this.textureHeight = 64;
         this.plank1 = new ModelRenderer(this, -16, 0);
+        this.plank1.setTextureSize(16, 16);
         this.plank1.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.plank1.addBox(-8.0F, -3.0F, -8.0F, 16, 0, 16, 0.0F);
         this.bedHead0 = new ModelRenderer(this, 0, 0);
