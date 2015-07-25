@@ -236,11 +236,17 @@ public class BedCraftBeyond {
 			'S', new ItemStack(Blocks.stone, 1),
 			's', new ItemStack(Blocks.stone_slab, 1, 0)
 		});
+		recipesAdded++;
+		
 		OreDictionary.registerOre("coloredBed", new ItemStack(BedCraftBeyond.bedItem, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("coloredChestBed", new ItemStack(BedCraftBeyond.chestBedItem, 1, OreDictionary.WILDCARD_VALUE));
+		
 		addShapelessOreRecipe(new ItemStack(Items.bed), new Object[]{ "coloredBed" } );
+		recipesAdded++;
+		
 		GameRegistry.addShapelessRecipe(new ItemStack(BedCraftBeyond.bedItem, 1, 241), new Object[]{ new ItemStack(Items.bed) } );
 		recipesAdded++;
+		
 		BedCraftBeyond.logger.info(this.MODID + " has added " + recipesAdded + " Recipes! That's a lot!");
 		/** Registers **/
 		proxy.registerRenderInformation();
