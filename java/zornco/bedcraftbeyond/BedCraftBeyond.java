@@ -13,6 +13,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -235,6 +236,10 @@ public class BedCraftBeyond {
 			'S', new ItemStack(Blocks.stone, 1),
 			's', new ItemStack(Blocks.stone_slab, 1, 0)
 		});
+		OreDictionary.registerOre("coloredBed", new ItemStack(BedCraftBeyond.bedItem, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("coloredChestBed", new ItemStack(BedCraftBeyond.chestBedItem, 1, OreDictionary.WILDCARD_VALUE));
+		addShapelessOreRecipe(new ItemStack(Items.bed), new Object[]{ "coloredBed" } );
+		GameRegistry.addShapelessRecipe(new ItemStack(BedCraftBeyond.bedItem, 1, 241), new Object[]{ new ItemStack(Items.bed) } );
 		recipesAdded++;
 		BedCraftBeyond.logger.info(this.MODID + " has added " + recipesAdded + " Recipes! That's a lot!");
 		/** Registers **/
