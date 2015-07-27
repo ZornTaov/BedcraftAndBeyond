@@ -45,13 +45,18 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid=BedCraftBeyond.MODID, version=BedCraftBeyond.VERSION)
+@Mod(
+        modid = BedCraftBeyond.MOD_ID,
+        name = BedCraftBeyond.MOD_NAME,
+        version = "${version}",
+        acceptedMinecraftVersions = "[1.7.10,)")
 public class BedCraftBeyond {
 
-	public static final String MODID = "BedCraftAndBeyond";
+	public static final String MOD_ID = "BedCraftAndBeyond";
+    public static final String MOD_NAME = "BedCraft And Beyond";
 	public static final String VERSION = "1.0";
 	// The instance of your mod that Forge uses.
-	@Instance(BedCraftBeyond.MODID)
+	@Instance(BedCraftBeyond.MOD_ID)
 	public static BedCraftBeyond instance;
 
 	// Says where the client and server 'proxy' code is loaded.
@@ -60,7 +65,7 @@ public class BedCraftBeyond {
 
 	public static CreativeTabs bedCraftBeyondTab;
 
-	public static Logger logger = LogManager.getLogger(BedCraftBeyond.MODID);
+	public static Logger logger = LogManager.getLogger(BedCraftBeyond.MOD_ID);
 	
 	public static Item rugItem;
 	public static Item bedItem;
@@ -187,6 +192,8 @@ public class BedCraftBeyond {
 				"dyeOrange",
 				"dyeWhite"
 			};
+
+		OreDictionary.registerOre("rug", new ItemStack(BedCraftBeyond.rugBlock, 1, OreDictionary.WILDCARD_VALUE));
 		for(int i = 0; i < ItemDye.field_150922_c.length; i++)
 		{
 			GameRegistry.addRecipe(new ItemStack(rugBlock, 4, i),
@@ -194,16 +201,15 @@ public class BedCraftBeyond {
 					Character.valueOf('x'), new ItemStack(Blocks.wool, 1, i)
 				}
 			);
-			recipesAdded++;
 		}
 		for(int i = 0; i < ItemDye.field_150922_c.length; i++)
 		{
-			for(int j = 0; j < ItemDye.field_150922_c.length; j++)
-			{
-				addShapelessOreRecipe(new ItemStack(rugBlock, 1, 15-i), // blue plate
-						new Object[]{new ItemStack(rugBlock, 1, j), dyes[i] } );
-				recipesAdded++;
-			}
+			addShapelessOreRecipe(new ItemStack(rugBlock, 1, 15-i), 
+					new Object[]{"rug", dyes[i] } );
+			addShapelessOreRecipe(new ItemStack(rugBlock, 4, 15-i), 
+					new Object[]{"rug", "rug", "rug", "rug", dyes[i] } );
+			addShapelessOreRecipe(new ItemStack(rugBlock, 8, 15-i), 
+					new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i] } );
 		}
 		for (int i = 0; i < ItemDye.field_150922_c.length; i++) {
 			for (int j = 0; j < ItemDye.field_150922_c.length; j++) {
@@ -237,8 +243,9 @@ public class BedCraftBeyond {
 			's', new ItemStack(Blocks.stone_slab, 1, 0)
 		});
 		recipesAdded++;
-		
+
 		OreDictionary.registerOre("coloredBed", new ItemStack(BedCraftBeyond.bedItem, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("rug", new ItemStack(BedCraftBeyond.rugItem, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("coloredChestBed", new ItemStack(BedCraftBeyond.chestBedItem, 1, OreDictionary.WILDCARD_VALUE));
 		
 		addShapelessOreRecipe(new ItemStack(Items.bed), new Object[]{ "coloredBed" } );
@@ -247,7 +254,7 @@ public class BedCraftBeyond {
 		GameRegistry.addShapelessRecipe(new ItemStack(BedCraftBeyond.bedItem, 1, 241), new Object[]{ new ItemStack(Items.bed) } );
 		recipesAdded++;
 		
-		BedCraftBeyond.logger.info(this.MODID + " has added " + recipesAdded + " Recipes! That's a lot!");
+		BedCraftBeyond.logger.info(this.MOD_ID + " has added " + recipesAdded + " Recipes for Beds! That's a lot!");
 		/** Registers **/
 		proxy.registerRenderInformation();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);

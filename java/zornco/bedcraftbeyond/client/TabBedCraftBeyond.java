@@ -19,7 +19,7 @@ public class TabBedCraftBeyond extends CreativeTabs {
 	@Override
     public ItemStack getIconItemStack()
     {
-		return new ItemStack(GameRegistry.findBlock(BedCraftBeyond.MODID, "rugBlock"), 1, 0);
+		return new ItemStack(GameRegistry.findBlock(BedCraftBeyond.MOD_ID, "rugBlock"), 1, 0);
     }
 
 
