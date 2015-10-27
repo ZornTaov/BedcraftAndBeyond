@@ -168,23 +168,6 @@ public class BlockRug extends Block {
 		return ~par0 & 15;
 	}
 
-	/**
-	 * Returns the ID of the items to drop on destruction.
-	 */
-	@Override
-	public Item getItemDropped(int par1, Random par2Random, int par3) {
-		return BedCraftBeyond.rugItem;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	/**
-	 * only called by clickMiddleMouseButton , and passed to inventory.setCurrentItem (along with isCreative)
-	 */
-	public Item getItem(World par1World, int par2, int par3, int par4) {
-		return BedCraftBeyond.rugItem;
-	}
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	@SideOnly(Side.CLIENT)

@@ -67,7 +67,6 @@ public class BedCraftBeyond {
 
 	public static Logger logger = LogManager.getLogger(BedCraftBeyond.MOD_ID);
 	
-	public static Item rugItem;
 	public static Item bedItem;
 	public static Item chestBedItem;
 	public static Item stoneBedItem;
@@ -245,7 +244,7 @@ public class BedCraftBeyond {
 		recipesAdded++;
 
 		OreDictionary.registerOre("coloredBed", new ItemStack(BedCraftBeyond.bedItem, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("rug", new ItemStack(BedCraftBeyond.rugItem, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("rug", new ItemStack(BedCraftBeyond.rugBlock, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("coloredChestBed", new ItemStack(BedCraftBeyond.chestBedItem, 1, OreDictionary.WILDCARD_VALUE));
 		
 		addShapelessOreRecipe(new ItemStack(Items.bed), new Object[]{ "coloredBed" } );
