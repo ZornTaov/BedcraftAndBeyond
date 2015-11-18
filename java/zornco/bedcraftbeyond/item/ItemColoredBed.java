@@ -2,11 +2,10 @@ package zornco.bedcraftbeyond.item;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
@@ -16,14 +15,18 @@ import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.TileColoredBed;
+import zornco.bedcraftbeyond.util.PlankHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemColoredBed extends Item
 {
 
-	public static final int[] woodColors = new int[] {0xaf8f58, 0x745733, 0xd0c084, 0xac7c58, 0xb46237, 0x442c15};
-	public static final String[] woodType = new String[] {"Oak", "Spruce", "Birch", "Jungle", "Acacia", "Dark Oak"};
+	//public static final int[] woodColors = new int[] {0xaf8f58, 0x745733, 0xd0c084, 0xac7c58, 0xb46237, 0x442c15};
+	//public static final String[] woodType = new String[] {"oak", "spruce", "birch", "jungle", "acacia", "big_oak"};
 	public static final String[] colorNames = new String[] {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
-	
+	private static final int oakColor = 0xaf8f58;
+	private static final String oakName = "tile.wood.oak.name";
 	@SideOnly(Side.CLIENT)
 	protected IIcon[] bedIcon;
 	
@@ -40,6 +43,7 @@ public class ItemColoredBed extends Item
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
 	{
 		switch (par2)
@@ -49,7 +53,15 @@ public class ItemColoredBed extends Item
 		case 1:
 			return ItemDye.field_150922_c[ItemColoredBed.getColorFromInt(par1ItemStack.getItemDamage(), 1)];
 		case 2:
-			return ItemColoredBed.woodColors[ItemColoredBed.getColorFromInt(par1ItemStack.getItemDamage(), 0)];
+			//return ItemColoredBed.woodColors[ItemColoredBed.getColorFromInt(par1ItemStack.getItemDamage(), 0)];
+			int col = par1ItemStack.stackTagCompound.getInteger("color");
+			if(col == 0)
+			{
+				PlankHelper.addPlankInfo(par1ItemStack.stackTagCompound, new ItemStack(Blocks.planks,0));
+				return oakColor;
+			}
+			else
+				return col;
 		}
 		return 0xFF00FF;
 	}
@@ -88,6 +100,7 @@ public class ItemColoredBed extends Item
 		}
 	}
 	@Override
+	@SideOnly(Side.CLIENT)
 	public boolean requiresMultipleRenderPasses()
 	{
 		return true;
@@ -101,9 +114,11 @@ public class ItemColoredBed extends Item
 	 */
 	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (int var4 = 0; var4 < ItemColoredBed.woodColors.length; ++var4)
+		for (ItemStack plank :  PlankHelper.planks)
 		{
-			par3List.add(new ItemStack(par1, 1, 241 + 256* var4));
+			ItemStack bed = new ItemStack(par1, 1, 241);
+			PlankHelper.addPlankInfo(bed.stackTagCompound, plank);
+			par3List.add(bed);
 		}
 	}
 
@@ -117,7 +132,13 @@ public class ItemColoredBed extends Item
 	{
 		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 2)]+" Blanket");
 		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 1)]+" Sheet");
-		par3List.add(ItemColoredBed.woodType[getColorFromInt(par1ItemStack.getItemDamage(), 0)]+" Frame");
+		String name = par1ItemStack.stackTagCompound.getString("color");
+		if(name.equals(""))
+		{
+			PlankHelper.addPlankInfo(par1ItemStack.stackTagCompound, new ItemStack(Blocks.planks,0));
+			name = oakName;
+		}
+		par3List.add(name+" Frame");
 
 	}
 	
@@ -179,6 +200,7 @@ public class ItemColoredBed extends Item
 		        	if (tile != null)
 		        	{
 		        		tile.setColorCombo(par1ItemStack.getItemDamage());
+		        		//tile.setPlankColor(par1ItemStack.stackTagCompound.)
 		        	    //BedCraftBeyond.logger.info(tile.colorCombo+"");
 		        	}
 		        	TileColoredBed tile2 = (TileColoredBed)par3World.getTileEntity(par4 + b0, par5, par6 + b1);

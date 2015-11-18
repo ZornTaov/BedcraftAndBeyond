@@ -213,8 +213,8 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 			return ItemDye.field_150922_c[getColorFromInt(combo, 2)];
 		case 1:
 			return ItemDye.field_150922_c[getColorFromInt(combo, 1)];
-		case 2:
-			return ItemColoredBed.woodColors[getColorFromInt(combo, 0)];
+		//case 2:
+			//return ItemColoredBed.woodColors[getColorFromInt(combo, 0)];
 		}
 		return 0;
 	}
@@ -228,7 +228,8 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 	{
 		if (side == 0)
 		{
-			return Blocks.planks.getIcon(side, getColorFromInt(getColorFromTile(par1World, par2, par3, par4), 0));
+			//return Blocks.planks.getIcon(side, getColorFromInt(getColorFromTile(par1World, par2, par3, par4), 0));
+			return Block.getBlockFromName("plank").getIcon(0, 0);
 		}
 		else
 		{

@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond;
 
+import java.io.File;
 import java.util.Iterator;
 
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -35,6 +37,7 @@ import zornco.bedcraftbeyond.item.ItemDrawerKey;
 import zornco.bedcraftbeyond.item.ItemRug;
 import zornco.bedcraftbeyond.item.ItemScissors;
 import zornco.bedcraftbeyond.item.ItemStoneBed;
+import zornco.bedcraftbeyond.util.PlankHelper;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -83,9 +86,10 @@ public class BedCraftBeyond {
 	public static int bedRI = -1;
 	public static int chestBedRI = -1;
 	public static int stoneBedRI = -1;
-
+	File confFile;
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		confFile = event.getSuggestedConfigurationFile();
 		bedCraftBeyondTab = new TabBedCraftBeyond("BedCraftAndBeyond");
 		/** Blocks **/
 		rugBlock = new BlockRug().setHardness(0.8F).setStepSound(Block.soundTypeCloth).setBlockName("rugBlock");
@@ -143,7 +147,7 @@ public class BedCraftBeyond {
 		LanguageRegistry.instance().addStringLocalization("tile.Sbed.name", "en_US", "Stone Bed");
 */
 
-
+			proxy.compilePlanks();
 		/** Recipes **/
 		int recipesAdded = 0;
 		// This will be made into an option as soon as someone shows me a recipe that requires the vanilla bed!
@@ -210,29 +214,34 @@ public class BedCraftBeyond {
 			addShapelessOreRecipe(new ItemStack(rugBlock, 8, 15-i), 
 					new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i] } );
 		}
-		for (int i = 0; i < ItemDye.field_150922_c.length; i++) {
-			for (int j = 0; j < ItemDye.field_150922_c.length; j++) {
-				for (int k = 0; k < ItemColoredBed.woodColors.length; k++) {
-					GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.bedItem, 1, getFreqFromColours(k, BlockColored.func_150032_b(j), BlockColored.func_150032_b(i))), new Object[]{
+		for (ItemStack plank : (ItemStack[]) PlankHelper.planks.toArray(new ItemStack[PlankHelper.planks.size()])) {
+			for (int i = 0; i < ItemDye.field_150922_c.length; i++) {
+				for (int j = 0; j < ItemDye.field_150922_c.length; j++) {
+					ItemStack bed = new ItemStack(BedCraftBeyond.bedItem, 1, getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
+					ItemStack chestBed = new ItemStack(BedCraftBeyond.chestBedItem, 1, getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
+					bed.setTagCompound(new NBTTagCompound());
+					PlankHelper.addPlankInfo(bed.stackTagCompound, plank);
+					GameRegistry.addRecipe(bed, new Object[]{
 						"bbp",
 						"fff",
 						'b', new ItemStack(Blocks.wool, 1, i),
 						'p', new ItemStack(Blocks.wool, 1, j),
-						'f', new ItemStack(Blocks.planks, 1, k)
+						'f', plank
 						}
 					);
 					recipesAdded++;
-					GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.chestBedItem, 1, getFreqFromColours(k, BlockColored.func_150032_b(j), BlockColored.func_150032_b(i))), new Object[]{
+					GameRegistry.addRecipe(chestBed, new Object[]{
 						"bbp",
 						"fcf",
 						'b', new ItemStack(Blocks.wool, 1, i),
 						'p', new ItemStack(Blocks.wool, 1, j),
-						'f', new ItemStack(Blocks.planks, 1, k),
+						'f', plank,
 						'c', new ItemStack(Blocks.chest, 1)
 						}
 					);
 					recipesAdded++;
 				}
+				
 			}
 		}
 		GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.stoneBedItem, 1, 0), new Object[]{
@@ -267,9 +276,9 @@ public class BedCraftBeyond {
 		
 	}
 	
-	public static int getFreqFromColours(int colour1, int colour2, int colour3)
+	public static int getFreqFromColours(int colour2, int colour3)
     {
-        return (colour1 << 8) + ((colour2 & 0xF) << 4) + (colour3 & 0xF);
+        return ((colour2 & 0xF) << 4) + (colour3 & 0xF);
     }
 	
 	@SuppressWarnings("unchecked")

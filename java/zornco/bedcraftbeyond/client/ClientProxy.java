@@ -11,6 +11,7 @@ import zornco.bedcraftbeyond.client.render.BlockChestBedRenderer;
 import zornco.bedcraftbeyond.client.render.BlockRugRenderer;
 import zornco.bedcraftbeyond.client.render.TileStoneBedRenderer;
 import zornco.bedcraftbeyond.core.CommonProxy;
+import zornco.bedcraftbeyond.util.PlankHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -31,6 +32,11 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(zornco.bedcraftbeyond.blocks.TileStoneBed.class, new TileStoneBedRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(zornco.bedcraftbeyond.blocks.TileColoredBed.class, new BlockBedRendererTESR());
 
+	}
+	@Override
+	public void compilePlanks() {
+		super.compilePlanks();
+		PlankHelper.compilePlanksClient();
 	}
 	@Override
     public World getClientWorld()
