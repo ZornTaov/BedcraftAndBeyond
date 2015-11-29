@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -25,10 +26,9 @@ public class ItemColoredBed extends Item
 	//public static final int[] woodColors = new int[] {0xaf8f58, 0x745733, 0xd0c084, 0xac7c58, 0xb46237, 0x442c15};
 	//public static final String[] woodType = new String[] {"oak", "spruce", "birch", "jungle", "acacia", "big_oak"};
 	public static final String[] colorNames = new String[] {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
-	private static final int oakColor = 0xaf8f58;
-	private static final String oakName = "tile.wood.oak.name";
 	@SideOnly(Side.CLIENT)
 	protected IIcon[] bedIcon;
+	private ItemStack plankType;
 	
 	public ItemColoredBed()
 	{
@@ -54,14 +54,7 @@ public class ItemColoredBed extends Item
 			return ItemDye.field_150922_c[ItemColoredBed.getColorFromInt(par1ItemStack.getItemDamage(), 1)];
 		case 2:
 			//return ItemColoredBed.woodColors[ItemColoredBed.getColorFromInt(par1ItemStack.getItemDamage(), 0)];
-			int col = par1ItemStack.stackTagCompound.getInteger("color");
-			if(col == 0)
-			{
-				PlankHelper.addPlankInfo(par1ItemStack.stackTagCompound, new ItemStack(Blocks.planks,0));
-				return oakColor;
-			}
-			else
-				return col;
+			return PlankHelper.getPlankColor(PlankHelper.validatePlank(par1ItemStack));
 		}
 		return 0xFF00FF;
 	}
@@ -114,9 +107,10 @@ public class ItemColoredBed extends Item
 	 */
 	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		for (ItemStack plank :  PlankHelper.planks)
+		for (ItemStack plank :  PlankHelper.plankColorMap.keySet())
 		{
 			ItemStack bed = new ItemStack(par1, 1, 241);
+			bed.setTagCompound(new NBTTagCompound());
 			PlankHelper.addPlankInfo(bed.stackTagCompound, plank);
 			par3List.add(bed);
 		}
@@ -132,12 +126,9 @@ public class ItemColoredBed extends Item
 	{
 		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 2)]+" Blanket");
 		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 1)]+" Sheet");
-		String name = par1ItemStack.stackTagCompound.getString("color");
-		if(name.equals(""))
-		{
-			PlankHelper.addPlankInfo(par1ItemStack.stackTagCompound, new ItemStack(Blocks.planks,0));
-			name = oakName;
-		}
+
+		this.plankType = PlankHelper.validatePlank(par1ItemStack);
+		String name = this.plankType.getDisplayName();
 		par3List.add(name+" Frame");
 
 	}
@@ -200,13 +191,14 @@ public class ItemColoredBed extends Item
 		        	if (tile != null)
 		        	{
 		        		tile.setColorCombo(par1ItemStack.getItemDamage());
-		        		//tile.setPlankColor(par1ItemStack.stackTagCompound.)
+		        		tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
 		        	    //BedCraftBeyond.logger.info(tile.colorCombo+"");
 		        	}
 		        	TileColoredBed tile2 = (TileColoredBed)par3World.getTileEntity(par4 + b0, par5, par6 + b1);
 		        	if (tile2 != null)
 		        	{
 		        		tile2.setColorCombo(par1ItemStack.getItemDamage());
+		        		tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
 		        	    //BedCraftBeyond.logger.info(tile2.colorCombo+"");
 		        	}
 		        	if(!par2EntityPlayer.capabilities.isCreativeMode)

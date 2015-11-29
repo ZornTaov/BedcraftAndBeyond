@@ -3,6 +3,7 @@ package zornco.bedcraftbeyond.item;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.BlockColoredChestBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import zornco.bedcraftbeyond.util.PlankHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -85,6 +86,7 @@ public class ItemColoredChestBed extends ItemColoredBed {
 		        	{
 		        		tile.setColorCombo(par1ItemStack.getItemDamage());
 		        		tile.setOwnerName(par2EntityPlayer.getGameProfile().getName());
+		        		tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
 		        	    //BedCraftBeyond.logger.info(tile.colorCombo+"");
 		        	}
 		        	TileColoredChestBed tile2 = (TileColoredChestBed)par3World.getTileEntity(par4 + b0, par5, par6 + b1);
@@ -92,6 +94,7 @@ public class ItemColoredChestBed extends ItemColoredBed {
 		        	{
 		        		tile2.setColorCombo(par1ItemStack.getItemDamage());
 		        		tile2.setOwnerName(par2EntityPlayer.getGameProfile().getName());
+		        		tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
 		        	    //BedCraftBeyond.logger.info(tile2.colorCombo+"");
 		        	}
 		        	if(!par2EntityPlayer.capabilities.isCreativeMode)
