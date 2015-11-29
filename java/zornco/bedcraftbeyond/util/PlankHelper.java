@@ -31,7 +31,7 @@ public class PlankHelper {
 	static int prevcolor = 0;
 	@SideOnly(Side.CLIENT)
 	public static void compilePlanksClient() {
-		
+
 		for(ItemStack stack : planks)
 		{ 
 			//not bothering with items that are not blocks
@@ -44,7 +44,7 @@ public class PlankHelper {
 					for (ItemStack itemStack : list) {
 						addPlankToList(itemStack);
 					}
-					
+
 				}else
 				{ 
 					//just grab texture for the given meta 
@@ -55,22 +55,27 @@ public class PlankHelper {
 	}
 
 	public static int getPlankColor(ItemStack plank) {
-		if (plankColorMap.containsKey(plank)) {
-			return plankColorMap.get(plank);
+		if (getPlankColorMap().containsKey(plank)) {
+			return getPlankColorMap().get(plank);
 		}
 		else return PlankHelper.oakColor;
 	}
-	
+
+	public static HashMap<ItemStack, Integer> getPlankColorMap() {
+		HashMap<ItemStack, Integer> plankColorMap = PlankHelper.plankColorMap;
+		return plankColorMap;
+	}
+
 	public static void addPlankToList(ItemStack itemStack) {
 		ItemStack stack2 = new ItemStack(itemStack.getItem(), 1, itemStack.getItemDamage());
-		
+
 		String result = "Block: " + stack2.getDisplayName() + " meta: " + stack2.getItemDamage();
 		try {
 			//color1 = ClientUtils.getAverageItemColour(stack2);
 			//color2 = ClientUtils.getItemColours2(stack2);
 
 			int color = ClientUtils.getAverageBlockColour(stack2);
-			plankColorMap.put(stack2, color);
+			getPlankColorMap().put(stack2, color);
 			result += " Color: " + color;
 			if (color == prevcolor) {
 				result += "SAME AS LAST COLOR! WTF?!";
@@ -81,7 +86,7 @@ public class PlankHelper {
 		}
 		BedCraftBeyond.logger.info(result);
 	}
-	
+
 	public static ItemStack validatePlank(ItemStack bed) {
 		if (bed.getTagCompound() == null) {
 			bed.setTagCompound(new NBTTagCompound());
@@ -103,19 +108,19 @@ public class PlankHelper {
 		}
 		else
 		{
-			/*NBTTagList list = bedTags.getTagList("plank", 10);
+			NBTTagList list = bedTags.getTagList("plank", 10);
 			NBTTagCompound plank = list.getCompoundTagAt(0);
-			return ItemStack.loadItemStackFromNBT(plank);*/
-			bedTags.removeTag("plank");
-			return new ItemStack(Blocks.planks, 1, 0);
+			return ItemStack.loadItemStackFromNBT(plank);
+			/*bedTags.removeTag("plank");
+			return new ItemStack(Blocks.planks, 1, 0);*/
 		}
 	}
 
 	public static ItemStack addPlankInfo(NBTTagCompound bedTags, ItemStack plank) {
 		NBTTagList nbttaglist = new NBTTagList();
-        NBTTagCompound plankTag = new NBTTagCompound();
-		plank.loadItemStackFromNBT(plankTag);
-        nbttaglist.appendTag(plankTag);
+		NBTTagCompound plankTag = new NBTTagCompound();
+		plank.writeToNBT(plankTag);
+		nbttaglist.appendTag(plankTag);
 		bedTags.setTag("plank", nbttaglist);
 		return plank;
 	}
