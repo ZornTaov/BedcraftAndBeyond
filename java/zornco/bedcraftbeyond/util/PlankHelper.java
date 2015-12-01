@@ -3,8 +3,10 @@ package zornco.bedcraftbeyond.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javafx.scene.chart.StackedAreaChart;
 import net.minecraft.block.Block;
@@ -22,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class PlankHelper {
 
 	public static ArrayList<ItemStack> planks;
-	public static HashMap<ItemStack, Integer> plankColorMap = new HashMap<ItemStack, Integer>();
+	public static LinkedHashMap<ItemStack, Integer> plankColorMap = new LinkedHashMap<ItemStack, Integer>();
 	public static final int oakColor = 0xaf8f58;
 
 	public static void compilePlanks()
@@ -86,8 +88,8 @@ public class PlankHelper {
 	{
 		return stack2.getItem() == stack1.getItem() && (stack2.getItemDamage() == 32767 || stack2.getItemDamage() == stack1.getItemDamage());
 	}
-	public static HashMap<ItemStack, Integer> getPlankColorMap() {
-		HashMap<ItemStack, Integer> plankColorMap = PlankHelper.plankColorMap;
+	public static LinkedHashMap<ItemStack, Integer> getPlankColorMap() {
+		LinkedHashMap<ItemStack, Integer> plankColorMap = PlankHelper.plankColorMap;
 		return plankColorMap;
 	}
 
@@ -96,9 +98,8 @@ public class PlankHelper {
 
 		String result = "Block: " + stack2.getDisplayName() + " meta: " + stack2.getItemDamage();
 		try {
-			//color1 = ClientUtils.getAverageItemColour(stack2);
-			//color2 = ClientUtils.getItemColours2(stack2);
-
+			//int color = ClientUtils.getAverageItemColour(stack2);
+			//int color = ClientUtils.getAverageItemColour2(stack2);
 			int color = ClientUtils.getAverageBlockColour(stack2);
 			getPlankColorMap().put(stack2, color);
 			result += " Color: " + color;

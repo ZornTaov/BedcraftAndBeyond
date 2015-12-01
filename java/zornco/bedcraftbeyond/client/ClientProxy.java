@@ -17,7 +17,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy {
-	
+
 	@Override
 	public void registerRenderInformation()
 	{
@@ -39,22 +39,22 @@ public class ClientProxy extends CommonProxy {
 		PlankHelper.compilePlanksClient();
 	}
 	@Override
-    public World getClientWorld()
-    {
-        return FMLClientHandler.instance().getClient().theWorld;
-    }
+	public World getClientWorld()
+	{
+		return FMLClientHandler.instance().getClient().theWorld;
+	}
 
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        TileEntity te = world.getTileEntity(x, y, z);
-        if (te != null && te instanceof TileColoredChestBed)
-        {
-            return new GuiColoredChestBed(player.inventory, (TileColoredChestBed) te);
-        }
-        else
-        {
-            return null;
-        }
-    }
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te != null && te instanceof TileColoredChestBed)
+		{
+			return new GuiColoredChestBed(player.inventory, (TileColoredChestBed) te);
+		}
+		else
+		{
+			return null;
+		}
+	}
 }

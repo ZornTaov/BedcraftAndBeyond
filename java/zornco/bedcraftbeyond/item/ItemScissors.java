@@ -35,13 +35,13 @@ public class ItemScissors extends Item {
 		TileEntity tile = par3World.getTileEntity(par4, par5, par6);
 		if (tile != null)
 		{
-			
+
 			if(tile instanceof TileColoredBed)
 			{
 				TileColoredBed tilebed = (TileColoredBed)tile;
 				par2EntityPlayer.addChatMessage(new ChatComponentText(tilebed.getColorCombo()+" "+tilebed.getPlankType().toString()));
 			}
-			
+
 			if(tile instanceof TileColoredChestBed)
 			{
 				TileColoredChestBed tilebed = (TileColoredChestBed)tile;
@@ -53,7 +53,7 @@ public class ItemScissors extends Item {
 		{
 			return false;
 		}
-		
+
 		return true;
 
 	}

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -20,7 +21,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 public class ClientUtils {
-	
+
 	/*
 	 * Thanks to BluSunrize/TTFTCUTS
 	 */
@@ -38,7 +39,7 @@ public class ClientUtils {
 		InputStream layer = Minecraft.getMinecraft().getResourceManager().getResource(resource).getInputStream();
 		return ImageIO.read(layer);
 	}
-	
+
 	public static List<Integer> getItemColours(ItemStack stack)
 	{
 		List<Integer> colourSet = new ArrayList();
@@ -62,7 +63,7 @@ public class ClientUtils {
 					BedCraftBeyond.logger.info(resource.toString());
 					buffered = getImageForResource(resource);
 					int passColour = item.getColorFromItemStack(stack, pass);
-					
+
 					int[] data = new int[buffered.getWidth()*buffered.getHeight()];
 					buffered.getRGB(0,0, buffered.getWidth(),buffered.getHeight(), data, 0,tas.getIconWidth());
 					//buffered.getRGB(tas.getOriginX(),tas.getOriginY(), tas.getIconWidth(),tas.getIconHeight(), data, 0,tas.getIconWidth());
@@ -96,8 +97,9 @@ public class ClientUtils {
 		}
 		return 0xffffff;
 	}
-	public static List<Integer> getBlockColours(ItemStack stack)
+	public static int getBlockColours(ItemStack stack)
 	{
+		int colour = Color.WHITE.getRGB();
 		List<Integer> colourSet = new ArrayList();
 		Item item = stack.getItem();
 		Block block = Block.getBlockFromItem(stack.getItem());
@@ -117,17 +119,19 @@ public class ClientUtils {
 				resource = getResource(iconName);
 				buffered = getImageForResource(resource);
 				int passColour = block.getRenderColor(stack.getItemDamage());
-				
-				int[] data = new int[buffered.getWidth()*buffered.getHeight()];
+
+				/*int[] data = new int[buffered.getWidth()*buffered.getHeight()];
 				buffered.getRGB(0,0, buffered.getWidth(),buffered.getHeight(), data, 0,tas.getIconWidth());
 				//buffered.getRGB(tas.getOriginX(),tas.getOriginY(), tas.getIconWidth(),tas.getIconHeight(), data, 0,tas.getIconWidth());
 				for(int rgb : data)
 					if(rgb!=0)
 					{
 						int coloured = rgb&0xFFFFFF;//blendColoursToInt(rgb,passColour)&0xffffff;
-						if(coloured>0 /*&& !colourSet.contains(coloured)*/)
+						if(coloured>0 && !colourSet.contains(coloured))
 							colourSet.add(coloured);
-					}
+					}*/
+				colour = averageColor(buffered, 0, 0, tas.getIconWidth(), tas.getIconHeight()).getRGB();
+				colour = colour&0xffffff;
 			}
 
 		}catch(Exception e)
@@ -136,19 +140,25 @@ public class ClientUtils {
 		}
 
 
-		return colourSet;
+		return colour;
 	}
 	public static int getAverageBlockColour(ItemStack stack)
 	{
-		List<Integer> col = ClientUtils.getBlockColours(stack);
+		/*List<Integer> col = ClientUtils.getBlockColours(stack);
 		if(col!=null && col.size()>0)
 		{
-			int rgb = 0x000000;
+			Iterator<Integer> colIter = col.iterator();
+			int rgb = colIter.hasNext() ? colIter.next() : 0x000000;
+
+		    while (colIter.hasNext()){
+		      //System.out.println(colIter.next());
+		    	rgb = ClientUtils.blendColoursToInt(rgb, colIter.next());
+		    }
 			for(int rgb2 : col)
 				rgb = ClientUtils.blendColoursToInt(rgb, rgb2);
 			return rgb&0xffffff;
-		}
-		return 0xffffff;
+		}*/
+		return ClientUtils.getBlockColours(stack);//0xffffff;
 	}
 
 	public static int blendColoursToInt(Object o0, Object o1)
@@ -182,19 +192,19 @@ public class ClientUtils {
 	 * are your width and height respectively
 	 */
 	public static Color averageColor(BufferedImage bi, int x0, int y0, int w, int h) {
-	    int x1 = x0 + w;
-	    int y1 = y0 + h;
-	    long sumr = 0, sumg = 0, sumb = 0;
-	    for (int x = x0; x < x1; x++) {
-	        for (int y = y0; y < y1; y++) {
-	            Color pixel = new Color(bi.getRGB(x, y));
-	            sumr += pixel.getRed();
-	            sumg += pixel.getGreen();
-	            sumb += pixel.getBlue();
-	        }
-	    }
-	    int num = w * h;
-	    return new Color((int)(sumr / num), (int)(sumg / num), (int)(sumb / num));
+		int x1 = x0 + w;
+		int y1 = y0 + h;
+		long sumr = 0, sumg = 0, sumb = 0;
+		for (int x = x0; x < x1; x++) {
+			for (int y = y0; y < y1; y++) {
+				Color pixel = new Color(bi.getRGB(x, y));
+				sumr += pixel.getRed();
+				sumg += pixel.getGreen();
+				sumb += pixel.getBlue();
+			}
+		}
+		int num = w * h;
+		return new Color((int)(sumr / num), (int)(sumg / num), (int)(sumb / num));
 	}
 	public static int getItemColours2(ItemStack stack)
 	{
@@ -218,10 +228,10 @@ public class ClientUtils {
 					resource = getResource(iconName);
 					buffered = getImageForResource(resource);
 					int passColour = item.getColorFromItemStack(stack, pass);
-					
+
 					colour = averageColor(buffered, 0, 0, tas.getIconWidth(), tas.getIconHeight()).getRGB();
 					colour = colour&0xffffff;
-					
+
 					/*int[] data = new int[buffered.getWidth()*buffered.getHeight()];
 					buffered.getRGB(0,0, buffered.getWidth(),buffered.getHeight(), data, 0,tas.getIconWidth());
 					//buffered.getRGB(tas.getOriginX(),tas.getOriginY(), tas.getIconWidth(),tas.getIconHeight(), data, 0,tas.getIconWidth());
@@ -245,14 +255,10 @@ public class ClientUtils {
 	}
 	public static int getAverageItemColour2(ItemStack stack)
 	{
-		List<Integer> col = ClientUtils.getItemColours(stack);
-		if(col!=null && col.size()>0)
-		{
-			int rgb = 0x000000;
-			for(int rgb2 : col)
-				rgb = ClientUtils.blendColoursToInt(rgb, rgb2);
-			return rgb&0xffffff;
-		}
-		return 0xffffff;
+		int col = ClientUtils.getItemColours2(stack);
+
+		int rgb = 0xffffff;
+		col = ClientUtils.blendColoursToInt(rgb, col);
+		return col&0xffffff;
 	}
 }

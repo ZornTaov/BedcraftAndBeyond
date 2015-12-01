@@ -1,24 +1,25 @@
 package zornco.bedcraftbeyond.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.tileentity.*;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
+
+import org.lwjgl.opengl.GL11;
+
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.TileColoredBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
-import zornco.bedcraftbeyond.blocks.TileStoneBed;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import zornco.bedcraftbeyond.util.ClientUtils;
 
 public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 
@@ -59,7 +60,7 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 		tessellator.addVertexWithUV(d4, d6, d7, d0, d2);
 		tessellator.addVertexWithUV(d5, d6, d7, d1, d2);
 		tessellator.addVertexWithUV(d5, d6, d8, d1, d3);
-		
+
 		//Render Top
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(renderer.blockAccess, x, y + 1, z));
 		tessellator.setColorOpaque_F(f1, f1, f1);
@@ -202,7 +203,7 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 		new ResourceLocation("bedcraftbeyond","textures/blocks/bed1.png"),
 		new ResourceLocation("bedcraftbeyond","textures/blocks/bed2.png"),
 		new ResourceLocation("bedcraftbeyond","textures/blocks/bed3.png")
-		};
+	};
 	private static final ResourceLocation plankTextures = new ResourceLocation("bedcraftbeyond","textures/blocks/planks.png");
 
 	private ModelColoredBed coloredBedModel = new ModelColoredBed();
@@ -263,10 +264,32 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 			}
 			GL11.glEnable(GL11.GL_CULL_FACE);
 			if (m == 2) {
-				this.bindTexture(plankTextures);
+				ItemStack stack = ((TileColoredBed)tile).getPlankType(); 
+				if (stack != null) {
+
+					Item item = stack.getItem();
+					IIcon icon = Block.getBlockFromItem(item).getIcon(0, stack.getItemDamage());
+
+					ResourceLocation resource;
+					if(icon instanceof TextureAtlasSprite)
+					{
+						TextureAtlasSprite tas = (TextureAtlasSprite) icon;
+						String iconName = tas.getIconName();
+						iconName = iconName.substring(0, Math.max(0,iconName.indexOf(":")+1)) + (item.getSpriteNumber()==0?"textures/blocks/":"textures/items/") + iconName.substring(Math.max(0,iconName.indexOf(":")+1)) + ".png";
+						resource = ClientUtils.getResource(iconName);
+						this.bindTexture(resource);
+					}
+				}
+				else
+				{
+					this.bindTexture(plankTextures);
+				}
 				if(tile instanceof TileColoredChestBed && m == 2) 
 					GL11.glTranslatef(0, (3.0F/16.0F), 0);
+
+				setColorOpaque_I(0xFFFFFF);
 				this.coloredBedModel.renderPlank(0.0625F);
+				setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, i, j, k, m));
 				if(tile instanceof TileColoredChestBed && m == 2) 
 					GL11.glTranslatef(0, -(3.0F/16.0F), 0);
 			}
@@ -274,15 +297,15 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 	}
 	/**
-     * Sets the color to the given opaque value (stored as byte values packed in an integer).
-     */
-    public void setColorOpaque_I(int j)
-    {
-    	float f1 = (float)(j >> 16 & 255) / 255.0F;
-        float f2 = (float)(j >> 8 & 255) / 255.0F;
-        float f3 = (float)(j & 255) / 255.0F;
-        GL11.glColor3f(f1, f2, f3);
-    }
+	 * Sets the color to the given opaque value (stored as byte values packed in an integer).
+	 */
+	public void setColorOpaque_I(int j)
+	{
+		float f1 = (float)(j >> 16 & 255) / 255.0F;
+		float f2 = (float)(j >> 8 & 255) / 255.0F;
+		float f3 = (float)(j & 255) / 255.0F;
+		GL11.glColor3f(f1, f2, f3);
+	}
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double d0, double d1,
 			double d2, float f) {

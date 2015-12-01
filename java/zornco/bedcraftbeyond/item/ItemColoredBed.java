@@ -29,7 +29,7 @@ public class ItemColoredBed extends Item
 	@SideOnly(Side.CLIENT)
 	protected IIcon[] bedIcon;
 	private ItemStack plankType;
-	
+
 	public ItemColoredBed()
 	{
 		super();
@@ -98,7 +98,7 @@ public class ItemColoredBed extends Item
 	{
 		return true;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -132,7 +132,7 @@ public class ItemColoredBed extends Item
 		par3List.add(name+" Frame");
 
 	}
-	
+
 	/**
 	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
 	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
@@ -187,22 +187,22 @@ public class ItemColoredBed extends Item
 						par3World.setBlock(par4 + b0, par5, par6 + b1, blockbed, i1 + 8, 3);
 					}
 
-		        	TileColoredBed tile = (TileColoredBed)par3World.getTileEntity(par4, par5, par6);
-		        	if (tile != null)
-		        	{
-		        		tile.setColorCombo(par1ItemStack.getItemDamage());
-		        		tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
-		        	    //BedCraftBeyond.logger.info(tile.colorCombo+"");
-		        	}
-		        	TileColoredBed tile2 = (TileColoredBed)par3World.getTileEntity(par4 + b0, par5, par6 + b1);
-		        	if (tile2 != null)
-		        	{
-		        		tile2.setColorCombo(par1ItemStack.getItemDamage());
-		        		tile2.setPlankType(PlankHelper.validatePlank(par1ItemStack));
-		        	    //BedCraftBeyond.logger.info(tile2.colorCombo+"");
-		        	}
-		        	if(!par2EntityPlayer.capabilities.isCreativeMode)
-		        		--par1ItemStack.stackSize;
+					TileColoredBed tile = (TileColoredBed)par3World.getTileEntity(par4, par5, par6);
+					if (tile != null)
+					{
+						tile.setColorCombo(par1ItemStack.getItemDamage());
+						tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
+						//BedCraftBeyond.logger.info(tile.colorCombo+"");
+					}
+					TileColoredBed tile2 = (TileColoredBed)par3World.getTileEntity(par4 + b0, par5, par6 + b1);
+					if (tile2 != null)
+					{
+						tile2.setColorCombo(par1ItemStack.getItemDamage());
+						tile2.setPlankType(PlankHelper.validatePlank(par1ItemStack));
+						//BedCraftBeyond.logger.info(tile2.colorCombo+"");
+					}
+					if(!par2EntityPlayer.capabilities.isCreativeMode)
+						--par1ItemStack.stackSize;
 					return true;
 				}
 				else

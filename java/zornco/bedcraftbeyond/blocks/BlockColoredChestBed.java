@@ -19,12 +19,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockColoredChestBed extends BlockColoredBed {
 
-	private Random random;
-
 	public BlockColoredChestBed() {
 		super();
-		random = new Random();
-        this.isBlockContainer = true;
+		this.isBlockContainer = true;
 	}
 
 	@Override
@@ -37,18 +34,18 @@ public class BlockColoredChestBed extends BlockColoredBed {
 		}
 		TileColoredChestBed tile = (TileColoredChestBed)world.getTileEntity(par2, par3, par4);
 
-        if (tile == null)
-        {
-            return true;
-        }
+		if (tile == null)
+		{
+			return true;
+		}
 
-        if (world.isRemote)
-        {
-            return true;
-        }
+		if (world.isRemote)
+		{
+			return true;
+		}
 
 		//BedCraftBeyond.logger.info(tile.colorCombo+"");
-        player.openGui(BedCraftBeyond.instance, 0, world, par2, par3, par4);
+		player.openGui(BedCraftBeyond.instance, 0, world, par2, par3, par4);
 		return true;
 	}
 	@Override
@@ -81,51 +78,51 @@ public class BlockColoredChestBed extends BlockColoredBed {
 		return BedCraftBeyond.chestBedItem;
 	}
 	@Override
-    public void breakBlock(World world, int i, int j, int k, Block i1, int i2)
-    {
+	public void breakBlock(World world, int i, int j, int k, Block i1, int i2)
+	{
 		TileColoredChestBed tileentitychest = (TileColoredChestBed) world.getTileEntity(i, j, k);
-        if (tileentitychest != null)
-        {
-            dropContent(0, tileentitychest, world, tileentitychest.xCoord, tileentitychest.yCoord, tileentitychest.zCoord);
-        }
-        super.breakBlock(world, i, j, k, i1, i2);
-    }
+		if (tileentitychest != null)
+		{
+			dropContent(0, tileentitychest, world, tileentitychest.xCoord, tileentitychest.yCoord, tileentitychest.zCoord);
+		}
+		super.breakBlock(world, i, j, k, i1, i2);
+	}
 
-    public void dropContent(int newSize, IInventory chest, World world, int xCoord, int yCoord, int zCoord)
-    {
-        for (int l = newSize; l < chest.getSizeInventory(); l++)
-        {
-            ItemStack itemstack = chest.getStackInSlot(l);
-            if (itemstack == null)
-            {
-                continue;
-            }
-            float f = random.nextFloat() * 0.8F + 0.1F;
-            float f1 = random.nextFloat() * 0.8F + 0.1F;
-            float f2 = random.nextFloat() * 0.8F + 0.1F;
-            while (itemstack.stackSize > 0)
-            {
-                int i1 = random.nextInt(21) + 10;
-                if (i1 > itemstack.stackSize)
-                {
-                    i1 = itemstack.stackSize;
-                }
-                itemstack.stackSize -= i1;
-                EntityItem entityitem = new EntityItem(world, xCoord + f, (float) yCoord + (newSize > 0 ? 1 : 0) + f1, zCoord + f2,
-                        new ItemStack(itemstack.getItem(), i1, itemstack.getItemDamage()));
-                float f3 = 0.05F;
-                entityitem.motionX = (float) random.nextGaussian() * f3;
-                entityitem.motionY = (float) random.nextGaussian() * f3 + 0.2F;
-                entityitem.motionZ = (float) random.nextGaussian() * f3;
-                if (itemstack.hasTagCompound())
-                {
-                    entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
-                }
-                world.spawnEntityInWorld(entityitem);
-            }
-        }
-    }
-    /**
+	public void dropContent(int newSize, IInventory chest, World world, int xCoord, int yCoord, int zCoord)
+	{
+		for (int l = newSize; l < chest.getSizeInventory(); l++)
+		{
+			ItemStack itemstack = chest.getStackInSlot(l);
+			if (itemstack == null)
+			{
+				continue;
+			}
+			float f = random.nextFloat() * 0.8F + 0.1F;
+			float f1 = random.nextFloat() * 0.8F + 0.1F;
+			float f2 = random.nextFloat() * 0.8F + 0.1F;
+			while (itemstack.stackSize > 0)
+			{
+				int i1 = random.nextInt(21) + 10;
+				if (i1 > itemstack.stackSize)
+				{
+					i1 = itemstack.stackSize;
+				}
+				itemstack.stackSize -= i1;
+				EntityItem entityitem = new EntityItem(world, xCoord + f, (float) yCoord + (newSize > 0 ? 1 : 0) + f1, zCoord + f2,
+						new ItemStack(itemstack.getItem(), i1, itemstack.getItemDamage()));
+				float f3 = 0.05F;
+				entityitem.motionX = (float) random.nextGaussian() * f3;
+				entityitem.motionY = (float) random.nextGaussian() * f3 + 0.2F;
+				entityitem.motionZ = (float) random.nextGaussian() * f3;
+				if (itemstack.hasTagCompound())
+				{
+					entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
+				}
+				world.spawnEntityInWorld(entityitem);
+			}
+		}
+	}
+	/**
 	 * The type of render function that is called for this block
 	 */
 	@Override
@@ -133,7 +130,7 @@ public class BlockColoredChestBed extends BlockColoredBed {
 	{
 		return BedCraftBeyond.chestBedRI;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	/**
@@ -148,15 +145,15 @@ public class BlockColoredChestBed extends BlockColoredBed {
 		this.bedSideIcons[2][0] = par1IconRegister.registerIcon("bedcraftbeyond:chest_bed_feet_side_2");
 		this.bedSideIcons[2][1] = par1IconRegister.registerIcon("bedcraftbeyond:chest_bed_head_side_2");
 	}
-    /**
-     * Called when the block receives a BlockEvent - see World.addBlockEvent. By default, passes it on to the tile
-     * entity at this location. Args: world, x, y, z, blockID, EventID, event parameter
-     */
-    @Override
+	/**
+	 * Called when the block receives a BlockEvent - see World.addBlockEvent. By default, passes it on to the tile
+	 * entity at this location. Args: world, x, y, z, blockID, EventID, event parameter
+	 */
+	@Override
 	public boolean onBlockEventReceived(World par1World, int par2, int par3, int par4, int par5, int par6)
-    {
-        super.onBlockEventReceived(par1World, par2, par3, par4, par5, par6);
-        TileEntity tileentity = par1World.getTileEntity(par2, par3, par4);
-        return tileentity != null ? tileentity.receiveClientEvent(par5, par6) : false;
-    }
+	{
+		super.onBlockEventReceived(par1World, par2, par3, par4, par5, par6);
+		TileEntity tileentity = par1World.getTileEntity(par2, par3, par4);
+		return tileentity != null ? tileentity.receiveClientEvent(par5, par6) : false;
+	}
 }

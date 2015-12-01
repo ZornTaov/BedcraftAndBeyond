@@ -10,15 +10,19 @@ import net.minecraft.block.BlockBed;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -37,124 +41,196 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 	protected IIcon[][] bedSideIcons;
 	@SideOnly(Side.CLIENT)
 	protected IIcon[][] bedTopIcons;
-	
+
 	private int colorCombo = 241;
+	protected Random random;
 
 	public BlockColoredBed()
 	{
 		// was 134
 		super();
+		random = new Random();
 	}
 	@Override
 	public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player)
-    {
-        return this instanceof BlockColoredBed;
-    }
-    @Override
+	{
+		return this instanceof BlockColoredBed;
+	}
+	@Override
 	public int damageDropped(int par1)
 	{
 		return par1;
 	}
-    @Override 
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
-    {
+	@Override 
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+	{
 
-    	TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
-    	if (tile != null)
-    	{
-    		colorCombo = tile.getColorCombo();
-    	}
-        return world.setBlockToAir(x, y, z);
-    }
-    @Override
-    /**
-     * This returns a complete list of items dropped from this block.
-     *
-     * @param world The current world
-     * @param x X Position
-     * @param y Y Position
-     * @param z Z Position
-     * @param metadata Current metadata
-     * @param fortune Breakers fortune level
-     * @return A ArrayList containing all items this block drops
-     */
-    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
-    {
-        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
+		if (tile != null)
+		{
+			colorCombo = tile.getColorCombo();
+		}
+		return world.setBlockToAir(x, y, z);
+	}
+	@Override
+	/**
+	 * This returns a complete list of items dropped from this block.
+	 *
+	 * @param world The current world
+	 * @param x X Position
+	 * @param y Y Position
+	 * @param z Z Position
+	 * @param metadata Current metadata
+	 * @param fortune Breakers fortune level
+	 * @return A ArrayList containing all items this block drops
+	 */
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	{
+		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 
-        int count = quantityDropped(metadata, fortune, world.rand);
-        //int combo = 241; //red blnket white sheets
-        for(int i = 0; i < count; i++)
-        {
-            Item id = getItemDropped(metadata, world.rand, fortune);
-            if (id != null)
-            {
-                ret.add(new ItemStack(id, 1, colorCombo));
-            }
-        }
-        return ret;
-    }
-    /**
-     * Sets whether or not the bed is occupied.
-     */
-    public static void setBedOccupied(World par0World, int par1, int par2, int par3, boolean par4)
-    {
-        int l = par0World.getBlockMetadata(par1, par2, par3);
+		/*int count = quantityDropped(metadata, fortune, world.rand);
+		//int combo = 241; //red blnket white sheets
+		for(int i = 0; i < count; i++)
+		{
+			Item id = getItemDropped(metadata, world.rand, fortune);
+			if (id != null)
+			{
+				Block block = id instanceof ItemBlock && !isFlowerPot() ? Block.getBlockFromItem(id) : this;
+				ItemStack stack = new ItemStack(id, 1, block.getDamageValue(world, x, y, z));
+				NBTTagCompound nbt = new NBTTagCompound();        
 
-        if (par4)
-        {
-            l |= 4;
-        }
-        else
-        {
-            l &= -5;
-        }
+				TileColoredBed tile = this.gett(TileColoredBed)world.getTileEntity(x, y, z);
+				PlankHelper.validatePlank(nbt, tile.getPlankType());
+				stack.setTagCompound(nbt);
+				ret.add(stack);
+			}
+		}*/
+		return ret;
+	}
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
+	{
+		if(!player.capabilities.isCreativeMode)
+		{
+			TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
+			ItemStack itemstack = new ItemStack(this.getItem(world, x, y, z), 1, tile.getColorCombo());
+			ItemStack plank = tile.getPlankType();
+			NBTTagCompound nbt = new NBTTagCompound();    
+			PlankHelper.validatePlank(nbt, tile.getPlankType());
+			itemstack.setTagCompound(nbt);    
 
-        par0World.setBlockMetadataWithNotify(par1, par2, par3, l, 4);
-    }
+
+			if (itemstack != null)
+			{
+				float f = random.nextFloat() * 0.8F + 0.1F;
+				float f1 = random.nextFloat() * 0.8F + 0.1F;
+				float f2 = random.nextFloat() * 0.8F + 0.1F;
+				while (itemstack.stackSize > 0)
+				{
+					int i1 = random.nextInt(21) + 10;
+					if (i1 > itemstack.stackSize)
+					{
+						i1 = itemstack.stackSize;
+					}
+					itemstack.stackSize -= i1;
+					EntityItem entityitem = new EntityItem(world, x + f, (float) y + f1, z + f2,
+							new ItemStack(itemstack.getItem(), i1, itemstack.getItemDamage()));
+					float f3 = 0.05F;
+					entityitem.motionX = (float) random.nextGaussian() * f3;
+					entityitem.motionY = (float) random.nextGaussian() * f3 + 0.2F;
+					entityitem.motionZ = (float) random.nextGaussian() * f3;
+					if (itemstack.hasTagCompound())
+					{
+						entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
+					}
+					world.spawnEntityInWorld(entityitem);
+				}
+			}
+		}
+		super.onBlockHarvested(world, x, y, z, meta, player);
+
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world,
+			int x, int y, int z, EntityPlayer player) {
+		Item item = getItem(world, x, y, z);
+
+		if (item == null)
+		{
+			return null;
+		}
+
+		Block block = item instanceof ItemBlock && !isFlowerPot() ? Block.getBlockFromItem(item) : this;
+		ItemStack stack = new ItemStack(item, 1, block.getDamageValue(world, x, y, z));
+		NBTTagCompound nbt = new NBTTagCompound();        
+
+		TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
+		PlankHelper.validatePlank(nbt, tile.getPlankType());
+		stack.setTagCompound(nbt);
+
+		return stack;
+	}
+	/**
+	 * Sets whether or not the bed is occupied.
+	 */
+	public static void setBedOccupied(World par0World, int par1, int par2, int par3, boolean par4)
+	{
+		int l = par0World.getBlockMetadata(par1, par2, par3);
+
+		if (par4)
+		{
+			l |= 4;
+		}
+		else
+		{
+			l &= -5;
+		}
+
+		par0World.setBlockMetadataWithNotify(par1, par2, par3, l, 4);
+	}
 	@Override
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		if (player.getHeldItem() == null || (player.getHeldItem() != null && player.getHeldItem().getItem() != null && !(player.getHeldItem().getItem() instanceof ItemDye)))
 		{
 			super.onBlockActivated(world, par2, par3, par4, player, par6, par7, par8, par9);
-	        world.markBlockForUpdate(par2, par3, par4);
+			world.markBlockForUpdate(par2, par3, par4);
 			return true;
 		}
 		TileColoredBed tile = (TileColoredBed)world.getTileEntity(par2, par3, par4);
 
-        if (tile == null)
-        {
-            return true;
-        }
+		if (tile == null)
+		{
+			return true;
+		}
 
-        if (world.isRemote)
-        {
-            return true;
-        }
-        boolean foot = this.isBedFoot(world, par2, par3, par4);
-        ItemStack dye = player.getHeldItem();
-        int color = dye.getItemDamage();
-        int combo = tile.getColorCombo();
-        int meta = world.getBlockMetadata(par2, par3, par4);
+		if (world.isRemote)
+		{
+			return true;
+		}
+		boolean foot = this.isBedFoot(world, par2, par3, par4);
+		ItemStack dye = player.getHeldItem();
+		int color = dye.getItemDamage();
+		int combo = tile.getColorCombo();
+		int meta = world.getBlockMetadata(par2, par3, par4);
 
-        tile.setColorCombo(BlockColoredBed.setColorToInt(combo, color, foot?1:2));
-        world.markBlockForUpdate(par2, par3, par4);
-        int i1 = getDirection(meta);
-        if(isBlockHeadOfBed(meta))
-        {
-        	par2 -= field_149981_a[i1][0];
-        	par4 -= field_149981_a[i1][1];
-        }
-        else
-        {
-            par2 += field_149981_a[i1][0];
-            par4 += field_149981_a[i1][1];
-        }
-    	tile = (TileColoredBed)world.getTileEntity(par2, par3, par4);
-        tile.setColorCombo(BlockColoredBed.setColorToInt(combo, color, foot?1:2));
-        
-        
-        world.markBlockForUpdate(par2, par3, par4);
+		tile.setColorCombo(BlockColoredBed.setColorToInt(combo, color, foot?1:2));
+		world.markBlockForUpdate(par2, par3, par4);
+		int i1 = getDirection(meta);
+		if(isBlockHeadOfBed(meta))
+		{
+			par2 -= field_149981_a[i1][0];
+			par4 -= field_149981_a[i1][1];
+		}
+		else
+		{
+			par2 += field_149981_a[i1][0];
+			par4 += field_149981_a[i1][1];
+		}
+		tile = (TileColoredBed)world.getTileEntity(par2, par3, par4);
+		tile.setColorCombo(BlockColoredBed.setColorToInt(combo, color, foot?1:2));
+
+
+		world.markBlockForUpdate(par2, par3, par4);
 		return true;
 	}
 	public static int getColorFromInt(int meta, int color)
@@ -183,7 +259,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		}
 		return combo;
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 
@@ -198,23 +274,23 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 	public static int getColorFromTile(IBlockAccess par1World, int par2, int par3, int par4) {
 
 		TileColoredBed tile = (TileColoredBed)par1World.getTileEntity(par2, par3, par4);
-    	if (tile != null)
-    	{
-    	    return tile.getColorCombo();
-    	}
-    	return 241;
+		if (tile != null)
+		{
+			return tile.getColorCombo();
+		}
+		return 241;
 	}
 
 	public static int getPlankColorFromTile(IBlockAccess par1World, int par2, int par3, int par4) {
 
 		TileColoredBed tile = (TileColoredBed)par1World.getTileEntity(par2, par3, par4);
-    	if (tile != null && tile.getPlankType() != null)
-    	{
-    	    return PlankHelper.getPlankColor(tile.getPlankType());
-    	}
-    	return PlankHelper.oakColor;
+		if (tile != null && tile.getPlankType() != null)
+		{
+			return PlankHelper.getPlankColor(tile.getPlankType());
+		}
+		return PlankHelper.oakColor;
 	}
-	
+
 	public static int getColorFromTilePerPass(IBlockAccess par1World, int par2, int par3, int par4, int pass)
 	{
 		int combo = getColorFromTile(par1World, par2, par3, par4);
@@ -229,7 +305,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		}
 		return 0;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 
 	/**
@@ -300,32 +376,33 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		return BedCraftBeyond.bedItem;
 	}
 
-    /**
-     * Get the block's damage value (for use with pick block).
-     */
-    @Override
+	/**
+	 * Get the block's damage value (for use with pick block).
+	 */
+	@Override
 	public int getDamageValue(World par1World, int i, int j, int k)
-    {
-    	TileColoredBed tile = (TileColoredBed)par1World.getTileEntity(i, j, k);
-    	if (tile != null)
-    	{
-    	    return tile.getColorCombo();
-    	}
-        return 241;
-    }
+	{
+		TileColoredBed tile = (TileColoredBed)par1World.getTileEntity(i, j, k);
+		if (tile != null)
+		{
+			return tile.getColorCombo();
+		}
+		return 241;
+	}
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new TileColoredBed();
 	}
 
-    /**
-     * ejects contained items into the world, and notifies neighbours of an update, as appropriate
-     */
-    @Override
-	public void breakBlock(World par1World, int par2, int par3, int par4, Block par5, int par6)
-    {
-        super.breakBlock(par1World, par2, par3, par4, par5, par6);
-        par1World.removeTileEntity(par2, par3, par4);
-    }
+	/**
+	 * ejects contained items into the world, and notifies neighbours of an update, as appropriate
+	 */
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+	{
+		super.breakBlock(world, x, y, z, block, meta);
+
+		world.removeTileEntity(x, y, z);
+	}
 }

@@ -81,24 +81,24 @@ public class ItemColoredChestBed extends ItemColoredBed {
 						par3World.setBlock(par4 + b0, par5, par6 + b1, blockbed, i1 + 8, 3);
 					}
 
-		        	TileColoredChestBed tile = (TileColoredChestBed)par3World.getTileEntity(par4, par5, par6);
-		        	if (tile != null)
-		        	{
-		        		tile.setColorCombo(par1ItemStack.getItemDamage());
-		        		tile.setOwnerName(par2EntityPlayer.getGameProfile().getName());
-		        		tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
-		        	    //BedCraftBeyond.logger.info(tile.colorCombo+"");
-		        	}
-		        	TileColoredChestBed tile2 = (TileColoredChestBed)par3World.getTileEntity(par4 + b0, par5, par6 + b1);
-		        	if (tile2 != null)
-		        	{
-		        		tile2.setColorCombo(par1ItemStack.getItemDamage());
-		        		tile2.setOwnerName(par2EntityPlayer.getGameProfile().getName());
-		        		tile2.setPlankType(PlankHelper.validatePlank(par1ItemStack));
-		        	    //BedCraftBeyond.logger.info(tile2.colorCombo+"");
-		        	}
-		        	if(!par2EntityPlayer.capabilities.isCreativeMode)
-		        		--par1ItemStack.stackSize;
+					TileColoredChestBed tile = (TileColoredChestBed)par3World.getTileEntity(par4, par5, par6);
+					if (tile != null)
+					{
+						tile.setColorCombo(par1ItemStack.getItemDamage());
+						tile.setOwnerName(par2EntityPlayer.getGameProfile().getName());
+						tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
+						//BedCraftBeyond.logger.info(tile.colorCombo+"");
+					}
+					TileColoredChestBed tile2 = (TileColoredChestBed)par3World.getTileEntity(par4 + b0, par5, par6 + b1);
+					if (tile2 != null)
+					{
+						tile2.setColorCombo(par1ItemStack.getItemDamage());
+						tile2.setOwnerName(par2EntityPlayer.getGameProfile().getName());
+						tile2.setPlankType(PlankHelper.validatePlank(par1ItemStack));
+						//BedCraftBeyond.logger.info(tile2.colorCombo+"");
+					}
+					if(!par2EntityPlayer.capabilities.isCreativeMode)
+						--par1ItemStack.stackSize;
 					return true;
 				}
 				else

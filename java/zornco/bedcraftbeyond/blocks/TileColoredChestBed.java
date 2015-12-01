@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
 
 public class TileColoredChestBed extends TileColoredBed implements IInventory {
-    private int ticksSinceSync = -1;
+	private int ticksSinceSync = -1;
 	public ItemStack[] chestContents;
 	public float prevLidAngle;
 	public float lidAngle;
@@ -30,17 +30,17 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setString("OwnerName", ownerName);
 		NBTTagList nbttaglist = new NBTTagList();
-        for (int i = 0; i < chestContents.length; i++)
-        {
-            if (chestContents[i] != null)
-            {
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound1.setByte("Slot", (byte) i);
-                chestContents[i].writeToNBT(nbttagcompound1);
-                nbttaglist.appendTag(nbttagcompound1);
-            }
-        }
-        nbttagcompound.setTag("Items", nbttaglist);
+		for (int i = 0; i < chestContents.length; i++)
+		{
+			if (chestContents[i] != null)
+			{
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				nbttagcompound1.setByte("Slot", (byte) i);
+				chestContents[i].writeToNBT(nbttagcompound1);
+				nbttaglist.appendTag(nbttagcompound1);
+			}
+		}
+		nbttagcompound.setTag("Items", nbttaglist);
 	}
 	public String getOwnerName() {
 		return ownerName;
@@ -53,102 +53,102 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 		super.readFromNBT(nbttagcompound);
 		ownerName = nbttagcompound.getString("OwnerName");
 		NBTTagList nbttaglist = nbttagcompound.getTagList("Items", 10);
-        chestContents = new ItemStack[getSizeInventory()];
-        for (int i = 0; i < nbttaglist.tagCount(); i++)
-        {
-            NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.getCompoundTagAt(i);
-            int j = nbttagcompound1.getByte("Slot") & 0xff;
-            if (j >= 0 && j < chestContents.length)
-            {
-                chestContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-            }
-        }
+		chestContents = new ItemStack[getSizeInventory()];
+		for (int i = 0; i < nbttaglist.tagCount(); i++)
+		{
+			NBTTagCompound nbttagcompound1 = (NBTTagCompound) nbttaglist.getCompoundTagAt(i);
+			int j = nbttagcompound1.getByte("Slot") & 0xff;
+			if (j >= 0 && j < chestContents.length)
+			{
+				chestContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateEntity() {
 		super.updateEntity();
-		 if (worldObj != null && !this.worldObj.isRemote && this.numUsingPlayers != 0 && (this.ticksSinceSync + this.xCoord + this.yCoord + this.zCoord) % 200 == 0)
-	        {
-	            this.numUsingPlayers = 0;
-	            float var1 = 5.0F;
-	            List<Entity> var2 = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - var1, this.yCoord - var1, this.zCoord - var1, this.xCoord + 1 + var1, this.yCoord + 1 + var1, this.zCoord + 1 + var1));
-	            Iterator<Entity> var3 = var2.iterator();
+		if (worldObj != null && !this.worldObj.isRemote && this.numUsingPlayers != 0 && (this.ticksSinceSync + this.xCoord + this.yCoord + this.zCoord) % 200 == 0)
+		{
+			this.numUsingPlayers = 0;
+			float var1 = 5.0F;
+			List<Entity> var2 = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - var1, this.yCoord - var1, this.zCoord - var1, this.xCoord + 1 + var1, this.yCoord + 1 + var1, this.zCoord + 1 + var1));
+			Iterator<Entity> var3 = var2.iterator();
 
-	            while (var3.hasNext())
-	            {
-	                EntityPlayer var4 = (EntityPlayer)var3.next();
+			while (var3.hasNext())
+			{
+				EntityPlayer var4 = (EntityPlayer)var3.next();
 
-	                if (var4.openContainer instanceof ContainerColoredChestBed)
-	                {
-	                    ++this.numUsingPlayers;
-	                }
-	            }
-	        }
+				if (var4.openContainer instanceof ContainerColoredChestBed)
+				{
+					++this.numUsingPlayers;
+				}
+			}
+		}
 
-	        if (worldObj != null && !worldObj.isRemote && ticksSinceSync < 0)
-	        {
-	            worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 3, ((numUsingPlayers << 3) & 0xF8));
-	        }
-	        if (!worldObj.isRemote && inventoryTouched)
-	        {
-	            inventoryTouched = false;
-	        }
+		if (worldObj != null && !worldObj.isRemote && ticksSinceSync < 0)
+		{
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 3, ((numUsingPlayers << 3) & 0xF8));
+		}
+		if (!worldObj.isRemote && inventoryTouched)
+		{
+			inventoryTouched = false;
+		}
 
-	        this.ticksSinceSync++;
-	        prevLidAngle = lidAngle;
-	        float f = 0.1F;
-	        if (numUsingPlayers > 0 && lidAngle == 0.0F)
-	        {
-	            double d = xCoord + 0.5D;
-	            double d1 = zCoord + 0.5D;
-	            worldObj.playSoundEffect(d, yCoord + 0.5D, d1, "random.chestopen", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
-	        }
-	        if (numUsingPlayers == 0 && lidAngle > 0.0F || numUsingPlayers > 0 && lidAngle < 1.0F)
-	        {
-	            float f1 = lidAngle;
-	            if (numUsingPlayers > 0)
-	            {
-	                lidAngle += f;
-	            }
-	            else
-	            {
-	                lidAngle -= f;
-	            }
-	            if (lidAngle > 1.0F)
-	            {
-	                lidAngle = 1.0F;
-	            }
-	            float f2 = 0.5F;
-	            if (lidAngle < f2 && f1 >= f2)
-	            {
-	                double d2 = xCoord + 0.5D;
-	                double d3 = zCoord + 0.5D;
-	                worldObj.playSoundEffect(d2, yCoord + 0.5D, d3, "random.chestclosed", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
-	            }
-	            if (lidAngle < 0.0F)
-	            {
-	                lidAngle = 0.0F;
-	            }
-	        }
+		this.ticksSinceSync++;
+		prevLidAngle = lidAngle;
+		float f = 0.1F;
+		if (numUsingPlayers > 0 && lidAngle == 0.0F)
+		{
+			double d = xCoord + 0.5D;
+			double d1 = zCoord + 0.5D;
+			worldObj.playSoundEffect(d, yCoord + 0.5D, d1, "random.chestopen", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+		}
+		if (numUsingPlayers == 0 && lidAngle > 0.0F || numUsingPlayers > 0 && lidAngle < 1.0F)
+		{
+			float f1 = lidAngle;
+			if (numUsingPlayers > 0)
+			{
+				lidAngle += f;
+			}
+			else
+			{
+				lidAngle -= f;
+			}
+			if (lidAngle > 1.0F)
+			{
+				lidAngle = 1.0F;
+			}
+			float f2 = 0.5F;
+			if (lidAngle < f2 && f1 >= f2)
+			{
+				double d2 = xCoord + 0.5D;
+				double d3 = zCoord + 0.5D;
+				worldObj.playSoundEffect(d2, yCoord + 0.5D, d3, "random.chestclosed", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			}
+			if (lidAngle < 0.0F)
+			{
+				lidAngle = 0.0F;
+			}
+		}
 	}
 	@Override
 	public boolean receiveClientEvent(int par1, int par2)
-    {
-        if (par1 == 1)
-        {
-            this.numUsingPlayers = par2;
-            return true;
-        }
-        else
-        {
-            return super.receiveClientEvent(par1, par2);
-        }
-    }
-	
+	{
+		if (par1 == 1)
+		{
+			this.numUsingPlayers = par2;
+			return true;
+		}
+		else
+		{
+			return super.receiveClientEvent(par1, par2);
+		}
+	}
+
 	public ItemStack[] getContents() {
-	    return chestContents;
+		return chestContents;
 	}
 	@Override
 	public int getSizeInventory() {
@@ -156,54 +156,54 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	}
 	@Override
 	public ItemStack getStackInSlot(int i) {
-	    inventoryTouched = true;
-	    return chestContents[i];
+		inventoryTouched = true;
+		return chestContents[i];
 	}
 	@Override
 	public ItemStack decrStackSize(int i, int j) {
 		if (chestContents[i] != null)
-	    {
-	        if (chestContents[i].stackSize <= j)
-	        {
-	            ItemStack itemstack = chestContents[i];
-	            chestContents[i] = null;
-	            markDirty();
-	            return itemstack;
-	        }
-	        ItemStack itemstack1 = chestContents[i].splitStack(j);
-	        if (chestContents[i].stackSize == 0)
-	        {
-	            chestContents[i] = null;
-	        }
-	        markDirty();
-	        return itemstack1;
-	    }
-	    else
-	    {
-	        return null;
-	    }
+		{
+			if (chestContents[i].stackSize <= j)
+			{
+				ItemStack itemstack = chestContents[i];
+				chestContents[i] = null;
+				markDirty();
+				return itemstack;
+			}
+			ItemStack itemstack1 = chestContents[i].splitStack(j);
+			if (chestContents[i].stackSize == 0)
+			{
+				chestContents[i] = null;
+			}
+			markDirty();
+			return itemstack1;
+		}
+		else
+		{
+			return null;
+		}
 	}
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-	    if (this.chestContents[i] != null)
-	    {
-	        ItemStack var2 = this.chestContents[i];
-	        this.chestContents[i] = null;
-	        return var2;
-	    }
-	    else
-	    {
-	        return null;
-	    }
+		if (this.chestContents[i] != null)
+		{
+			ItemStack var2 = this.chestContents[i];
+			this.chestContents[i] = null;
+			return var2;
+		}
+		else
+		{
+			return null;
+		}
 	}
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		chestContents[i] = itemstack;
-	    if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
-	    {
-	        itemstack.stackSize = getInventoryStackLimit();
-	    }
-	    markDirty();
+		if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+		{
+			itemstack.stackSize = getInventoryStackLimit();
+		}
+		markDirty();
 	}
 	@Override
 	public String getInventoryName() {
@@ -213,7 +213,7 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	}
 	@Override
 	public boolean hasCustomInventoryName() {
-        return this.ownerName != null && this.ownerName.length() > 0;
+		return this.ownerName != null && this.ownerName.length() > 0;
 	}
 	@Override
 	public int getInventoryStackLimit() {
@@ -221,30 +221,30 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	}
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-	    if (worldObj == null)
-	    {
-	        return true;
-	    }
-	    if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
-	    {
-	        return false;
-	    }
-	    //if (entityplayer.username != ownerName && ownerName != "")
-	    //	return false;
-	    return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
-	
+		if (worldObj == null)
+		{
+			return true;
+		}
+		if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+		{
+			return false;
+		}
+		//if (entityplayer.username != ownerName && ownerName != "")
+		//	return false;
+		return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+
 	}
 	@Override
 	public void openInventory() {
-	    if (worldObj == null) return;
-	    numUsingPlayers++;
-	    worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
+		if (worldObj == null) return;
+		numUsingPlayers++;
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
 	}
 	@Override
 	public void closeInventory() {
-	    if (worldObj == null) return;
-	    numUsingPlayers--;
-	    worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
+		if (worldObj == null) return;
+		numUsingPlayers--;
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
 	}
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
