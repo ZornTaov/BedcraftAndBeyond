@@ -39,7 +39,7 @@ public class ItemScissors extends Item {
 			if(tile instanceof TileColoredBed)
 			{
 				TileColoredBed tilebed = (TileColoredBed)tile;
-				par2EntityPlayer.addChatMessage(new ChatComponentText(tilebed.getColorCombo()+""));
+				par2EntityPlayer.addChatMessage(new ChatComponentText(tilebed.getColorCombo()+" "+tilebed.getPlankType().toString()));
 			}
 			
 			if(tile instanceof TileColoredChestBed)

@@ -46,10 +46,10 @@ public class CommonProxy implements IGuiHandler {
 
 	public void compilePlanks() {
 		PlankHelper.compilePlanks();
-		BedCraftBeyond.logger.info("SPAM TIME!");
+		/*BedCraftBeyond.logger.info("SPAM TIME!");
 		for (Object block : Block.blockRegistry.getKeys()) {
 			String blockname = block.toString();
 			BedCraftBeyond.logger.info(blockname);
-		}
+		}*/
 	}
 }

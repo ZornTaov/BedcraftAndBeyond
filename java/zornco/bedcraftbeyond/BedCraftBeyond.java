@@ -214,35 +214,34 @@ public class BedCraftBeyond {
 			addShapelessOreRecipe(new ItemStack(rugBlock, 8, 15-i), 
 					new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i] } );
 		}
-		for (ItemStack plank : (ItemStack[]) PlankHelper.planks.toArray(new ItemStack[PlankHelper.planks.size()])) {
-			for (int i = 0; i < ItemDye.field_150922_c.length; i++) {
-				for (int j = 0; j < ItemDye.field_150922_c.length; j++) {
-					ItemStack bed = new ItemStack(BedCraftBeyond.bedItem, 1, getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
-					ItemStack chestBed = new ItemStack(BedCraftBeyond.chestBedItem, 1, getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
+		for (ItemStack plank : PlankHelper.plankColorMap.keySet()) {
+			/*for (int i = 0; i < ItemDye.field_150922_c.length; i++) {
+				for (int j = 0; j < ItemDye.field_150922_c.length; j++) {*/
+					ItemStack bed = new ItemStack(BedCraftBeyond.bedItem, 1, 241);//getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
+					ItemStack chestBed = new ItemStack(BedCraftBeyond.chestBedItem, 1, 241);//getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
 					bed.setTagCompound(new NBTTagCompound());
 					PlankHelper.addPlankInfo(bed.stackTagCompound, plank);
 					GameRegistry.addRecipe(bed, new Object[]{
-						"bbp",
+						"bbb",
 						"fff",
-						'b', new ItemStack(Blocks.wool, 1, i),
-						'p', new ItemStack(Blocks.wool, 1, j),
+						'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
+						//'p', new ItemStack(Blocks.wool, 1, j),
 						'f', plank
 						}
 					);
 					recipesAdded++;
 					GameRegistry.addRecipe(chestBed, new Object[]{
-						"bbp",
+						"bbb",
 						"fcf",
-						'b', new ItemStack(Blocks.wool, 1, i),
-						'p', new ItemStack(Blocks.wool, 1, j),
+						'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
+						//'p', new ItemStack(Blocks.wool, 1, j),
 						'f', plank,
-						'c', new ItemStack(Blocks.chest, 1)
+						'c', Blocks.chest
 						}
 					);
 					recipesAdded++;
-				}
-				
-			}
+				/*}
+			}*/
 		}
 		GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.stoneBedItem, 1, 0), new Object[]{
 			"SSS",

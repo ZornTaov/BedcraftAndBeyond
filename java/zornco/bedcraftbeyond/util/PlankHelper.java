@@ -2,7 +2,9 @@ package zornco.bedcraftbeyond.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javafx.scene.chart.StackedAreaChart;
 import net.minecraft.block.Block;
@@ -21,7 +23,7 @@ public class PlankHelper {
 
 	public static ArrayList<ItemStack> planks;
 	public static HashMap<ItemStack, Integer> plankColorMap = new HashMap<ItemStack, Integer>();
-	private static final int oakColor = 0xaf8f58;
+	public static final int oakColor = 0xaf8f58;
 
 	public static void compilePlanks()
 	{
@@ -54,13 +56,36 @@ public class PlankHelper {
 		}
 	}
 
-	public static int getPlankColor(ItemStack plank) {
+	/*public static int getPlankColor(ItemStack plank) {
 		if (getPlankColorMap().containsKey(plank)) {
+
 			return getPlankColorMap().get(plank);
 		}
 		else return PlankHelper.oakColor;
+	}*/
+	public static int getPlankColor(ItemStack plank)
+	{
+		Iterator iterator = getPlankColorMap().entrySet().iterator();
+		Entry entry;
+
+		do
+		{
+			if (!iterator.hasNext())
+			{
+				return PlankHelper.oakColor;
+			}
+
+			entry = (Entry)iterator.next();
+		}
+		while (!PlankHelper.compareStacks(plank, (ItemStack)entry.getKey()));
+
+		return (Integer)entry.getValue();
 	}
 
+	private static boolean compareStacks(ItemStack stack1, ItemStack stack2)
+	{
+		return stack2.getItem() == stack1.getItem() && (stack2.getItemDamage() == 32767 || stack2.getItemDamage() == stack1.getItemDamage());
+	}
 	public static HashMap<ItemStack, Integer> getPlankColorMap() {
 		HashMap<ItemStack, Integer> plankColorMap = PlankHelper.plankColorMap;
 		return plankColorMap;
@@ -91,19 +116,32 @@ public class PlankHelper {
 		if (bed.getTagCompound() == null) {
 			bed.setTagCompound(new NBTTagCompound());
 		}
-		return validatePlank(bed.getTagCompound());
+		return validatePlank(bed.getTagCompound(), bed.getItemDamage(), null);
+	}
+	public static ItemStack validatePlank(NBTTagCompound bedTags) {
+		return validatePlank(bedTags, -1, null);
+	}
+	public static ItemStack validatePlank(NBTTagCompound bedTags, ItemStack plankToAdd) {
+		return validatePlank(bedTags, -1, plankToAdd);
 	}
 
-	public static ItemStack validatePlank(NBTTagCompound bedTags) {
+	public static ItemStack validatePlank(NBTTagCompound bedTags, int damage, ItemStack plankToAdd) {
 		if (!bedTags.hasKey("plank")) {
-			int frameNum = 0;
-			if (bedTags.hasKey("Damage")) {
-				frameNum = bedTags.getShort("Damage") >> 8;
+
+			if (plankToAdd != null) {
+				return PlankHelper.addPlankInfo(bedTags, plankToAdd);
 			}
+			int frameNum = 0;
+			//check if item is from 1.0.5 or lower
+			if (damage >= 241) {
+				frameNum = damage >> 8;
+			}
+			//check if block is from 1.0.5 or lower
 			if (bedTags.hasKey("colorCombo"))
 			{
 				frameNum = bedTags.getShort("colorCombo") >> 8;
 			}
+
 			return PlankHelper.addPlankInfo(bedTags, new ItemStack(Blocks.planks, 1, frameNum));
 		}
 		else
@@ -111,8 +149,7 @@ public class PlankHelper {
 			NBTTagList list = bedTags.getTagList("plank", 10);
 			NBTTagCompound plank = list.getCompoundTagAt(0);
 			return ItemStack.loadItemStackFromNBT(plank);
-			/*bedTags.removeTag("plank");
-			return new ItemStack(Blocks.planks, 1, 0);*/
+			//bedTags.removeTag("plank");			return new ItemStack(Blocks.planks, 1, 0);
 		}
 	}
 

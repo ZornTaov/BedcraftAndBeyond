@@ -198,7 +198,7 @@ public class ItemColoredBed extends Item
 		        	if (tile2 != null)
 		        	{
 		        		tile2.setColorCombo(par1ItemStack.getItemDamage());
-		        		tile.setPlankType(PlankHelper.validatePlank(par1ItemStack));
+		        		tile2.setPlankType(PlankHelper.validatePlank(par1ItemStack));
 		        	    //BedCraftBeyond.logger.info(tile2.colorCombo+"");
 		        	}
 		        	if(!par2EntityPlayer.capabilities.isCreativeMode)

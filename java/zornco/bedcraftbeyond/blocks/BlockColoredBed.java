@@ -23,6 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.item.ItemColoredBed;
+import zornco.bedcraftbeyond.util.PlankHelper;
 
 public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 {
@@ -203,6 +204,16 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
     	}
     	return 241;
 	}
+
+	public static int getPlankColorFromTile(IBlockAccess par1World, int par2, int par3, int par4) {
+
+		TileColoredBed tile = (TileColoredBed)par1World.getTileEntity(par2, par3, par4);
+    	if (tile != null && tile.getPlankType() != null)
+    	{
+    	    return PlankHelper.getPlankColor(tile.getPlankType());
+    	}
+    	return PlankHelper.oakColor;
+	}
 	
 	public static int getColorFromTilePerPass(IBlockAccess par1World, int par2, int par3, int par4, int pass)
 	{
@@ -213,8 +224,8 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 			return ItemDye.field_150922_c[getColorFromInt(combo, 2)];
 		case 1:
 			return ItemDye.field_150922_c[getColorFromInt(combo, 1)];
-		//case 2:
-			//return ItemColoredBed.woodColors[getColorFromInt(combo, 0)];
+		case 2:
+			return getPlankColorFromTile(par1World, par2, par3, par4);
 		}
 		return 0;
 	}

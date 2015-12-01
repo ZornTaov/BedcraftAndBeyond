@@ -23,7 +23,7 @@ public class TileColoredBed extends TileEntity {
 		super.writeToNBT(nbttagcompound);
 		nbttagcompound.setInteger("colorCombo", colorCombo);
 		nbttagcompound.setInteger("plankColor", plankColor);
-		PlankHelper.validatePlank(nbttagcompound);
+		PlankHelper.validatePlank(nbttagcompound, getPlankType());
 	}
 
 	@Override
