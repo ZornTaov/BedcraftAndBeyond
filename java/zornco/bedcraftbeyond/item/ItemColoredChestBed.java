@@ -1,15 +1,15 @@
 package zornco.bedcraftbeyond.item;
 
-import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.blocks.BlockColoredChestBed;
-import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
-import zornco.bedcraftbeyond.util.PlankHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.BlockColoredChestBed;
+import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import zornco.bedcraftbeyond.util.PlankHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -3,7 +3,6 @@ package zornco.bedcraftbeyond.blocks;
 import java.util.Iterator;
 import java.util.List;
 
-import zornco.bedcraftbeyond.BedCraftBeyond;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -11,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 
 public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	private int ticksSinceSync = -1;
