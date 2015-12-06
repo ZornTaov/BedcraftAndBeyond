@@ -24,6 +24,7 @@ item.CbedItem.name=Colored Bed
 item.CCbedItem.name=Colored Chest Bed
 item.SbedItem.name=Stone Bed
 item.scissorsItem.name=Scissors
+item.drawerKey.name=Drawer Key
 item.rugItem.Black.name=Black rug
 item.rugItem.Red.name=Red rug
 item.rugItem.Green.name=Green rug
