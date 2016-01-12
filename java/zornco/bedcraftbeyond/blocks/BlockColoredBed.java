@@ -110,7 +110,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		if(!player.capabilities.isCreativeMode)
 		{
 			TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
-			ItemStack itemstack = new ItemStack(this.getItem(world, x, y, z), 1, tile.getColorCombo());
+			ItemStack itemstack = new ItemStack(this.getBedItem(), 1, tile.getColorCombo());
 			ItemStack plank = tile.getPlankType();
 			NBTTagCompound nbt = new NBTTagCompound();    
 			PlankHelper.validatePlank(nbt, tile.getPlankType());
@@ -148,6 +148,9 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 
 	}
 
+	public Item getBedItem() {
+		return BedCraftBeyond.bedItem;
+	}
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition target, World world,
 			int x, int y, int z, EntityPlayer player) {

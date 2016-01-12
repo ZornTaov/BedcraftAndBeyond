@@ -49,6 +49,11 @@ public class BlockColoredChestBed extends BlockColoredBed {
 		return true;
 	}
 	@Override
+	public Item getBedItem() {
+		return BedCraftBeyond.chestBedItem;
+	}
+
+	@Override
 	public void onBlockAdded(World world, int i, int j, int k)
 	{
 		super.onBlockAdded(world, i, j, k);
