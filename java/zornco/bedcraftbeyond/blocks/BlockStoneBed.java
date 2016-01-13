@@ -47,7 +47,7 @@ public class BlockStoneBed extends BlockColoredBed {
 	@SideOnly(Side.CLIENT)
 	public Item getItem(World par1World, int par2, int par3, int par4) 
 	{
-		return super.getItem(par1World, par2, par3, par4);
+		return BedCraftBeyond.stoneBedItem;
 	}
 
 }
