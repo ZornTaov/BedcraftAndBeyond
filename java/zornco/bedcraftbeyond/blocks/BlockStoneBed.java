@@ -34,6 +34,10 @@ public class BlockStoneBed extends BlockColoredBed {
 		return BedCraftBeyond.stoneBedItem;
 	}
 
+	public Item getBedItem() {
+		return BedCraftBeyond.stoneBedItem;
+	}
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileStoneBed();

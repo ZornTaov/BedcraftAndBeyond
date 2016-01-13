@@ -44,6 +44,7 @@ public class PlankHelper {
 					
 					if (stack1Name == null ){ 
 						BedCraftBeyond.logger.info("STACK1 NULL");
+						break;
 					} else {
 						BedCraftBeyond.logger.info("s1:" + stack1Name);
 						list.add(stack1);
@@ -104,7 +105,7 @@ public class PlankHelper {
 
 	private static boolean compareStacks(ItemStack stack1, ItemStack stack2)
 	{
-		return stack2.getItem() == stack1.getItem() && (stack2.getItemDamage() == 32767 || stack2.getItemDamage() == stack1.getItemDamage());
+		return stack1 != null && stack2 != null && stack2.getItem() == stack1.getItem() && (stack2.getItemDamage() == 32767 || stack2.getItemDamage() == stack1.getItemDamage());
 	}
 	public static LinkedHashMap<ItemStack, Integer> getPlankColorMap() {
 		LinkedHashMap<ItemStack, Integer> plankColorMap = PlankHelper.plankColorMap;
