@@ -28,7 +28,6 @@ public class PlankHelper {
 	}
 
 	static int prevcolor = 0;
-	@SideOnly(Side.CLIENT)
 	public static void compilePlanksClient() {
 
 		for(ItemStack stack : planks)
@@ -39,11 +38,35 @@ public class PlankHelper {
 				{ 
 					//iterate over sub items
 					List<ItemStack> list = new ArrayList<ItemStack>();
-					stack.getItem().getSubItems(stack.getItem(), null, list);
-					for (ItemStack itemStack : list) {
-						addPlankToList(itemStack);
+					
+					ItemStack stack1 = new ItemStack(stack.getItem(), 1, 0);
+					String stack1Name = stack1.getDisplayName();
+					
+					if (stack1Name == null ){ 
+						BedCraftBeyond.logger.info("STACK1 NULL");
+					} else {
+						BedCraftBeyond.logger.info("s1:" + stack1Name);
+						list.add(stack1);
+					
+						for (int i = 1; i < 16; i++) {
+							ItemStack stack2 = new ItemStack(stack.getItem(), 1, i);
+							String stack2Name = stack2.getDisplayName();
+							if (stack2Name == null ){ 
+								BedCraftBeyond.logger.info("STACK2 NULL");
+							    break;
+							} else {
+								BedCraftBeyond.logger.info("s2:" + stack2Name);
+								if (stack2Name.equals(stack1Name)) {
+									break;
+								}
+								list.add(stack2);
+							}
+						}
+						
+						for (ItemStack itemStack : list) {
+							addPlankToList(itemStack);
+						}
 					}
-
 				}else
 				{ 
 					//just grab texture for the given meta 
@@ -95,10 +118,10 @@ public class PlankHelper {
 		try {
 			//int color = ClientUtils.getAverageItemColour(stack2);
 			//int color = ClientUtils.getAverageItemColour2(stack2);
-			int color = ClientUtils.getAverageBlockColour(stack2);
+			int color = BedCraftBeyond.instance.proxy.getAverageBlockColour(stack2);
 			getPlankColorMap().put(stack2, color);
 			result += " Color: " + color;
-			if (color == prevcolor) {
+			if (color == prevcolor && color != -1) {
 				result += "SAME AS LAST COLOR! WTF?!";
 			}
 			prevcolor = color;

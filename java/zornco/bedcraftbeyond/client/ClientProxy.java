@@ -1,6 +1,7 @@
 package zornco.bedcraftbeyond.client;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -9,6 +10,7 @@ import zornco.bedcraftbeyond.client.render.BlockBedRendererTESR;
 import zornco.bedcraftbeyond.client.render.BlockRugRenderer;
 import zornco.bedcraftbeyond.client.render.TileStoneBedRenderer;
 import zornco.bedcraftbeyond.core.CommonProxy;
+import zornco.bedcraftbeyond.util.ClientUtils;
 import zornco.bedcraftbeyond.util.PlankHelper;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -34,7 +36,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void compilePlanks() {
 		super.compilePlanks();
-		PlankHelper.compilePlanksClient();
+	}
+	@Override
+	public int getAverageBlockColour(ItemStack stack2) {
+		// TODO Auto-generated method stub
+		return ClientUtils.getAverageBlockColour(stack2);
 	}
 	@Override
 	public World getClientWorld()

@@ -2,11 +2,13 @@ package zornco.bedcraftbeyond.core;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.ContainerColoredChestBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import zornco.bedcraftbeyond.util.ClientUtils;
 import zornco.bedcraftbeyond.util.PlankHelper;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -43,9 +45,12 @@ public class CommonProxy implements IGuiHandler {
 		return null;
 	}
 
-
+	public int getAverageBlockColour(ItemStack stack2) {
+		return -1;
+	}
 	public void compilePlanks() {
 		PlankHelper.compilePlanks();
+		PlankHelper.compilePlanksClient();
 		/*BedCraftBeyond.logger.info("SPAM TIME!");
 		for (Object block : Block.blockRegistry.getKeys()) {
 			String blockname = block.toString();
