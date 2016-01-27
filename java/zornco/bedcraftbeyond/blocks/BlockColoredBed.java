@@ -22,6 +22,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.util.PlankHelper;
 import cpw.mods.fml.relauncher.Side;
@@ -233,6 +234,11 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 
 		world.markBlockForUpdate(par2, par3, par4);
 		return true;
+	}
+	
+	@Override
+	public boolean rotateBlock(World worldObj, int x, int y, int z, ForgeDirection axis) {
+		return false;
 	}
 	public static int getColorFromInt(int meta, int color)
 	{
