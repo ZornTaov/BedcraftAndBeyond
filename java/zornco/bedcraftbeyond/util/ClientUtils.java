@@ -135,7 +135,8 @@ public class ClientUtils {
 
 		}catch(Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			return -2;
 		}
 
 

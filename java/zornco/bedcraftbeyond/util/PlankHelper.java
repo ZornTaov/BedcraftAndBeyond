@@ -120,14 +120,19 @@ public class PlankHelper {
 			//int color = ClientUtils.getAverageItemColour(stack2);
 			//int color = ClientUtils.getAverageItemColour2(stack2);
 			int color = BedCraftBeyond.instance.proxy.getAverageBlockColour(stack2);
-			getPlankColorMap().put(stack2, color);
+			if (color != -2) {
+				getPlankColorMap().put(stack2, color);
+			}
 			result += " Color: " + color;
-			if (color == prevcolor && color != -1) {
-				result += "SAME AS LAST COLOR! WTF?!";
+			if (color == -2) {
+				result += " THIS TEXTURE IS MISSING OR BROKEN! WON'T BE ADDED!";
+			}
+			if (color == prevcolor && color > -1 ) {
+				result += " SAME AS LAST COLOR! WTF?!";
 			}
 			prevcolor = color;
 		} catch (Exception e) {
-			result += " THIS TEXTURE IS MISSING OR BROKEN! WON'T BE ADDED!";
+			result += " THIS TEXTURE IS REALLY MISSING OR BROKEN! WON'T BE ADDED!";
 		}
 		BedCraftBeyond.logger.info(result);
 	}
