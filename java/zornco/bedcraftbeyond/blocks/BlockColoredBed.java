@@ -114,8 +114,9 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 			ItemStack itemstack = new ItemStack(this.getBedItem(), 1, tile.getColorCombo());
 			ItemStack plank = tile.getPlankType();
 			NBTTagCompound nbt = new NBTTagCompound();    
-			PlankHelper.validatePlank(nbt, tile.getPlankType());
-			itemstack.setTagCompound(nbt);    
+			//PlankHelper.validatePlank(nbt, tile.getPlankType());
+			itemstack.setTagCompound(nbt);
+			itemstack.getTagCompound().setString("plankNameSpace", PlankHelper.plankStringfromItemStack(plank));
 
 
 			if (itemstack != null)
@@ -167,8 +168,9 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		NBTTagCompound nbt = new NBTTagCompound();        
 
 		TileColoredBed tile = (TileColoredBed)world.getTileEntity(x, y, z);
-		PlankHelper.validatePlank(nbt, tile.getPlankType());
+		//PlankHelper.validatePlank(nbt, tile.getPlankType());
 		stack.setTagCompound(nbt);
+		stack.getTagCompound().setString("plankNameSpace", PlankHelper.plankStringfromItemStack(tile.getPlankType()));
 
 		return stack;
 	}

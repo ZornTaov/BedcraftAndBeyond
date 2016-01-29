@@ -1,5 +1,7 @@
 package zornco.bedcraftbeyond.blocks;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -12,6 +14,7 @@ public class TileColoredBed extends TileEntity {
 	private int colorCombo;
 	private int plankColor;
 	public ItemStack plankType;
+	public String plankTypeNS;
 	private boolean firstRun = true;
 
 	public TileColoredBed() {
@@ -24,6 +27,9 @@ public class TileColoredBed extends TileEntity {
 		nbttagcompound.setInteger("colorCombo", colorCombo);
 		nbttagcompound.setInteger("plankColor", plankColor);
 		PlankHelper.validatePlank(nbttagcompound, getPlankType());
+		if (plankTypeNS != null) {
+			nbttagcompound.setString("plankNameSpace", plankTypeNS);
+		}
 	}
 
 	@Override
@@ -32,14 +38,31 @@ public class TileColoredBed extends TileEntity {
 		this.colorCombo = nbttagcompound.getInteger("colorCombo");
 		this.plankColor = nbttagcompound.getInteger("plankColor");
 		this.plankType = PlankHelper.validatePlank(nbttagcompound);
+		this.plankTypeNS = nbttagcompound.getString("plankNameSpace");
 	}
 
 	public ItemStack getPlankType() {
-		return plankType;
+		if (plankTypeNS != null) {
+			return PlankHelper.plankItemStackfromString(plankTypeNS);
+		}
+		if (plankType != null) {
+			plankTypeNS = PlankHelper.plankStringfromItemStack(plankType);
+			return plankType;
+		}
+		return new ItemStack(Blocks.planks, 1, 0);
 	}
 
 	public void setPlankType(ItemStack plankType) {
 		this.plankType = plankType;
+		updateClients();
+	}
+
+	public String getPlankTypeNS() {
+		return plankTypeNS;
+	}
+
+	public void setPlankTypeNS(String plank) {
+		this.plankTypeNS = plank;
 		updateClients();
 	}
 
