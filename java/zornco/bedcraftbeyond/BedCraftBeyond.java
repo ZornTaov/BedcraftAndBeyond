@@ -105,7 +105,7 @@ public class BedCraftBeyond {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		confFile = event.getSuggestedConfigurationFile();
-		bedCraftBeyondTab = new TabBedCraftBeyond("BedCraftAndBeyond");
+		bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
 		/** Blocks **/
 		plankBlock = new BlockBCBPlanks().setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("bcbwood");
 		rugBlock = new BlockRug().setHardness(0.8F).setStepSound(Block.soundTypeCloth).setUnlocalizedName("rugBlock");
