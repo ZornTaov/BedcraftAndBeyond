@@ -22,6 +22,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -201,7 +202,7 @@ public class BedCraftBeyond {
 					"dyeWhite"
 			};
 
-		/*
+		
 		for(int i = 0; i < ItemDye.dyeColors.length; i++)
 		{
 			GameRegistry.addRecipe(new ItemStack(rugBlock, 4, i),
@@ -218,7 +219,7 @@ public class BedCraftBeyond {
 					new Object[]{"rug", "rug", "rug", "rug", dyes[i] } );
 			addShapelessOreRecipe(new ItemStack(rugBlock, 8, 15-i), 
 					new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i] } );
-		}*/
+		}
 
 		for (String plank : PlankHelper.plankColorMap.keySet()) {
 			ItemStack bed = new ItemStack(BedCraftBeyond.bedItem, 1, 241);//getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
