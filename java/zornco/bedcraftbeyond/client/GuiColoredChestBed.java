@@ -1,12 +1,11 @@
 package zornco.bedcraftbeyond.client;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import zornco.bedcraftbeyond.blocks.ContainerColoredChestBed;
 
 public class GuiColoredChestBed extends GuiContainer {
@@ -32,8 +31,8 @@ public class GuiColoredChestBed extends GuiContainer {
     @Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
-        this.fontRendererObj.drawString(this.chestInventory.hasCustomInventoryName() ? this.chestInventory.getInventoryName() : I18n.format(this.chestInventory.getInventoryName(), new Object[0]), 8, 6+ 17 , 4210752);                  
-        this.fontRendererObj.drawString(this.playerInventory.hasCustomInventoryName() ? this.playerInventory.getInventoryName() : I18n.format(this.playerInventory.getInventoryName(), new Object[0]), 8, GuiColoredChestBed.ySize - 96 + 2 + 17 , 4210752);
+        this.fontRendererObj.drawString(this.chestInventory.getDisplayName().getUnformattedText(), 8, 6+ 17 , 4210752);                  
+        this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, GuiColoredChestBed.ySize - 96 + 2 + 17 , 4210752);
     }
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j)

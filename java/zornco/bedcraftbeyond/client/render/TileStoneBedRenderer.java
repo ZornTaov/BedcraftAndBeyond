@@ -8,6 +8,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -22,15 +24,15 @@ public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
 	public void renderWorldBlock(TileEntity tile, IBlockAccess world, int i, int j, int k,
 			Block block, double x, double y, double z) {
 
-		Tessellator tessellator = Tessellator.instance;
-		boolean flag = block.isBedFoot(world, i, j, k);
+		Tessellator tessellator = Tessellator.getInstance();
+		boolean flag = !block.isBedFoot(world, new BlockPos(i, j, k));
 
 		//This will make your block brightness dependent from surroundings lighting.
-		float f = block.getMixedBrightnessForBlock(world, i, j, k);
-		int l = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
+		int f = block.getMixedBrightnessForBlock(world, new BlockPos(i, j, k));
+		int l = world.getCombinedLight(new BlockPos(i, j, k), 0);
 		int l1 = l % 65536;
 		int l2 = l / 65536;
-		tessellator.setColorOpaque_F(f, f, f);
+		//tessellator.getWorldRenderer().putBrightness4(f, f, f, f);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, l1, l2);
 
 		/*This will rotate your model corresponding to player direction that was when you placed the block. If you want this to work,
@@ -38,10 +40,10 @@ public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
         	int dir = MathHelper.floor_double((double)((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
         	world.setBlockMetadataWithNotify(x, y, z, dir, 0);*/
 
-		int dir = block.getBedDirection(world, i, j, k);		
+		EnumFacing dir = block.getBedDirection(world, new BlockPos(i, j, k));		
 
 		GL11.glPushMatrix();
-		switch(dir)
+		switch(dir.getHorizontalIndex())
 		{
 		case 0:
 		case 2:
@@ -57,7 +59,7 @@ public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
 		}
 		GL11.glTranslatef(0.5F, 0, 0.5F);
 		//This line actually rotates the renderer.
-		GL11.glRotatef(dir * (-90F), 0F, 1F, 0F);
+		GL11.glRotatef(dir.getHorizontalIndex() * (-90F), 0F, 1F, 0F);
 		//GL11.glTranslatef(-0.5F, 0, -0.5F);
 		this.bindTexture(stoneBedTexture);
 		/*
@@ -69,13 +71,12 @@ public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity tileEntity, double d0, double d1,
-			double d2, float f) {
+	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage) {
 		GL11.glPushMatrix();
 		//This will move our renderer so that it will be on proper place in the world
 		TileStoneBed tileEntityYour = (TileStoneBed)tileEntity;
 		/*Note that true tile entity coordinates (tileEntity.xCoord, etc) do not match to render coordinates (d, etc) that are calculated as [true coordinates] - [player coordinates (camera coordinates)]*/
-		renderWorldBlock(tileEntityYour, tileEntity.getWorldObj(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, BedCraftBeyond.stoneBedBlock, (float)d0, (float)d1, (float)d2);
+		renderWorldBlock(tileEntityYour, tileEntity.getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), BedCraftBeyond.stoneBedBlock, (float)x, (float)y, (float)z);
 		GL11.glPopMatrix();
 	}
 

@@ -1,16 +1,16 @@
 package zornco.bedcraftbeyond.blocks;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
-public class TileColoredBed extends TileEntity {
+public class TileColoredBed extends TileEntity implements ITickable {
 	private int colorCombo;
 	private int plankColor;
 	public ItemStack plankType;
@@ -89,7 +89,7 @@ public class TileColoredBed extends TileEntity {
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if (!worldObj.isRemote
 				&& (worldObj.getWorldTime() % 20 == 0 || firstRun)) {
 			firstRun = false;
@@ -102,14 +102,13 @@ public class TileColoredBed extends TileEntity {
 	public final Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
-				this.zCoord, -5, nbt);
+		return new S35PacketUpdateTileEntity(this.pos, -5, nbt);
 	}
 
 	@Override
 	public final void onDataPacket(NetworkManager net,
 			S35PacketUpdateTileEntity packet) {
-		NBTTagCompound nbt = packet.func_148857_g();
+		NBTTagCompound nbt = packet.getNbtCompound();
 		if (nbt != null) {
 			this.readFromNBT(nbt);
 		}

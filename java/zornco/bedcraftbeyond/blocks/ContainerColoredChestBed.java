@@ -16,7 +16,7 @@ public class ContainerColoredChestBed extends Container {
     {
         chest = chestInventory;
         player = ((InventoryPlayer) playerInventory).player;
-        chestInventory.openInventory();
+        chestInventory.openInventory(player);
         layoutContainer(playerInventory, chestInventory);
     }
 
@@ -69,7 +69,7 @@ public class ContainerColoredChestBed extends Container {
     public void onContainerClosed(EntityPlayer entityplayer)
     {
         super.onContainerClosed(entityplayer);
-        chest.closeInventory();
+        chest.closeInventory(entityplayer);
     }
 
     protected void layoutContainer(IInventory playerInventory, IInventory chestInventory)

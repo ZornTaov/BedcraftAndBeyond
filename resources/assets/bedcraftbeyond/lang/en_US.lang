@@ -2,6 +2,8 @@
 tile.CbedBlock.name=Colored Bed
 tile.CCbedBlock.name=Colored Chest Bed
 tile.SbedBlock.name=Stone Bed
+tile.bcbwood.zorn.name=Zorn Plank
+tile.bcbwood.xylex.name=Xylex Plank
 tile.rugBlock.Black.name=Black rug
 tile.rugBlock.Red.name=Red rug
 tile.rugBlock.Green.name=Green rug
@@ -45,4 +47,4 @@ item.rugItem.White.name=White rug
 # GUI
 
 # Other
-itemGroup.BedCraftAndBeyond=Bed Craft And Beyond
+itemGroup.BedCraftBeyond=Bed Craft And Beyond

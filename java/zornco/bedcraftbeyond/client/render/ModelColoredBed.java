@@ -82,7 +82,7 @@ public class ModelColoredBed extends ModelBase {
     }
     
     public void renderPlank(float f5) {
-    	this.plank1.rotateAngleY = (float) (Math.PI/2.0);
+    	this.plank1.rotateAngleY = 0;//(float) (Math.PI/2.0);
         this.plank1.render(f5);
     }
     /**

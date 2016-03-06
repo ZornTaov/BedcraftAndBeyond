@@ -10,6 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 public class TileColoredChestBed extends TileColoredBed implements IInventory {
@@ -67,14 +70,14 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
-		if (worldObj != null && !this.worldObj.isRemote && this.numUsingPlayers != 0 && (this.ticksSinceSync + this.xCoord + this.yCoord + this.zCoord) % 200 == 0)
+	public void update() {
+		super.update();
+		if (worldObj != null && !this.worldObj.isRemote && this.numUsingPlayers != 0 && (this.ticksSinceSync + pos.hashCode()) % 200 == 0)
 		{
 			this.numUsingPlayers = 0;
 			float var1 = 5.0F;
-			List<Entity> var2 = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - var1, this.yCoord - var1, this.zCoord - var1, this.xCoord + 1 + var1, this.yCoord + 1 + var1, this.zCoord + 1 + var1));
-			Iterator<Entity> var3 = var2.iterator();
+			List<EntityPlayer> var2 = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.fromBounds(this.pos.getX() - var1, this.pos.getY() - var1, this.pos.getZ() - var1, this.pos.getX() + 1 + var1, this.pos.getY() + 1 + var1, this.pos.getZ() + 1 + var1));
+			Iterator<EntityPlayer> var3 = var2.iterator();
 
 			while (var3.hasNext())
 			{
@@ -89,7 +92,7 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 
 		if (worldObj != null && !worldObj.isRemote && ticksSinceSync < 0)
 		{
-			worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 3, ((numUsingPlayers << 3) & 0xF8));
+			worldObj.addBlockEvent(pos, BedCraftBeyond.bedBlock, 3, ((numUsingPlayers << 3) & 0xF8));
 		}
 		if (!worldObj.isRemote && inventoryTouched)
 		{
@@ -101,9 +104,7 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 		float f = 0.1F;
 		if (numUsingPlayers > 0 && lidAngle == 0.0F)
 		{
-			double d = xCoord + 0.5D;
-			double d1 = zCoord + 0.5D;
-			worldObj.playSoundEffect(d, yCoord + 0.5D, d1, "random.chestopen", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			worldObj.playSoundEffect(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D, "random.chestopen", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
 		}
 		if (numUsingPlayers == 0 && lidAngle > 0.0F || numUsingPlayers > 0 && lidAngle < 1.0F)
 		{
@@ -123,9 +124,7 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 			float f2 = 0.5F;
 			if (lidAngle < f2 && f1 >= f2)
 			{
-				double d2 = xCoord + 0.5D;
-				double d3 = zCoord + 0.5D;
-				worldObj.playSoundEffect(d2, yCoord + 0.5D, d3, "random.chestclosed", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+				worldObj.playSoundEffect(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D, "random.chestclosed", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
 			}
 			if (lidAngle < 0.0F)
 			{
@@ -184,7 +183,7 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 		}
 	}
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
+	public ItemStack removeStackFromSlot(int i) {
 		if (this.chestContents[i] != null)
 		{
 			ItemStack var2 = this.chestContents[i];
@@ -206,13 +205,13 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 		markDirty();
 	}
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		if (ownerName != "")
 			return ownerName + "'s Drawers";
 		return "Drawers";
 	}
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return this.ownerName != null && this.ownerName.length() > 0;
 	}
 	@Override
@@ -225,30 +224,54 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 		{
 			return true;
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+		if (worldObj.getTileEntity(pos) != this)
 		{
 			return false;
 		}
 		//if (entityplayer.username != ownerName && ownerName != "")
 		//	return false;
-		return entityplayer.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+		return entityplayer.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64D;
 
 	}
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 		if (worldObj == null) return;
 		numUsingPlayers++;
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
+		worldObj.addBlockEvent(pos, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
 	}
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 		if (worldObj == null) return;
 		numUsingPlayers--;
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
+		worldObj.addBlockEvent(pos, BedCraftBeyond.bedBlock, 1, numUsingPlayers);
 	}
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		return true;
+	}
+	@Override
+	public IChatComponent getDisplayName() {
+        return (IChatComponent)(this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName(), new Object[0]));
+	}
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+	@Override
+	public void setField(int id, int value) {
+		
+	}
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+	@Override
+	public void clear() {
+
+        for (int i = 0; i < this.chestContents.length; ++i)
+        {
+            this.chestContents[i] = null;
+        }
 	}
 
 }

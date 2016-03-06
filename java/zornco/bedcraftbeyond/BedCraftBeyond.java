@@ -3,24 +3,45 @@ package zornco.bedcraftbeyond;
 import java.io.File;
 import java.util.Iterator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.base.Function;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import zornco.bedcraftbeyond.blocks.BlockBCBPlanks;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.BlockColoredChestBed;
 import zornco.bedcraftbeyond.blocks.BlockRug;
@@ -30,6 +51,7 @@ import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
 import zornco.bedcraftbeyond.blocks.TileStoneBed;
 import zornco.bedcraftbeyond.client.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.core.CommonProxy;
+import zornco.bedcraftbeyond.item.ItemBCBPlank;
 import zornco.bedcraftbeyond.item.ItemColoredBed;
 import zornco.bedcraftbeyond.item.ItemColoredChestBed;
 import zornco.bedcraftbeyond.item.ItemDrawerKey;
@@ -37,24 +59,15 @@ import zornco.bedcraftbeyond.item.ItemRug;
 import zornco.bedcraftbeyond.item.ItemScissors;
 import zornco.bedcraftbeyond.item.ItemStoneBed;
 import zornco.bedcraftbeyond.util.PlankHelper;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(
-        modid = BedCraftBeyond.MOD_ID,
-        name = BedCraftBeyond.MOD_NAME,
-        version = "${version}",
-        acceptedMinecraftVersions = "[1.7.10,)")
+		modid = BedCraftBeyond.MOD_ID,
+		name = BedCraftBeyond.MOD_NAME,
+		version = "${version}",
+		acceptedMinecraftVersions = "[1.8.9,)")
 public class BedCraftBeyond {
 
-	public static final String MOD_ID = "BedCraftAndBeyond";
+	public static final String MOD_ID = "bedcraftbeyond";
 	public static final String MOD_NAME = "BedCraft And Beyond";
 	public static final String VERSION = "1.0";
 	// The instance of your mod that Forge uses.
@@ -69,12 +82,15 @@ public class BedCraftBeyond {
 
 	public static Logger logger = LogManager.getLogger(BedCraftBeyond.MOD_ID);
 
+	//public static Item plankItem;
 	public static Item bedItem;
 	public static Item chestBedItem;
 	public static Item stoneBedItem;
+	public static Item rugItem;
 	public static Item scissors;
 	public static Item drawerKey;
 
+	public static Block plankBlock;
 	public static Block rugBlock;
 	public static Block bedBlock;
 	public static Block chestBedBlock;
@@ -91,27 +107,32 @@ public class BedCraftBeyond {
 		confFile = event.getSuggestedConfigurationFile();
 		bedCraftBeyondTab = new TabBedCraftBeyond("BedCraftAndBeyond");
 		/** Blocks **/
-		rugBlock = new BlockRug().setHardness(0.8F).setStepSound(Block.soundTypeCloth).setBlockName("rugBlock");
-		bedBlock = new BlockColoredBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setBlockName("CbedBlock");
-		chestBedBlock = new BlockColoredChestBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setBlockName("CCbedBlock");
-		stoneBedBlock = new BlockStoneBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setBlockName("SbedBlock");
+		plankBlock = new BlockBCBPlanks().setHardness(2.0F).setResistance(5.0F).setStepSound(Block.soundTypeWood).setUnlocalizedName("bcbwood");
+		rugBlock = new BlockRug().setHardness(0.8F).setStepSound(Block.soundTypeCloth).setUnlocalizedName("rugBlock");
+		bedBlock = new BlockColoredBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setUnlocalizedName("CbedBlock");
+		chestBedBlock = new BlockColoredChestBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setUnlocalizedName("CCbedBlock");
+		stoneBedBlock = new BlockStoneBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setUnlocalizedName("SbedBlock");
 		registerBlock(rugBlock, ItemRug.class);
+		registerBlock(plankBlock, ItemBCBPlank.class);
 		registerBlock(bedBlock);
 		registerBlock(chestBedBlock);
 		registerBlock(stoneBedBlock);
 
 		/** Items **/
-		scissors = new ItemScissors().setUnlocalizedName("scissorsItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
-		drawerKey = new ItemDrawerKey().setUnlocalizedName("drawerKey").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+		scissors = new ItemScissors();
+		drawerKey = new ItemDrawerKey();
+		//plankItem = new ItemBCBPlank(plankBlock).setUnlocalizedName("bcbwood").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		bedItem = new ItemColoredBed().setMaxStackSize(1).setUnlocalizedName("CbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		chestBedItem = new ItemColoredChestBed().setMaxStackSize(1).setUnlocalizedName("CCbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		stoneBedItem = new ItemStoneBed().setMaxStackSize(1).setUnlocalizedName("SbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
-		//registerItem(new ItemRug(GameRegistry.findBlock(BedCraftBeyond.MODID, "rugBlock")).setUnlocalizedName("rugItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab));
+		//registerItem(plankItem);
+		//rugItem = new ItemRug(GameRegistry.findBlock(BedCraftBeyond.MOD_ID, "rugBlock")).setUnlocalizedName("rugItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+		//registerItem(rugItem);
 		registerItem(bedItem);
 		registerItem(chestBedItem);
 		registerItem(stoneBedItem);
-		registerItem(scissors);
-		registerItem(drawerKey);
+		//registerItem(scissors);
+		proxy.registerModels();
 
 	}
 
@@ -119,49 +140,32 @@ public class BedCraftBeyond {
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
 
-		
-		/*GameRegistry.registerItem(rugItem, "rugitem");
-		GameRegistry.registerBlock(rugBlock, "rugblock");
-		GameRegistry.registerItem(bedItem, "bedItem");
-		GameRegistry.registerBlock(bedBlock, "bedBlock");
-		GameRegistry.registerItem(chestBedItem, "chestBedItem");
-		GameRegistry.registerBlock(chestBedBlock, "chestBedBlock");
-		GameRegistry.registerItem(stoneBedItem, "stoneBedItem");
-		GameRegistry.registerBlock(stoneBedBlock, "stoneBedBlock");*/
-		
-		/** Names **/
-		/*LanguageRegistry.instance().addStringLocalization( "itemGroup.BedCraftBeyond", "Bed Craft & Beyond" );
-		LanguageRegistry.addName(scissors, "Scissors");
-
-		for(String a : ItemRug.rugColorNames)
-		{
-			LanguageRegistry.instance().addStringLocalization("item.rug."+a+".name", "en_US", a+" Rug");
-			LanguageRegistry.instance().addStringLocalization("tile.rug."+a+".name", "en_US", a+" Rug");
-		}
-		LanguageRegistry.instance().addStringLocalization("item.Cbed.name", "en_US", "Colored Bed");
-		LanguageRegistry.instance().addStringLocalization("tile.Cbed.name", "en_US", "Colored Bed");
-		LanguageRegistry.instance().addStringLocalization("item.CCbed.name", "en_US", "Colored Chest Bed");
-		LanguageRegistry.instance().addStringLocalization("tile.CCbed.name", "en_US", "Colored Chest Bed");
-		LanguageRegistry.instance().addStringLocalization("item.Sbed.name", "en_US", "Stone Bed");
-		LanguageRegistry.instance().addStringLocalization("tile.Sbed.name", "en_US", "Stone Bed");
-*/
-
+		/** Registers **/
+		proxy.registerRenderInformationInit();
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
+		GameRegistry.registerTileEntity(TileColoredBed.class, "CbedTile");
+		GameRegistry.registerTileEntity(TileColoredChestBed.class, "CCbedTile");
+		GameRegistry.registerTileEntity(TileStoneBed.class, "SbedTile");
 		long start = System.currentTimeMillis();
+		OreDictionary.registerOre("plankWood", new ItemStack(BedCraftBeyond.plankBlock, 1, OreDictionary.WILDCARD_VALUE));
 		proxy.compilePlanks();
 		//BedCraftBeyond.logger.info(PlankHelper.getPlankColorMap2());
 		/** Recipes **/
+		OreDictionary.registerOre("coloredBed", new ItemStack(BedCraftBeyond.bedItem, 1, OreDictionary.WILDCARD_VALUE));
+		//OreDictionary.registerOre("rug", new ItemStack(BedCraftBeyond.rugBlock, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre("coloredChestBed", new ItemStack(BedCraftBeyond.chestBedItem, 1, OreDictionary.WILDCARD_VALUE));
 		int recipesAdded = 0;
 		// This will be made into an option as soon as someone shows me a recipe that requires the vanilla bed!
 		Iterator<IRecipe> iterator = CraftingManager.getInstance().getRecipeList().iterator();
-        while(iterator.hasNext())
-        {
-            ItemStack r = iterator.next().getRecipeOutput();
-            if(r != null && r.getItem() == Items.bed)
-            {
-                iterator.remove();
-                logger.info("Removed Vanilla Bed.");
-            }
-        }
+		while(iterator.hasNext())
+		{
+			ItemStack r = iterator.next().getRecipeOutput();
+			if(r != null && r.getItem() == Items.bed)
+			{
+				iterator.remove();
+				logger.info("Removed Vanilla Bed.");
+			}
+		}
 		/*GameRegistry.addShapelessRecipe(new ItemStack(scissors, 1, 16), // scissors
 				new Object[]{ Items.iron_ingot, Items.redstone } );*/
 		/*addOreRecipe(new ItemStack(scissors, 1),
@@ -170,35 +174,35 @@ public class BedCraftBeyond {
 			'y', "dyeRed"
 				}
 			);*/
-        addOreRecipe(new ItemStack(drawerKey, 1),
+		addOreRecipe(new ItemStack(drawerKey, 1),
 				new Object[] { "xy", 
-			'x', Items.iron_ingot, 
-			'y', Items.gold_ingot
-				}
-			);
-        recipesAdded++;
+						'x', Items.iron_ingot, 
+						'y', Items.gold_ingot
+		}
+				);
+		recipesAdded++;
 		String[] dyes = 
 			{
-				"dyeBlack",
-				"dyeRed",
-				"dyeGreen",
-				"dyeBrown",
-				"dyeBlue",
-				"dyePurple",
-				"dyeCyan",
-				"dyeLightGray",
-				"dyeGray",
-				"dyePink",
-				"dyeLime",
-				"dyeYellow",
-				"dyeLightBlue",
-				"dyeMagenta",
-				"dyeOrange",
-				"dyeWhite"
+					"dyeBlack",
+					"dyeRed",
+					"dyeGreen",
+					"dyeBrown",
+					"dyeBlue",
+					"dyePurple",
+					"dyeCyan",
+					"dyeLightGray",
+					"dyeGray",
+					"dyePink",
+					"dyeLime",
+					"dyeYellow",
+					"dyeLightBlue",
+					"dyeMagenta",
+					"dyeOrange",
+					"dyeWhite"
 			};
 
-		OreDictionary.registerOre("rug", new ItemStack(BedCraftBeyond.rugBlock, 1, OreDictionary.WILDCARD_VALUE));
-		for(int i = 0; i < ItemDye.field_150922_c.length; i++)
+		/*
+		for(int i = 0; i < ItemDye.dyeColors.length; i++)
 		{
 			GameRegistry.addRecipe(new ItemStack(rugBlock, 4, i),
 				new Object[] { "xxx", 
@@ -206,7 +210,7 @@ public class BedCraftBeyond {
 				}
 			);
 		}
-		for(int i = 0; i < ItemDye.field_150922_c.length; i++)
+		for(int i = 0; i < ItemDye.dyeColors.length; i++)
 		{
 			addShapelessOreRecipe(new ItemStack(rugBlock, 1, 15-i), 
 					new Object[]{"rug", dyes[i] } );
@@ -214,95 +218,57 @@ public class BedCraftBeyond {
 					new Object[]{"rug", "rug", "rug", "rug", dyes[i] } );
 			addShapelessOreRecipe(new ItemStack(rugBlock, 8, 15-i), 
 					new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i] } );
-		}
-
-		/*for (ItemStack plank : PlankHelper.plankColorMap.keySet()) {
-			ItemStack bed = new ItemStack(BedCraftBeyond.bedItem, 1, 241);//getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
-			ItemStack chestBed = new ItemStack(BedCraftBeyond.chestBedItem, 1, 241);//getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
-			bed.setTagCompound(new NBTTagCompound());
-			PlankHelper.addPlankInfo(bed.stackTagCompound, plank);
-			GameRegistry.addRecipe(bed, new Object[]{
-				"bbb",
-				"fff",
-				'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
-				//'p', new ItemStack(Blocks.wool, 1, j),
-				'f', plank
-				}
-			);
-			recipesAdded++;
-			GameRegistry.addRecipe(chestBed, new Object[]{
-				"bbb",
-				"fcf",
-				'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
-				//'p', new ItemStack(Blocks.wool, 1, j),
-				'f', plank,
-				'c', Blocks.chest
-				}
-			);
-			recipesAdded++;
-			
 		}*/
-		for (String plank : PlankHelper.plankColorMap2.keySet()) {
+
+		for (String plank : PlankHelper.plankColorMap.keySet()) {
 			ItemStack bed = new ItemStack(BedCraftBeyond.bedItem, 1, 241);//getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
 			ItemStack chestBed = new ItemStack(BedCraftBeyond.chestBedItem, 1, 241);//getFreqFromColours(BlockColored.func_150032_b(j), BlockColored.func_150032_b(i)));
 			bed.setTagCompound(new NBTTagCompound());
 			//PlankHelper.addPlankInfo(bed.stackTagCompound, plank);
 			bed.getTagCompound().setString("plankNameSpace", plank);
 			GameRegistry.addRecipe(bed, new Object[]{
-				"bbb",
-				"fff",
-				'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
-				//'p', new ItemStack(Blocks.wool, 1, j),
-				'f', new ItemStack((Item)(Item.itemRegistry.getObject(plank.split("@")[0])), 1, Integer.parseInt(plank.split("@")[1]))
-				}
-			);
+					"bbb",
+					"fff",
+					'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
+					//'p', new ItemStack(Blocks.wool, 1, j),
+					'f', new ItemStack((Item)(Item.itemRegistry.getObject(new ResourceLocation(plank.split("@")[0]))), 1, Integer.parseInt(plank.split("@")[1]))
+			}
+					);
 			recipesAdded++;
 			GameRegistry.addRecipe(chestBed, new Object[]{
-				"bbb",
-				"fcf",
-				'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
-				//'p', new ItemStack(Blocks.wool, 1, j),
-				'f', new ItemStack((Item)(Item.itemRegistry.getObject(plank.split("@")[0])), 1, Integer.parseInt(plank.split("@")[1])),
-				'c', Blocks.chest
-				}
-			);
+					"bbb",
+					"fcf",
+					'b', Blocks.wool,//new ItemStack(Blocks.wool, 1, i),
+					//'p', new ItemStack(Blocks.wool, 1, j),
+					'f', new ItemStack((Item)(Item.itemRegistry.getObject(new ResourceLocation(plank.split("@")[0]))), 1, Integer.parseInt(plank.split("@")[1])),
+					'c', Blocks.chest
+			}
+					);
 			recipesAdded++;
-			
+
 		}
 		GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.stoneBedItem, 1, 0), new Object[]{
-			"SSS",
-			"sss",
-			'S', new ItemStack(Blocks.stone, 1),
-			's', new ItemStack(Blocks.stone_slab, 1, 0)
+				"SSS",
+				"sss",
+				'S', new ItemStack(Blocks.stone, 1),
+				's', new ItemStack(Blocks.stone_slab, 1, 0)
 		});
 
 		long elapsedTimeMillis = System.currentTimeMillis()-start;
 		BedCraftBeyond.logger.info("Time Took to generate planklist: " + elapsedTimeMillis);
-		OreDictionary.registerOre("coloredBed", new ItemStack(BedCraftBeyond.bedItem, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("rug", new ItemStack(BedCraftBeyond.rugBlock, 1, OreDictionary.WILDCARD_VALUE));
-		OreDictionary.registerOre("coloredChestBed", new ItemStack(BedCraftBeyond.chestBedItem, 1, OreDictionary.WILDCARD_VALUE));
 
 		addShapelessOreRecipe(new ItemStack(Items.bed), new Object[]{ "coloredBed" } );
 
 		GameRegistry.addShapelessRecipe(new ItemStack(BedCraftBeyond.bedItem, 1, 241), new Object[]{ new ItemStack(Items.bed) } );
 
 		BedCraftBeyond.logger.info(this.MOD_ID + " has added " + recipesAdded + " Recipes for Beds! That's a lot!");
-		/** Registers **/
-		proxy.registerRenderInformation();
-		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
-		GameRegistry.registerTileEntity(TileColoredBed.class, "CbedTile");
-		GameRegistry.registerTileEntity(TileColoredChestBed.class, "CCbedTile");
-		GameRegistry.registerTileEntity(TileStoneBed.class, "SbedTile");
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		BedCraftBeyond.logger.info(this.MOD_ID + " has posted");
+		PlankHelper.readyToColor = true;
 
-	}
-
-	public static int getFreqFromColours(int colour2, int colour3)
-	{
-		return ((colour2 & 0xF) << 4) + (colour3 & 0xF);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -318,7 +284,7 @@ public class BedCraftBeyond {
 
 	public static void registerItem(Item item)
 	{
-		GameRegistry.registerItem(item, item.getUnlocalizedName().replace("item.", ""));
+		GameRegistry.registerItem(item, item.getUnlocalizedName().replace("item.", "").replace("tile.", ""));
 	}
 
 	public static void registerBlock(Block block)
@@ -329,5 +295,10 @@ public class BedCraftBeyond {
 	public static void registerBlock(Block block, Class<? extends ItemBlock> itemBlockClass)
 	{
 		GameRegistry.registerBlock(block, itemBlockClass, block.getUnlocalizedName().replace("tile.", ""));
+	}
+
+	public static void registerBlock(Block block, Class<? extends ItemBlock> itemBlockClass, Object... itemCtorArgs)
+	{
+		GameRegistry.registerBlock(block, itemBlockClass, block.getUnlocalizedName().replace("tile.", ""), itemCtorArgs);
 	}
 }

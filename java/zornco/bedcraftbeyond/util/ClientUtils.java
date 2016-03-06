@@ -13,9 +13,9 @@ import javax.imageio.ImageIO;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
@@ -38,64 +38,7 @@ public class ClientUtils {
 		InputStream layer = Minecraft.getMinecraft().getResourceManager().getResource(resource).getInputStream();
 		return ImageIO.read(layer);
 	}
-
-	public static List<Integer> getItemColours(ItemStack stack)
-	{
-		List<Integer> colourSet = new ArrayList();
-		Item item = stack.getItem();
-
-		ResourceLocation resource;
-		BufferedImage buffered;
-		//= item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
-		try{
-
-			for(int pass=0; pass<item.getRenderPasses(stack.getItemDamage()); pass++)
-			{
-				IIcon icon = item.getIcon(stack, pass);
-
-				if(icon instanceof TextureAtlasSprite)
-				{
-					TextureAtlasSprite tas = (TextureAtlasSprite) icon;
-					String iconName = tas.getIconName();
-					iconName = iconName.substring(0, Math.max(0,iconName.indexOf(":")+1)) + (item.getSpriteNumber()==0?"textures/blocks/":"textures/items/") + iconName.substring(Math.max(0,iconName.indexOf(":")+1)) + ".png";
-					resource = getResource(iconName);
-					BedCraftBeyond.logger.info(resource.toString());
-					buffered = getImageForResource(resource);
-					int passColour = item.getColorFromItemStack(stack, pass);
-
-					int[] data = new int[buffered.getWidth()*buffered.getHeight()];
-					buffered.getRGB(0,0, buffered.getWidth(),buffered.getHeight(), data, 0,tas.getIconWidth());
-					//buffered.getRGB(tas.getOriginX(),tas.getOriginY(), tas.getIconWidth(),tas.getIconHeight(), data, 0,tas.getIconWidth());
-					for(int rgb : data)
-						if(rgb!=0)
-						{
-							int coloured = rgb&0xffffff;//blendColoursToInt(rgb,passColour)&0xffffff;
-							if(coloured>0 /*&& !colourSet.contains(coloured)*/)
-								colourSet.add(coloured);
-						}
-				}
-
-			}
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
-
-		return colourSet;
-	}
-	public static int getAverageItemColour(ItemStack stack)
-	{
-		List<Integer> col = ClientUtils.getItemColours(stack);
-		if(col!=null && col.size()>0)
-		{
-			int rgb = 0x000000;
-			for(int rgb2 : col)
-				rgb = ClientUtils.blendColoursToInt(rgb, rgb2);
-			return rgb&0xffffff;
-		}
-		return 0xffffff;
-	}
+	
 	public static int getBlockColours(ItemStack stack)
 	{
 		int colour = Color.WHITE.getRGB();
@@ -108,16 +51,16 @@ public class ClientUtils {
 		//= item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
 		try{
 
-			IIcon icon = block.getIcon(0, stack.getItemDamage());
+			TextureAtlasSprite icon = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelForState(block.getStateFromMeta(item.getDamage(stack))).getParticleTexture();//getTexture(block.getDefaultState());
 
-			if(icon instanceof TextureAtlasSprite)
+			if(icon instanceof TextureAtlasSprite && !icon.getIconName().equals("missingno"))
 			{
 				TextureAtlasSprite tas = (TextureAtlasSprite) icon;
 				String iconName = tas.getIconName();
-				iconName = iconName.substring(0, Math.max(0,iconName.indexOf(":")+1)) + (item.getSpriteNumber()==0?"textures/blocks/":"textures/items/") + iconName.substring(Math.max(0,iconName.indexOf(":")+1)) + ".png";
+				iconName = iconName.substring(0, Math.max(0,iconName.indexOf(":")+1)) + "textures/" + iconName.substring(Math.max(0,iconName.indexOf(":")+1)) + ".png";
 				resource = getResource(iconName);
 				buffered = getImageForResource(resource);
-				int passColour = block.getRenderColor(stack.getItemDamage());
+				int passColour = block.getRenderColor(block.getStateFromMeta(stack.getItemDamage()));
 
 				/*int[] data = new int[buffered.getWidth()*buffered.getHeight()];
 				buffered.getRGB(0,0, buffered.getWidth(),buffered.getHeight(), data, 0,tas.getIconWidth());
@@ -132,10 +75,14 @@ public class ClientUtils {
 				colour = averageColor(buffered, 0, 0, tas.getIconWidth(), tas.getIconHeight()).getRGB();
 				colour = colour&0xffffff;
 			}
+			else
+			{
+				return -3;
+			}
 
 		}catch(Exception e)
 		{
-			//e.printStackTrace();
+			e.printStackTrace();
 			return -2;
 		}
 
@@ -206,59 +153,8 @@ public class ClientUtils {
 		int num = w * h;
 		return new Color((int)(sumr / num), (int)(sumg / num), (int)(sumb / num));
 	}
-	public static int getItemColours2(ItemStack stack)
-	{
-		int colour = Color.WHITE.getRGB();
-		Item item = stack.getItem();
 
-		ResourceLocation resource;
-		BufferedImage buffered;
-		//= item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
-		try{
-
-			for(int pass=0; pass<item.getRenderPasses(stack.getItemDamage()); pass++)
-			{
-				IIcon icon = item.getIcon(stack, pass);
-
-				if(icon instanceof TextureAtlasSprite)
-				{
-					TextureAtlasSprite tas = (TextureAtlasSprite) icon;
-					String iconName = tas.getIconName();
-					iconName = iconName.substring(0, Math.max(0,iconName.indexOf(":")+1)) + (item.getSpriteNumber()==0?"textures/blocks/":"textures/items/") + iconName.substring(Math.max(0,iconName.indexOf(":")+1)) + ".png";
-					resource = getResource(iconName);
-					buffered = getImageForResource(resource);
-					int passColour = item.getColorFromItemStack(stack, pass);
-
-					colour = averageColor(buffered, 0, 0, tas.getIconWidth(), tas.getIconHeight()).getRGB();
-					colour = colour&0xffffff;
-
-					/*int[] data = new int[buffered.getWidth()*buffered.getHeight()];
-					buffered.getRGB(0,0, buffered.getWidth(),buffered.getHeight(), data, 0,tas.getIconWidth());
-					//buffered.getRGB(tas.getOriginX(),tas.getOriginY(), tas.getIconWidth(),tas.getIconHeight(), data, 0,tas.getIconWidth());
-					for(int rgb : data)
-						if(rgb!=0)
-						{
-							int coloured = blendColoursToInt(rgb,passColour)&0xffffff;
-							if(coloured>0 && !colourSet.contains(coloured))
-								colour.add(coloured);
-						}*/
-				}
-
-			}
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
-
-		return colour;
-	}
-	public static int getAverageItemColour2(ItemStack stack)
-	{
-		int col = ClientUtils.getItemColours2(stack);
-
-		int rgb = 0xffffff;
-		col = ClientUtils.blendColoursToInt(rgb, col);
-		return col&0xffffff;
+	public static Minecraft mc() {
+		return Minecraft.getMinecraft();
 	}
 }
