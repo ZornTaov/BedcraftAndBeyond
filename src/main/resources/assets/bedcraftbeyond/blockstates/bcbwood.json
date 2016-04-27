@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "type=zorn": { "model": "bedcraftbeyond:plank/zorn" },
+        "type=xylex":  { "model": "bedcraftbeyond:plank/xylex" }
+    }
+}
