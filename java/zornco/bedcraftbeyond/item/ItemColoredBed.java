@@ -31,7 +31,7 @@ public class ItemColoredBed extends Item implements IName
 	public static final String[] colorNames = new String[] {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
 	@SideOnly(Side.CLIENT)
 	//protected IIcon[] bedIcon;
-	private ItemStack plankType;
+	protected ItemStack plankType;
 
 	public ItemColoredBed()
 	{
@@ -39,11 +39,11 @@ public class ItemColoredBed extends Item implements IName
 		this.setHasSubtypes(true);
 	}
 
-	/*@Override
-	public int getRenderPasses(int metadata)
+	
+	public int getDefaultColor()
 	{
-		return requiresMultipleRenderPasses() ? 3 : 1;
-	}*/
+		return 241;
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -113,7 +113,7 @@ public class ItemColoredBed extends Item implements IName
 	{
 		for (String plank :  PlankHelper.getPlankColorMap().keySet())
 		{
-			ItemStack bed = new ItemStack(par1, 1, 241);
+			ItemStack bed = new ItemStack(par1, 1, getDefaultColor());
 			bed.setTagCompound(new NBTTagCompound());
 			PlankHelper.addPlankInfo(bed.getTagCompound(), PlankHelper.plankItemStackfromString(plank));
 			par3List.add(bed);

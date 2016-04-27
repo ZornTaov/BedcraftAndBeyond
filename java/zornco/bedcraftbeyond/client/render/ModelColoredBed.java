@@ -26,10 +26,10 @@ public class ModelColoredBed extends ModelBase {
         this.plank1.addBox(-8.0F, -3.0F, -8.0F, 16, 0, 16, 0.0F);
         this.bedHead0 = new ModelRenderer(this, 0, 0);
         this.bedHead0.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.bedHead0.addBox(-8.0F, -9.0F, -8.0F, 16, 9, 16, 0.0F);
-        this.bedFoot0 = new ModelRenderer(this, 0, 32);
+        this.bedHead0.addBox(-8.0F, -9.0F, 0.0F, 16, 9, 8, 0.0F);
+        this.bedFoot0 = new ModelRenderer(this, 0, 31);
         this.bedFoot0.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.bedFoot0.addBox(-8.0F, -9.0F, -8.0F, 16, 9, 16, 0.0F);
+        this.bedFoot0.addBox(-8.0F, -9.0F, -8.0F, 16, 9, 24, 0.0F);
         /*this.bedHead1 = new ModelRenderer(this, 0, 0);
         this.bedHead1.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.bedHead1.addBox(-8.0F, -9.0F, -8.0F, 16, 9, 16, 0.0F);

@@ -16,7 +16,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
-import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.TileColoredBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
@@ -37,7 +36,7 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 	public void renderWorldBlock(TileEntity tile, IBlockAccess world, BlockPos pos,
 			Block block, double x, double y, double z) {
 
-		if (!(block instanceof BlockColoredBed)) {
+		if (!(block instanceof BlockColoredBed) || !(world.getBlockState(pos).getBlock() instanceof BlockColoredBed)) {
 			return;
 		}
 		Tessellator tessellator = Tessellator.getInstance();
@@ -71,10 +70,11 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 		GL11.glRotatef(dir.getHorizontalIndex() * (-90F), 0F, 1F, 0F);
 		//GL11.glTranslatef(-0.5F, 0, -0.5F);
 		for (int m = 0; m < bedTextures.length; m++) {
-			GL11.glDisable(GL11.GL_CULL_FACE);
 			if (!(tile instanceof TileColoredChestBed) && m == 3) {
 				break;
 			}
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			
 			//This will make your block brightness dependent from surroundings lighting.
 			float f = block.getMixedBrightnessForBlock(world, pos);
 			int l = world.getCombinedLight(pos, 0);

@@ -45,10 +45,12 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zornco.bedcraftbeyond.blocks.BlockBCBPlanks;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.BlockColoredChestBed;
+import zornco.bedcraftbeyond.blocks.BlockRainbowBed;
 import zornco.bedcraftbeyond.blocks.BlockRug;
 import zornco.bedcraftbeyond.blocks.BlockStoneBed;
 import zornco.bedcraftbeyond.blocks.TileColoredBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import zornco.bedcraftbeyond.blocks.TileRainbowBed;
 import zornco.bedcraftbeyond.blocks.TileStoneBed;
 import zornco.bedcraftbeyond.client.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.core.CommonProxy;
@@ -56,6 +58,7 @@ import zornco.bedcraftbeyond.item.ItemBCBPlank;
 import zornco.bedcraftbeyond.item.ItemColoredBed;
 import zornco.bedcraftbeyond.item.ItemColoredChestBed;
 import zornco.bedcraftbeyond.item.ItemDrawerKey;
+import zornco.bedcraftbeyond.item.ItemRainbowBed;
 import zornco.bedcraftbeyond.item.ItemRug;
 import zornco.bedcraftbeyond.item.ItemScissors;
 import zornco.bedcraftbeyond.item.ItemStoneBed;
@@ -64,13 +67,13 @@ import zornco.bedcraftbeyond.util.PlankHelper;
 @Mod(
 		modid = BedCraftBeyond.MOD_ID,
 		name = BedCraftBeyond.MOD_NAME,
-		version = "${version}",
+		version = BedCraftBeyond.VERSION,
 		acceptedMinecraftVersions = "[1.8.9,)")
 public class BedCraftBeyond {
 
 	public static final String MOD_ID = "bedcraftbeyond";
 	public static final String MOD_NAME = "BedCraft And Beyond";
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "${version}";
 	// The instance of your mod that Forge uses.
 	@Instance(BedCraftBeyond.MOD_ID)
 	public static BedCraftBeyond instance;
@@ -87,6 +90,7 @@ public class BedCraftBeyond {
 	public static Item bedItem;
 	public static Item chestBedItem;
 	public static Item stoneBedItem;
+	public static Item rainbowBedItem;
 	public static Item rugItem;
 	public static Item scissors;
 	public static Item drawerKey;
@@ -96,6 +100,7 @@ public class BedCraftBeyond {
 	public static Block bedBlock;
 	public static Block chestBedBlock;
 	public static Block stoneBedBlock;
+	public static Block rainbowBedBlock;
 
 	//ID's
 	public static int rugRI = -1;
@@ -112,12 +117,14 @@ public class BedCraftBeyond {
 		rugBlock = new BlockRug().setHardness(0.8F).setStepSound(Block.soundTypeCloth).setUnlocalizedName("rugBlock");
 		bedBlock = new BlockColoredBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setUnlocalizedName("CbedBlock");
 		chestBedBlock = new BlockColoredChestBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setUnlocalizedName("CCbedBlock");
-		stoneBedBlock = new BlockStoneBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setUnlocalizedName("SbedBlock");
+		stoneBedBlock = new BlockStoneBed().setHardness(1.0f).setStepSound(Block.soundTypeStone).setUnlocalizedName("SbedBlock");
+		rainbowBedBlock = new BlockRainbowBed().setHardness(1.0f).setStepSound(Block.soundTypeCloth).setUnlocalizedName("RbedBlock");
 		registerBlock(rugBlock, ItemRug.class);
 		registerBlock(plankBlock, ItemBCBPlank.class);
 		registerBlock(bedBlock);
 		registerBlock(chestBedBlock);
 		registerBlock(stoneBedBlock);
+		registerBlock(rainbowBedBlock);
 
 		/** Items **/
 		scissors = new ItemScissors();
@@ -126,12 +133,14 @@ public class BedCraftBeyond {
 		bedItem = new ItemColoredBed().setMaxStackSize(1).setUnlocalizedName("CbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		chestBedItem = new ItemColoredChestBed().setMaxStackSize(1).setUnlocalizedName("CCbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		stoneBedItem = new ItemStoneBed().setMaxStackSize(1).setUnlocalizedName("SbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+		rainbowBedItem = new ItemRainbowBed().setMaxStackSize(1).setUnlocalizedName("RbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		//registerItem(plankItem);
 		//rugItem = new ItemRug(GameRegistry.findBlock(BedCraftBeyond.MOD_ID, "rugBlock")).setUnlocalizedName("rugItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		//registerItem(rugItem);
 		registerItem(bedItem);
 		registerItem(chestBedItem);
 		registerItem(stoneBedItem);
+		registerItem(rainbowBedItem);
 		//registerItem(scissors);
 		proxy.registerModels();
 
@@ -147,6 +156,7 @@ public class BedCraftBeyond {
 		GameRegistry.registerTileEntity(TileColoredBed.class, "CbedTile");
 		GameRegistry.registerTileEntity(TileColoredChestBed.class, "CCbedTile");
 		GameRegistry.registerTileEntity(TileStoneBed.class, "SbedTile");
+		GameRegistry.registerTileEntity(TileRainbowBed.class, "RbedTile");
 		long start = System.currentTimeMillis();
 		OreDictionary.registerOre("plankWood", new ItemStack(BedCraftBeyond.plankBlock, 1, OreDictionary.WILDCARD_VALUE));
 		proxy.compilePlanks();

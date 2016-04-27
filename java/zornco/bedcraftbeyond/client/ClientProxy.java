@@ -31,6 +31,7 @@ import zornco.bedcraftbeyond.blocks.BlockRug;
 import zornco.bedcraftbeyond.blocks.BlockStoneBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
 import zornco.bedcraftbeyond.client.render.BlockBedRendererTESR;
+import zornco.bedcraftbeyond.client.render.TileRainbowBedRenderer;
 import zornco.bedcraftbeyond.client.render.TileStoneBedRenderer;
 import zornco.bedcraftbeyond.core.CommonProxy;
 import zornco.bedcraftbeyond.item.IName;
@@ -38,6 +39,7 @@ import zornco.bedcraftbeyond.item.ItemBCBPlank;
 import zornco.bedcraftbeyond.item.ItemColoredBed;
 import zornco.bedcraftbeyond.item.ItemColoredChestBed;
 import zornco.bedcraftbeyond.item.ItemDrawerKey;
+import zornco.bedcraftbeyond.item.ItemRainbowBed;
 import zornco.bedcraftbeyond.item.ItemRug;
 import zornco.bedcraftbeyond.item.ItemScissors;
 import zornco.bedcraftbeyond.item.ItemStoneBed;
@@ -52,6 +54,7 @@ public class ClientProxy extends CommonProxy {
 		//RenderingRegistry.registerBlockHandler(new BlockRugRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(zornco.bedcraftbeyond.blocks.TileStoneBed.class, new TileStoneBedRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(zornco.bedcraftbeyond.blocks.TileColoredBed.class, new BlockBedRendererTESR());
+		ClientRegistry.bindTileEntitySpecialRenderer(zornco.bedcraftbeyond.blocks.TileRainbowBed.class, new TileRainbowBedRenderer());
 	}
 
 	@Override
@@ -60,6 +63,7 @@ public class ClientProxy extends CommonProxy {
 		ModelLoader.setCustomStateMapper(BedCraftBeyond.bedBlock, (new StateMap.Builder()).ignore(new IProperty[] {BlockBed.OCCUPIED}).ignore(new IProperty[] {BlockBed.PART}).ignore(new IProperty[] {BlockBed.FACING}).build());
 		ModelLoader.setCustomStateMapper(BedCraftBeyond.chestBedBlock, (new StateMap.Builder()).ignore(new IProperty[] {BlockBed.OCCUPIED}).ignore(new IProperty[] {BlockBed.PART}).ignore(new IProperty[] {BlockBed.FACING}).build());
 		ModelLoader.setCustomStateMapper(BedCraftBeyond.stoneBedBlock, (new StateMap.Builder()).ignore(new IProperty[] {BlockBed.OCCUPIED}).ignore(new IProperty[] {BlockBed.PART}).ignore(new IProperty[] {BlockBed.FACING}).build());
+		ModelLoader.setCustomStateMapper(BedCraftBeyond.rainbowBedBlock, (new StateMap.Builder()).ignore(new IProperty[] {BlockBed.OCCUPIED}).ignore(new IProperty[] {BlockBed.PART}).ignore(new IProperty[] {BlockBed.FACING}).build());
 		/*ResourceLocation[] resLocs = new ResourceLocation[BlockBCBPlanks.EnumType.values().length];
 		for (int i = 0; i < resLocs.length; i++) {
 			resLocs[i] = new ResourceLocation(BedCraftBeyond.MOD_ID, "plank_" + BlockBCBPlanks.EnumType.byMetadata(i));
@@ -81,6 +85,8 @@ public class ClientProxy extends CommonProxy {
 			registerItemModel(BedCraftBeyond.bedItem, i, ((ItemColoredBed) BedCraftBeyond.bedItem).getName(), "inventory");
 			registerItemModel(BedCraftBeyond.chestBedItem, i, ((ItemColoredChestBed) BedCraftBeyond.chestBedItem).getName(), "inventory");
 		}
+
+		registerItemModel(BedCraftBeyond.rainbowBedItem, 255, ((ItemRainbowBed) BedCraftBeyond.rainbowBedItem).getName(), "inventory");
 		for (int i = 0; i < EnumDyeColor.values().length; i++) {
 			registerBlockModelAsItem(BedCraftBeyond.rugBlock, i, "rugBlock");
 			//ModelBakery.registerItemVariants(Item.getItemFromBlock(BedCraftBeyond.rugBlock), names);

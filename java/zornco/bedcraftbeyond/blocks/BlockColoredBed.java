@@ -219,7 +219,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
 		world.markBlockForUpdate(pos);
 		return true;
 	}
-	private boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
+	protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
 		if (worldIn.isRemote)
         {
             return true;
@@ -295,7 +295,7 @@ public class BlockColoredBed extends BlockBed implements ITileEntityProvider
         }
 	}
 
-    private EntityPlayer getPlayerInBed(World worldIn, BlockPos pos)
+	protected EntityPlayer getPlayerInBed(World worldIn, BlockPos pos)
     {
         for (EntityPlayer entityplayer : worldIn.playerEntities)
         {

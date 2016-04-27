@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.BlockStoneBed;
 import zornco.bedcraftbeyond.blocks.TileStoneBed;
 
 public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
@@ -21,15 +22,18 @@ public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
 
 	private ModelStoneBed stoneBedModel = new ModelStoneBed();
 
-	public void renderWorldBlock(TileEntity tile, IBlockAccess world, int i, int j, int k,
+	public void renderWorldBlock(TileEntity tile, IBlockAccess world, BlockPos pos,
 			Block block, double x, double y, double z) {
-
+		
+		if (!(block instanceof BlockStoneBed) || !(world.getBlockState(pos).getBlock() instanceof BlockStoneBed)) {
+			return;
+		}
 		Tessellator tessellator = Tessellator.getInstance();
-		boolean flag = !block.isBedFoot(world, new BlockPos(i, j, k));
+		boolean flag = !block.isBedFoot(world, pos);
 
 		//This will make your block brightness dependent from surroundings lighting.
-		int f = block.getMixedBrightnessForBlock(world, new BlockPos(i, j, k));
-		int l = world.getCombinedLight(new BlockPos(i, j, k), 0);
+		int f = block.getMixedBrightnessForBlock(world, pos);
+		int l = world.getCombinedLight(pos, 0);
 		int l1 = l % 65536;
 		int l2 = l / 65536;
 		//tessellator.getWorldRenderer().putBrightness4(f, f, f, f);
@@ -40,7 +44,7 @@ public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
         	int dir = MathHelper.floor_double((double)((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
         	world.setBlockMetadataWithNotify(x, y, z, dir, 0);*/
 
-		EnumFacing dir = block.getBedDirection(world, new BlockPos(i, j, k));		
+		EnumFacing dir = block.getBedDirection(world, pos);		
 
 		GL11.glPushMatrix();
 		switch(dir.getHorizontalIndex())
@@ -76,7 +80,7 @@ public class TileStoneBedRenderer extends TileEntitySpecialRenderer {
 		//This will move our renderer so that it will be on proper place in the world
 		TileStoneBed tileEntityYour = (TileStoneBed)tileEntity;
 		/*Note that true tile entity coordinates (tileEntity.xCoord, etc) do not match to render coordinates (d, etc) that are calculated as [true coordinates] - [player coordinates (camera coordinates)]*/
-		renderWorldBlock(tileEntityYour, tileEntity.getWorld(), tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), BedCraftBeyond.stoneBedBlock, (float)x, (float)y, (float)z);
+		renderWorldBlock(tileEntityYour, tileEntity.getWorld(), tileEntity.getPos(), BedCraftBeyond.stoneBedBlock, (float)x, (float)y, (float)z);
 		GL11.glPopMatrix();
 	}
 
