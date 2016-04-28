@@ -12,7 +12,5 @@ public class ItemScissors extends Item {
 		setRegistryName(BedCraftBeyond.MOD_ID, name);
 		setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		setMaxStackSize(1);
-
-		GameRegistry.register(this);
 	}
 }

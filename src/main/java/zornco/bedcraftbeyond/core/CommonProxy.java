@@ -6,8 +6,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import zornco.bedcraftbeyond.blocks.ContainerColoredChestBed;
-import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 public class CommonProxy implements IGuiHandler {
@@ -16,9 +14,7 @@ public class CommonProxy implements IGuiHandler {
 		// Nothing here as this is the server side proxy
 	}
 
-	public void registerModels() {
-
-	}
+	public void registerModels() { }
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -30,15 +26,16 @@ public class CommonProxy implements IGuiHandler {
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int X, int Y, int Z)
 	{
 		TileEntity te = world.getTileEntity(new BlockPos(X, Y, Z));
-		if (te != null && te instanceof TileColoredChestBed)
+		/*if (te != null && te instanceof TileBedcraftChestBed)
 		{
-			TileColoredChestBed teccb = (TileColoredChestBed) te;
-			return new ContainerColoredChestBed(player.inventory, teccb);
+			TileBedcraftChestBed teccb = (TileBedcraftChestBed) te;
+			// return new ContainerColoredChestBed(player.inventory, teccb);
 		}
 		else
 		{
 			return null;
-		}
+		} */
+		return null;
 	}
 
 	public World getClientWorld()

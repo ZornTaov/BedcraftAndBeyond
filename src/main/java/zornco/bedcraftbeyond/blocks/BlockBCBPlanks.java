@@ -21,11 +21,15 @@ public class BlockBCBPlanks extends Block
 {
     public static final PropertyEnum<BlockBCBPlanks.EnumType> Type = PropertyEnum.<BlockBCBPlanks.EnumType>create("type", BlockBCBPlanks.EnumType.class);
 
-    public BlockBCBPlanks()
-    {
+    public BlockBCBPlanks() {
         super(Material.wood);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(Type, BlockBCBPlanks.EnumType.ZORN));
-        this.setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+        setHardness(2.0F);
+        setResistance(5);
+        setUnlocalizedName("bcbwood");
+        setRegistryName(BedCraftBeyond.MOD_ID, "bcbwood");
+
+        setDefaultState(this.blockState.getBaseState().withProperty(Type, BlockBCBPlanks.EnumType.ZORN));
+        setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
     }
 
     /**

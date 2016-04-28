@@ -9,6 +9,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -16,8 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
-import zornco.bedcraftbeyond.blocks.TileColoredBed;
-import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import zornco.bedcraftbeyond.blocks.tiles.TileBedcraftBed;
+import zornco.bedcraftbeyond.util.BedUtils;
 import zornco.bedcraftbeyond.util.ClientUtils;
 
 public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
@@ -70,28 +73,23 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 		//GL11.glTranslatef(-0.5F, 0, -0.5F);
 		for (int m = 0; m < bedTextures.length; m++) {
 			GL11.glDisable(GL11.GL_CULL_FACE);
-			if (!(tile instanceof TileColoredChestBed) && m == 3) {
-				break;
-			}
+			// if (!(tile instanceof TileBedcraftChestBed) && m == 3) break;
+
 			//This will make your block brightness dependent from surroundings lighting.
 			// TODO: float f = block.getMixedBrightnessForBlock(world, pos);
 			int l = world.getCombinedLight(pos, 0);
 			int l1 = l % 65536;
 			int l2 = l / 65536;
-			//tessellator.setColorOpaque_F(f, f, f);
+
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, l1, l2);
-			setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, pos, m));
-			//BedCraftBeyond.logger.info(BlockColoredBed.getColorFromTilePerPass(world, pos, m));
+			setColorOpaque_I(BedUtils.getColorFromTilePerPass(world, pos, m));
+
 			this.bindTexture(bedTextures[m]);
-			this.coloredBedModel.render((Entity)null, (flag?1:0), m, 0.0F, 0.0F, 0.0F, 0.0625F);
-			if (tile instanceof TileColoredChestBed && m == 3) {
-				setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, pos, m-1));
-				this.bindTexture(bedTextures[m]);
-				this.coloredBedModel.render((Entity)null, (flag?1:0), m, 0.0F, 0.0F, 0.0F, 0.0625F);
-			}
+			this.coloredBedModel.render(null, (flag?1:0), m, 0.0F, 0.0F, 0.0F, 0.0625F);
+
 			GL11.glEnable(GL11.GL_CULL_FACE);
 			if (m == 2) {
-				ItemStack stack = ((TileColoredBed)tile).getPlankType(); 
+				ItemStack stack = ((TileBedcraftBed)tile).getPlankType();
 				if (stack != null) {
 
 					Item item = stack.getItem();
@@ -111,16 +109,16 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 				{
 					this.bindTexture(plankTextures);
 				}
-				if(tile instanceof TileColoredChestBed && m == 2) 
-					GL11.glTranslatef(0, (3.0F/16.0F), 0);
+
+				// if(tile instanceof TileBedcraftChestBed && m == 2) GL11.glTranslatef(0, (3.0F/16.0F), 0);
 
 				setColorOpaque_I(0xFFFFFF);
 				this.coloredBedModel.renderPlank(0.0625F);
-				setColorOpaque_I(BlockColoredBed.getColorFromTilePerPass(world, pos, m));
-				if(tile instanceof TileColoredChestBed && m == 2) 
-					GL11.glTranslatef(0, -(3.0F/16.0F), 0);
+				setColorOpaque_I(BedUtils.getColorFromTilePerPass(world, pos, m));
+				// if(tile instanceof TileBedcraftChestBed && m == 2) GL11.glTranslatef(0, -(3.0F/16.0F), 0);
 			}
 		}
+
 		setColorOpaque_I(0xFFFFFF);
 		GL11.glPopMatrix();
 	}
@@ -138,7 +136,7 @@ public class BlockBedRendererTESR extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float partialTicks, int destroyStage) {
 		GL11.glPushMatrix();
 		//This will move our renderer so that it will be on proper place in the world
-		TileColoredBed tileEntityYour = (TileColoredBed)tileEntity;
+		TileBedcraftBed tileEntityYour = (TileBedcraftBed)tileEntity;
 		/*Note that true tile entity coordinates (tileEntity.xCoord, etc) do not match to render coordinates (d, etc) that are calculated as [true coordinates] - [player coordinates (camera coordinates)]*/
 		renderWorldBlock(tileEntityYour, tileEntity.getWorld(), tileEntity.getPos(), tileEntityYour.getBlockType(), (float)x, (float)y, (float)z);
 		GL11.glPopMatrix();

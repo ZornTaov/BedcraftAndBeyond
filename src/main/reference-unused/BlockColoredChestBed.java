@@ -14,6 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.tiles.TileBedcraftChestBed;
 import zornco.bedcraftbeyond.item.ItemDrawerKey;
 
 import java.util.Random;
@@ -21,8 +22,10 @@ import java.util.Random;
 public class BlockColoredChestBed extends BlockColoredBed {
 
 	public BlockColoredChestBed() {
-		super();
 		this.isBlockContainer = true;
+		setHardness(1.0f);
+		setUnlocalizedName("beds.colored.withChest");
+		setRegistryName(BedCraftBeyond.MOD_ID, "colored_chest_bed");
 	}
 
 	@Override
@@ -32,7 +35,7 @@ public class BlockColoredChestBed extends BlockColoredBed {
 			super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
 			return true;
 		}
-		TileColoredChestBed tile = (TileColoredChestBed)world.getTileEntity(pos);
+		TileBedcraftChestBed tile = (TileBedcraftChestBed)world.getTileEntity(pos);
 
 		if (tile == null)
 		{
@@ -50,11 +53,6 @@ public class BlockColoredChestBed extends BlockColoredBed {
 	}
 
 	@Override
-	public Item getBedItem() {
-		return BedCraftBeyond.chestBedItem;
-	}
-
-	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{
 		super.onBlockAdded(world, pos, state);
@@ -63,7 +61,7 @@ public class BlockColoredChestBed extends BlockColoredBed {
 
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
-		return new TileColoredChestBed();
+		return new TileBedcraftChestBed();
 	}
 
 	/**
@@ -83,7 +81,7 @@ public class BlockColoredChestBed extends BlockColoredBed {
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
-		TileColoredChestBed tileentitychest = (TileColoredChestBed) world.getTileEntity(pos);
+		TileBedcraftChestBed tileentitychest = (TileBedcraftChestBed) world.getTileEntity(pos);
 		if (tileentitychest != null)
 		{
 			dropContent(0, tileentitychest, world, tileentitychest.getPos());
@@ -136,10 +134,5 @@ public class BlockColoredChestBed extends BlockColoredBed {
 		super.onBlockEventReceived(par1World, pos, state, par5, par6);
 		TileEntity tileentity = par1World.getTileEntity(pos);
 		return tileentity != null ? tileentity.receiveClientEvent(par5, par6) : false;
-	}
-
-	public String getName() {
-		// TODO: Forge registry changes
-		return "CCbedBlock";
 	}
 }

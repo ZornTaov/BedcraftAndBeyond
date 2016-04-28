@@ -41,14 +41,15 @@ public class BlockRug extends Block {
 
   public BlockRug() {
     super(Material.cloth);
+    setHardness(0.8f);
+    setUnlocalizedName("rugBlock");
+    setRegistryName(BedCraftBeyond.MOD_ID, "rug_block");
+
     this.setDefaultState(this.blockState.getBaseState()
             .withProperty(COLOR, EnumDyeColor.WHITE)
             .withProperty(FACING, EnumFacing.NORTH)
-            .withProperty(SHAPE, BlockRug.EnumShape.STRAIGHT)/*
-				.withProperty(EL, BlockRug.EnumSideHalf.NONE)
-				.withProperty(SL, BlockRug.EnumSideHalf.NONE)
-				.withProperty(WL, BlockRug.EnumSideHalf.NONE)
-				.withProperty(NL, BlockRug.EnumSideHalf.NONE)*/);
+            .withProperty(SHAPE, BlockRug.EnumShape.STRAIGHT));
+
     this.setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
   }
 

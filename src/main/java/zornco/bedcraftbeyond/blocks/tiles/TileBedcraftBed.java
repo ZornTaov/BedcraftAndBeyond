@@ -1,30 +1,33 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.blocks.tiles;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
-public class TileColoredBed extends TileEntity implements ITickable {
-	private int colorCombo;
+public class TileBedcraftBed extends TileEntity {
+	private EnumDyeColor blankets;
+	private EnumDyeColor sheets;
 	private int plankColor;
+
 	public ItemStack plankType;
 	public String plankTypeNS;
-	private boolean firstRun = true;
 
-	public TileColoredBed() {
-		super();
+	public TileBedcraftBed() {
+		blankets = EnumDyeColor.WHITE;
+		sheets = EnumDyeColor.WHITE;
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbttagcompound) {
 		super.writeToNBT(nbttagcompound);
-		nbttagcompound.setInteger("colorCombo", colorCombo);
+		nbttagcompound.setInteger("blankets", blankets.getMetadata());
+		nbttagcompound.setInteger("sheets", sheets.getMetadata());
 		nbttagcompound.setInteger("plankColor", plankColor);
 		PlankHelper.validatePlank(nbttagcompound, getPlankType());
 		if (plankTypeNS != null) {
@@ -35,7 +38,8 @@ public class TileColoredBed extends TileEntity implements ITickable {
 	@Override
 	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		super.readFromNBT(nbttagcompound);
-		this.colorCombo = nbttagcompound.getInteger("colorCombo");
+		this.blankets = EnumDyeColor.byMetadata(nbttagcompound.getInteger("blankets"));
+		this.sheets = EnumDyeColor.byMetadata(nbttagcompound.getInteger("sheets"));
 		this.plankColor = nbttagcompound.getInteger("plankColor");
 		this.plankType = PlankHelper.validatePlank(nbttagcompound);
 		this.plankTypeNS = nbttagcompound.getString("plankNameSpace");
@@ -79,24 +83,24 @@ public class TileColoredBed extends TileEntity implements ITickable {
 		return plankType.getDisplayName();
 	}
 
-	public void setColorCombo(int combo) {
-		this.colorCombo = combo;
+	public void setColorCombo(EnumDyeColor sheets, EnumDyeColor blankets) {
+		this.sheets = sheets;
+		this.blankets = blankets;
 		updateClients();
 	}
 
-	public int getColorCombo() {
-		return this.colorCombo;
+	public void setSheetsColor(EnumDyeColor color){
+		this.sheets = color;
+		updateClients();
 	}
 
-	@Override
-	public void update() {
-		if (!worldObj.isRemote
-				&& (worldObj.getWorldTime() % 20 == 0 || firstRun)) {
-			firstRun = false;
-			updateClients();
-
-		}
+	public void setBlanketsColor(EnumDyeColor color){
+		this.blankets = color;
+		updateClients();
 	}
+
+	public EnumDyeColor getSheetsColor(){ return this.sheets; }
+	public EnumDyeColor getBlanketsColor(){ return this.blankets; }
 
 	@Override
 	public final Packet getDescriptionPacket() {

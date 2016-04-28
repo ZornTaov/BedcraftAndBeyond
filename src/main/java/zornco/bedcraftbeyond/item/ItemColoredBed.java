@@ -2,39 +2,45 @@ package zornco.bedcraftbeyond.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
-import net.minecraft.block.state.BlockStateBase;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.blocks.TileColoredBed;
+import zornco.bedcraftbeyond.blocks.BlockColoredBed;
+import zornco.bedcraftbeyond.blocks.tiles.TileBedcraftBed;
+import zornco.bedcraftbeyond.util.BedUtils;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.util.List;
 
-public class ItemColoredBed extends Item implements IName
-{
+public class ItemColoredBed extends ItemBlock {
 
 	//public static final int[] woodColors = new int[] {0xaf8f58, 0x745733, 0xd0c084, 0xac7c58, 0xb46237, 0x442c15};
 	//public static final String[] woodType = new String[] {"oak", "spruce", "birch", "jungle", "acacia", "big_oak"};
-	public static final String[] colorNames = new String[] {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
+
 	@SideOnly(Side.CLIENT)
 	//protected IIcon[] bedIcon;
 	private ItemStack plankType;
 
-	public ItemColoredBed()
-	{
-		super();
+	// TODO: Fix block placement
+
+	public ItemColoredBed(Block b) {
+		super(b);
+		setUnlocalizedName("CbedItem");
+		setRegistryName(b.getRegistryName());
+		setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+		setMaxStackSize(1);
 		this.setHasSubtypes(true);
 	}
 
@@ -76,47 +82,20 @@ public class ItemColoredBed extends Item implements IName
 		return 0;
 	}
 
-	/*@Override
-	@SideOnly(Side.CLIENT)*/
-	/**
-	 * Gets an icon index based on an item's damage value and the given render pass
-	 */
-	/*public IIcon getIconFromDamageForRenderPass(int par1, int par2)
-	{
-		return this.bedIcon[par2];
-	}*/
-
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
-		this.bedIcon = new IIcon[3];
-		for (int i = 0; i < 3; i++) {
-			this.bedIcon[i] = par1IconRegister.registerIcon("bedcraftbeyond:bed_"+i);
-		}
-	}*/
-
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public boolean requiresMultipleRenderPasses()
-	{
-		return true;
-	}*/
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	@SideOnly(Side.CLIENT)
 	/**
 	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
 	 */
-	public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List)
+	public void getSubItems(Item item, CreativeTabs tab, List subItems)
 	{
 		for (String plank :  PlankHelper.getPlankColorMap().keySet())
 		{
-			ItemStack bed = new ItemStack(par1, 1, 241);
+			ItemStack bed = new ItemStack(item, 1, 241);
 			bed.setTagCompound(new NBTTagCompound());
 			PlankHelper.addPlankInfo(bed.getTagCompound(), PlankHelper.plankItemStackfromString(plank));
-			par3List.add(bed);
+			subItems.add(bed);
 		}
 	}
 
@@ -126,98 +105,60 @@ public class ItemColoredBed extends Item implements IName
 	/**
 	 * allows items to add custom lines of information to the mouseover description
 	 */
-	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+	public void addInformation(ItemStack stack, EntityPlayer player, List tags, boolean advanced)
 	{
-		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 2)]+" Blanket");
-		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 1)]+" Sheet");
+		tags.add(BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.BLANKETS).getName() +" Blanket");
+		tags.add(BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.SHEETS).getName() +" Sheet");
 
-		this.plankType = PlankHelper.validatePlank(par1ItemStack);
+		this.plankType = PlankHelper.validatePlank(stack);
 		String name = this.plankType.getDisplayName();
-		par3List.add(name+" Frame");
+		tags.add(name+" Frame");
 
 	}
 
-	/**
-	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
-	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ)
-	{
-		if (worldIn.isRemote)
-		{
-			return true;
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+		// pos is position block will be placed at (bottom half of bed)
+		// If we're on the client or not trying to place on the top of a block, fail
+		if (worldIn.isRemote)	return EnumActionResult.SUCCESS;
+		if (side != EnumFacing.UP) return EnumActionResult.FAIL;
+
+		boolean canPlaceBedHere = BedUtils.testBedPlacement(worldIn, playerIn, pos, stack);
+		if(!canPlaceBedHere) return EnumActionResult.FAIL;
+
+		BlockPos btmHalf = pos.up();
+		BlockPos topHalf = btmHalf.offset(playerIn.getHorizontalFacing());
+
+		// TODO: Look into possible fix for head versus foot state data being wrong
+		IBlockState bedFootState = BedCraftBeyond.coloredBedBlock.getDefaultState()
+						.withProperty(BlockBed.OCCUPIED, false)
+						.withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
+						.withProperty(BlockColoredBed.BlanketColor, BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.BLANKETS))
+						.withProperty(BlockColoredBed.SheetColor, BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.SHEETS))
+						.withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+
+		if (worldIn.setBlockState(btmHalf, bedFootState, 3)) {
+			IBlockState bedHeadState = bedFootState.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
+			worldIn.setBlockState(topHalf, bedHeadState, 3);
 		}
-		else if (side != EnumFacing.UP)
-		{
-			return false;
+
+		TileBedcraftBed tileBtmHalf = (TileBedcraftBed) worldIn.getTileEntity(btmHalf);
+		if (tileBtmHalf != null) {
+			tileBtmHalf.setBlanketsColor(BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.BLANKETS));
+			tileBtmHalf.setSheetsColor(BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.SHEETS));
+			tileBtmHalf.setPlankType(PlankHelper.validatePlank(stack));
 		}
-		else
-		{
-			IBlockState iblockstate = worldIn.getBlockState(pos);
-			Block block = iblockstate.getBlock();
-			boolean flag = block.isReplaceable(worldIn, pos);
 
-			if (!flag)
-			{
-				pos = pos.up();
-			}
-
-			int i = MathHelper.floor_double((double)(playerIn.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			EnumFacing enumfacing = EnumFacing.getHorizontal(i);
-			BlockPos blockpos = pos.offset(enumfacing);
-
-			if (playerIn.canPlayerEdit(pos, side, stack) && playerIn.canPlayerEdit(blockpos, side, stack))
-			{
-				boolean flag1 = worldIn.getBlockState(blockpos).getBlock().isReplaceable(worldIn, blockpos);
-				boolean flag2 = flag || worldIn.isAirBlock(pos);
-				boolean flag3 = flag1 || worldIn.isAirBlock(blockpos);
-
-				if (flag2 && flag3 &&
-								worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos.down(), EnumFacing.UP) &&
-								worldIn.getBlockState(blockpos.down()).isSideSolid(worldIn, blockpos.down(), EnumFacing.UP))
-				{
-					IBlockState iblockstate1 = BedCraftBeyond.bedBlock.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.FACING, enumfacing).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
-
-					if (worldIn.setBlockState(pos, iblockstate1, 3))
-					{
-						IBlockState iblockstate2 = iblockstate1.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
-						worldIn.setBlockState(blockpos, iblockstate2, 3);
-					}
-
-
-					TileColoredBed tile = (TileColoredBed)worldIn.getTileEntity(pos);
-					if (tile != null)
-					{
-						tile.setColorCombo(stack.getItemDamage());
-						tile.setPlankType(PlankHelper.validatePlank(stack));
-						//BedCraftBeyond.logger.info(tile.colorCombo+"");
-					}
-					TileColoredBed tile2 = (TileColoredBed)worldIn.getTileEntity(blockpos);
-					if (tile2 != null)
-					{
-						tile2.setColorCombo(stack.getItemDamage());
-						tile2.setPlankType(PlankHelper.validatePlank(stack));
-						//BedCraftBeyond.logger.info(tile2.colorCombo+"");
-					}
-					if(!playerIn.capabilities.isCreativeMode)
-						--stack.stackSize;
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
+		TileBedcraftBed tileTopHalf = (TileBedcraftBed) worldIn.getTileEntity(topHalf);
+		if (tileTopHalf != null) {
+			tileBtmHalf.setBlanketsColor(BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.BLANKETS));
+			tileBtmHalf.setSheetsColor(BedUtils.getColor(stack, BedUtils.EnumColoredBedPiece.SHEETS));
+			tileTopHalf.setPlankType(PlankHelper.validatePlank(stack));
 		}
-	}
-	*/
 
-	// TODO: Registry should have this now.
-	public String getName() {
-		return "CbedItem";
+		// If not creative mode, remove placer item
+		if(!playerIn.capabilities.isCreativeMode) --stack.stackSize;
+
+		return EnumActionResult.SUCCESS;
 	}
 }

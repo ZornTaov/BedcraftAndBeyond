@@ -1,9 +1,15 @@
 package zornco.bedcraftbeyond.item;
 
+import net.minecraft.block.Block;
+import zornco.bedcraftbeyond.BedCraftBeyond;
+
 public class ItemColoredChestBed extends ItemColoredBed {
 
-	public ItemColoredChestBed() {
-		super();
+	public ItemColoredChestBed(Block b) {
+		super(b);
+		setUnlocalizedName("CCbedItem");
+		setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+		setMaxStackSize(1);
 	}
 
 	/**
@@ -52,7 +58,7 @@ public class ItemColoredChestBed extends ItemColoredBed {
 						worldIn.setBlockState(blockpos, iblockstate2, 3);
 					}
 
-					TileColoredChestBed tile = (TileColoredChestBed)worldIn.getTileEntity(pos);
+					TileBedcraftChestBed tile = (TileBedcraftChestBed)worldIn.getTileEntity(pos);
 					if (tile != null)
 					{
 						tile.setColorCombo(stack.getItemDamage());
@@ -60,7 +66,7 @@ public class ItemColoredChestBed extends ItemColoredBed {
 						tile.setPlankType(PlankHelper.validatePlank(stack));
 						//BedCraftBeyond.logger.info(tile.colorCombo+"");
 					}
-					TileColoredChestBed tile2 = (TileColoredChestBed)worldIn.getTileEntity(blockpos);
+					TileBedcraftChestBed tile2 = (TileBedcraftChestBed)worldIn.getTileEntity(blockpos);
 					if (tile2 != null)
 					{
 						tile2.setColorCombo(stack.getItemDamage());

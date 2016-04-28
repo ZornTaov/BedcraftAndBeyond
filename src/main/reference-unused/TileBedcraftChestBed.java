@@ -1,12 +1,11 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.blocks.tiles;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -15,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 // TODO: IItemHandler support instead
-public class TileColoredChestBed extends TileColoredBed implements IInventory {
+public class TileBedcraftChestBed extends TileBedcraftBed implements ITickable, IInventory {
 	private int ticksSinceSync = -1;
 	public ItemStack[] chestContents;
 	public float prevLidAngle;
@@ -24,8 +23,11 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	private boolean inventoryTouched;
 	public String ownerName = "";
 
-	public TileColoredChestBed() {
+	public InventoryBedChest inventory;
+
+	public TileBedcraftChestBed() {
 		super();
+		this.inventory = new InventoryBedChest();
 		this.chestContents = new ItemStack[getSizeInventory()];
 	}
 	@Override
@@ -71,7 +73,6 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void update() {
-		super.update();
 		if (worldObj != null && !this.worldObj.isRemote && this.numUsingPlayers != 0 && (this.ticksSinceSync + pos.hashCode()) % 200 == 0)
 		{
 			this.numUsingPlayers = 0;

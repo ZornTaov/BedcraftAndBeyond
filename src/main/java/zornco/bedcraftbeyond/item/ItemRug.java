@@ -1,15 +1,20 @@
 package zornco.bedcraftbeyond.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.blocks.BlockRug;
 
 import java.util.List;
 
-public class ItemRug extends ItemBlock implements IName {
+public class ItemRug extends ItemBlock {
 
 	public static final String[] rugColorNames = new String[] {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
 	//public static final String[] rugIconNames = new String[] {"rug_black", "rug_red", "rug_green", "rug_brown", "rug_blue", "rug_purple", "rug_cyan", "rug_silver", "rug_gray", "rug_pink", "rug_lime", "rug_yellow", "rug_lightBlue", "rug_magenta", "rug_orange", "rug_white"};
@@ -190,40 +195,10 @@ public class ItemRug extends ItemBlock implements IName {
 
 		return par1World.canPlaceEntityOnSide(this.block, par2, par3, par4, false, par5, (Entity)null, par7ItemStack);
 	}*/
-	@Override
-	public String getUnlocalizedName()
-	{
-		return this.block.getUnlocalizedName();
-	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-
-	/**
-	 * gets the CreativeTab this item is displayed on
-	 */
-	public CreativeTabs getCreativeTab()
-	{
-		return this.block.getCreativeTabToDisplayOn();
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * Called to actually place the block, after the location is determined
-	 * and all permission checks have been made.
-	 *
-	 * @param stack The item stack that was used to place the block. This can be changed inside the method.
-	 * @param player The player who is placing the block. Can be null if the block is not being placed by a player.
-	 * @param side The side the player (or machine) right-clicked on.
-	 */
-	/*public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
-	{
-		if (!world.setBlock(x, y, z, this.block, metadata, 3))
+	public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+		/*if (!world.setBlock(x, y, z, this.block, metadata, 3))
 		{
 			return false;
 		}
@@ -234,6 +209,7 @@ public class ItemRug extends ItemBlock implements IName {
 			this.block.onPostBlockPlaced(world, x, y, z, metadata);
 		}
 
-		return true;
-	}*/
+		return true; */
+		return false;
+	}
 }

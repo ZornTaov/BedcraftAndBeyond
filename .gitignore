@@ -50,3 +50,14 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+run/
+out/
+gradle/
+eclipse/
+libs/
+Bedcraft.iml
+Bedcraft.ipr
+Bedcraft.iws
+build.gradle
+gradlew
+gradlew.bat
