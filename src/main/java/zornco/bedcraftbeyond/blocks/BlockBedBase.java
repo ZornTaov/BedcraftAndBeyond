@@ -1,30 +1,33 @@
 package zornco.bedcraftbeyond.blocks;
 
 import net.minecraft.block.BlockBed;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenHell;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.blocks.tiles.TileBedcraftBed;
-import zornco.bedcraftbeyond.util.BedUtils;
+import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
+import java.util.BitSet;
 import java.util.Random;
 
-public class BlockBedBase extends BlockBed {
+public abstract class BlockBedBase extends BlockBed {
 
   protected Random random;
 
@@ -47,8 +50,8 @@ public class BlockBedBase extends BlockBed {
   @Override
   public void onBlockHarvested(World world, BlockPos pos, IBlockState meta, EntityPlayer player) {
     if (!player.capabilities.isCreativeMode) {
-      TileBedcraftBed tile = (TileBedcraftBed) world.getTileEntity(pos);
-      ItemStack itemstack = new ItemStack(BedCraftBeyond.bedItem, 1);
+      TileColoredBed tile = (TileColoredBed) world.getTileEntity(pos);
+      ItemStack itemstack = new ItemStack(BedCraftBeyond.coloredBedItem, 1);
       ItemStack plank = tile.getPlankType();
       NBTTagCompound nbt = new NBTTagCompound();
       //PlankHelper.validatePlank(nbt, tile.getPlankType());
@@ -92,62 +95,56 @@ public class BlockBedBase extends BlockBed {
     return true;
   }
 
-  private boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
-    if (worldIn.isRemote) {
-      return true;
-    } else {
-      if (state.getValue(PART) != BlockBed.EnumPartType.HEAD) {
-        pos = pos.offset(state.getValue(FACING));
-        state = worldIn.getBlockState(pos);
+  protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
+    if (worldIn.isRemote) return true;
 
-        if (state.getBlock() != this) {
+    if (state.getValue(PART) != BlockBed.EnumPartType.HEAD) {
+      pos = pos.offset(state.getValue(FACING));
+      state = worldIn.getBlockState(pos);
+
+      if (state.getBlock() != this) return true;
+    }
+
+    if (worldIn.provider.canRespawnHere() && !worldIn.getBiomeGenForCoords(pos).getRegistryName().equals("hell")) {
+      if (state.getValue(OCCUPIED).booleanValue()) {
+        EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
+
+        if (entityplayer != null) {
+          playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.occupied"));
           return true;
         }
+
+        state = state.withProperty(OCCUPIED, Boolean.valueOf(false));
+        worldIn.setBlockState(pos, state, 2);
       }
-      NBTTagCompound compound = new NBTTagCompound();
-      TileBedcraftBed te = (TileBedcraftBed) worldIn.getTileEntity(pos);
-      te.writeToNBT(compound);
-      if (worldIn.provider.canRespawnHere() && false /* IS HELL */) {
-        if (state.getValue(OCCUPIED).booleanValue()) {
-          EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
 
-          if (entityplayer != null) {
-            playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.occupied"));
-            return true;
-          }
-
-          state = state.withProperty(OCCUPIED, Boolean.valueOf(false));
-          worldIn.setBlockState(pos, state, 2);
-          ((TileBedcraftBed) worldIn.getTileEntity(pos)).readFromNBT(compound);
-        }
-
-        EntityPlayer.EnumStatus entityplayer$enumstatus = playerIn.trySleep(pos);
-
-        if (entityplayer$enumstatus == EntityPlayer.EnumStatus.OK) {
+      EntityPlayer.EnumStatus status = playerIn.trySleep(pos);
+      switch(status){
+        case OK:
           state = state.withProperty(OCCUPIED, Boolean.valueOf(true));
           worldIn.setBlockState(pos, state, 2);
-          worldIn.getTileEntity(pos).readFromNBT(compound);
-          return true;
-        } else {
-          if (entityplayer$enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
-            playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.noSleep"));
-          } else if (entityplayer$enumstatus == EntityPlayer.EnumStatus.NOT_SAFE) {
-            playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
-          }
+          break;
 
-          return true;
-        }
-      } else {
-        worldIn.setBlockToAir(pos);
-        BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
+        case NOT_POSSIBLE_NOW:
+          playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.noSleep"));
+          break;
 
-        if (worldIn.getBlockState(blockpos).getBlock() == this) {
-          worldIn.setBlockToAir(blockpos);
-        }
-
-        worldIn.newExplosion(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, true);
-        return true;
+        case NOT_SAFE:
+          playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
+          break;
       }
+
+      return true;
+    } else {
+      worldIn.setBlockToAir(pos);
+      BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
+
+      if (worldIn.getBlockState(blockpos).getBlock() == this) {
+        worldIn.setBlockToAir(blockpos);
+      }
+
+      worldIn.newExplosion(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, true);
+      return true;
     }
   }
 
@@ -180,12 +177,42 @@ public class BlockBedBase extends BlockBed {
    */
   @Override
   public Item getItemDropped(IBlockState par1, Random par2Random, int par3) {
-    return par1.getValue(PART) == BlockBed.EnumPartType.HEAD ? null : BedCraftBeyond.bedItem;
+    return par1.getValue(PART) == BlockBed.EnumPartType.HEAD ? getBedItem(par1) : null;
+  }
+
+
+
+  @Override
+  protected BlockStateContainer createBlockState() {
+    return new ExtendedBlockState(this, new IProperty[]{ PART, OCCUPIED }, new IUnlistedProperty[0] );
+  }
+
+  // States - rightmost is occupied, next is part (true = head)
+  @Override
+  public IBlockState getStateFromMeta(int meta) {
+    IBlockState state = getDefaultState();
+    if((meta & 1) == 1) state = state.withProperty(BlockBed.OCCUPIED, true);
+    state = state.withProperty(BlockBed.PART, ((meta & 10) == 1) ? EnumPartType.HEAD : EnumPartType.FOOT);
+    return state;
   }
 
   @Override
-  public TileEntity createTileEntity(World world, IBlockState state) {
-    return new TileBedcraftBed();
+  public int getMetaFromState(IBlockState state) {
+    int meta = 0;
+    if(state.getValue(BlockBed.OCCUPIED)) meta = meta | 1;
+    if(state.getValue(BlockBed.PART) == EnumPartType.HEAD) meta = meta | 10;
+    return meta;
   }
 
+  @Override
+  public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+    if(world.setBlockToAir(pos)) {
+      world.removeTileEntity(pos);
+      return true;
+    }
+
+    return false;
+  }
+
+  public abstract Item getBedItem(IBlockState state);
 }

@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond.item;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,15 +10,11 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.blocks.BlockColoredBed;
-import zornco.bedcraftbeyond.blocks.tiles.TileBedcraftBed;
 import zornco.bedcraftbeyond.util.BedUtils;
-import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.util.List;
 
@@ -79,7 +74,6 @@ public class ItemStoneBed extends Item {
 
     IBlockState bedFootState = BedCraftBeyond.stoneBedBlock.getDefaultState()
             .withProperty(BlockBed.OCCUPIED, false)
-            .withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
             .withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 
     if (worldIn.setBlockState(btmHalf, bedFootState, 3)) {

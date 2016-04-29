@@ -8,65 +8,56 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
-public class TileBedcraftBed extends TileEntity {
+// This tile is only to be used ONCE on beds!
+// Place it on the head of the bed. Use BlockColoredBed.getTileEntity anywhere on a bed to fetch this instance.
+public class TileColoredBed extends TileEntity {
 	private EnumDyeColor blankets;
 	private EnumDyeColor sheets;
 	private int plankColor;
+	public EnumFacing facing;
+	public ResourceLocation plankType;
 
-	public ItemStack plankType;
-	public String plankTypeNS;
-
-	public TileBedcraftBed() {
+	public TileColoredBed() {
+		facing = EnumFacing.NORTH;
 		blankets = EnumDyeColor.WHITE;
 		sheets = EnumDyeColor.WHITE;
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbttagcompound) {
-		super.writeToNBT(nbttagcompound);
-		nbttagcompound.setInteger("blankets", blankets.getMetadata());
-		nbttagcompound.setInteger("sheets", sheets.getMetadata());
-		nbttagcompound.setInteger("plankColor", plankColor);
-		PlankHelper.validatePlank(nbttagcompound, getPlankType());
-		if (plankTypeNS != null) {
-			nbttagcompound.setString("plankNameSpace", plankTypeNS);
-		}
+	public void writeToNBT(NBTTagCompound tags) {
+		super.writeToNBT(tags);
+		tags.setInteger("blankets", blankets.getMetadata());
+		tags.setInteger("sheets", sheets.getMetadata());
+		tags.setInteger("plankColor", plankColor);
+		tags.setString("facing", facing.getName());
+
+		// TODO: Fix plank type
+		PlankHelper.validatePlank(tags, getPlankType());
+		if (plankType != null) tags.setString("plankType", plankType.toString());
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbttagcompound) {
-		super.readFromNBT(nbttagcompound);
-		this.blankets = EnumDyeColor.byMetadata(nbttagcompound.getInteger("blankets"));
-		this.sheets = EnumDyeColor.byMetadata(nbttagcompound.getInteger("sheets"));
-		this.plankColor = nbttagcompound.getInteger("plankColor");
-		this.plankType = PlankHelper.validatePlank(nbttagcompound);
-		this.plankTypeNS = nbttagcompound.getString("plankNameSpace");
+	public void readFromNBT(NBTTagCompound tags) {
+		super.readFromNBT(tags);
+		this.blankets = EnumDyeColor.byMetadata(tags.getInteger("blankets"));
+		this.sheets = EnumDyeColor.byMetadata(tags.getInteger("sheets"));
+		this.plankColor = tags.getInteger("plankColor");
+		this.facing = EnumFacing.byName(tags.getString("facing"));
+		// this.plankType = PlankHelper.validatePlank(tags.getTag("plankType"));
+		// TODO: Fix plank type here
+		this.plankType = new ResourceLocation("minecraft", "planks@0");
 	}
 
-	public ItemStack getPlankType() {
-		if (plankTypeNS != null) {
-			return PlankHelper.plankItemStackfromString(plankTypeNS);
-		}
-		if (plankType != null) {
-			plankTypeNS = PlankHelper.plankStringfromItemStack(plankType);
-			return plankType;
-		}
-		return new ItemStack(Blocks.planks, 1, 0);
+	public ItemStack getPlankType(){
+		return new ItemStack(Blocks.planks, 1);
 	}
 
 	public void setPlankType(ItemStack plankType) {
-		this.plankType = plankType;
-		updateClients();
-	}
-
-	public String getPlankTypeNS() {
-		return plankTypeNS;
-	}
-
-	public void setPlankTypeNS(String plank) {
-		this.plankTypeNS = plank;
+		this.plankType = plankType.getItem().getRegistryName();
 		updateClients();
 	}
 
@@ -76,16 +67,6 @@ public class TileBedcraftBed extends TileEntity {
 
 	public void setPlankColor(int plankColor) {
 		this.plankColor = plankColor;
-		updateClients();
-	}
-
-	public String getPlankName() {
-		return plankType.getDisplayName();
-	}
-
-	public void setColorCombo(EnumDyeColor sheets, EnumDyeColor blankets) {
-		this.sheets = sheets;
-		this.blankets = blankets;
 		updateClients();
 	}
 

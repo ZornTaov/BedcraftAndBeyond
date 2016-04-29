@@ -1,7 +1,6 @@
 package zornco.bedcraftbeyond.util;
 
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
@@ -12,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
-import zornco.bedcraftbeyond.blocks.tiles.TileBedcraftBed;
+import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
 
 public class BedUtils {
 
@@ -63,14 +62,14 @@ public class BedUtils {
     switch (piece){
       case BLANKETS:
         toChange = BlockColoredBed.BlanketColor;
-        ((TileBedcraftBed) w.getTileEntity(pos)).setBlanketsColor(color);
-        ((TileBedcraftBed) w.getTileEntity(footPos)).setBlanketsColor(color);
+        ((TileColoredBed) w.getTileEntity(pos)).setBlanketsColor(color);
+        ((TileColoredBed) w.getTileEntity(footPos)).setBlanketsColor(color);
         break;
 
       case SHEETS:
         toChange = BlockColoredBed.SheetColor;
-        ((TileBedcraftBed) w.getTileEntity(pos)).setSheetsColor(color);
-        ((TileBedcraftBed) w.getTileEntity(footPos)).setSheetsColor(color);
+        ((TileColoredBed) w.getTileEntity(pos)).setSheetsColor(color);
+        ((TileColoredBed) w.getTileEntity(footPos)).setSheetsColor(color);
         break;
     }
 
@@ -79,13 +78,5 @@ public class BedUtils {
 
     stateFoot = stateFoot.withProperty(toChange, color);
     w.setBlockState(footPos, stateFoot, 3);
-  }
-
-  public static int getPlankColorFromTile(IBlockAccess par1World, BlockPos pos) {
-    TileBedcraftBed tile = (TileBedcraftBed) par1World.getTileEntity(pos);
-    if (tile != null && tile.getPlankTypeNS() != null) {
-      return PlankHelper.getPlankColor(tile.getPlankTypeNS());
-    }
-    return PlankHelper.oakColor;
   }
 }

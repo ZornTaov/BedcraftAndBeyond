@@ -2,6 +2,7 @@ package zornco.bedcraftbeyond.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
@@ -24,6 +25,8 @@ public class ItemRug extends ItemBlock {
 
 	public ItemRug(Block par2) {
 		super(par2);
+		this.setRegistryName(par2.getRegistryName());
+		this.setUnlocalizedName("rug");
 		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 	}
@@ -38,18 +41,9 @@ public class ItemRug extends ItemBlock {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack)
-	{
+	public String getUnlocalizedName(ItemStack stack) {
 		return super.getUnlocalizedName() + "." + ItemRug.rugColorNames[BlockRug.getBlockFromDye(stack.getItemDamage())];
 	}
-
-	// TODO: Move to IItemColor
-	/*@Override
-	@SideOnly(Side.CLIENT)
-	public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
-	{
-		return ItemDye.dyeColors[EnumDyeColor.byDyeDamage(par1ItemStack.getItemDamage()).getMetadata()];
-	}*/
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override

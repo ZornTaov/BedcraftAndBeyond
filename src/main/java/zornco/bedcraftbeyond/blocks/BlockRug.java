@@ -321,7 +321,7 @@ public class BlockRug extends Block {
     }
   }
 
-  public static enum EnumShape implements IStringSerializable {
+  public enum EnumShape implements IStringSerializable {
     BLOCK("block"),
     SLAB("slab"),
     STRAIGHT("straight"),
@@ -357,10 +357,6 @@ public class BlockRug extends Block {
     public String toString() {
       return this.name;
     }
-
-    // TODO: Forge registry
-    public String getName() {
-      return this.name;
-    }
+    public String getName(){ return this.name; }
   }
 }
