@@ -57,13 +57,6 @@ public class ItemColoredBed extends ItemBlock implements IItemColor {
 				PlankHelper.addPlankInfo(bed.getTagCompound(), PlankHelper.plankItemStackfromString(plank));
 				subItems.add(bed);
 			}
-		} else {
-			ItemStack bed = new ItemStack(item, 1);
-			NBTTagCompound bedColors = new NBTTagCompound();
-			bedColors.setInteger("blankets", EnumDyeColor.RED.getMetadata());
-			bedColors.setInteger("sheets", EnumDyeColor.WHITE.getMetadata());
-			bed.setTagCompound(bedColors);
-			subItems.add(bedColors);
 		}
 	}
 
@@ -102,11 +95,13 @@ public class ItemColoredBed extends ItemBlock implements IItemColor {
 						.withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
 						.withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 
+		// TODO: Figure out why placement is not working. WTF.
 		if (worldIn.setBlockState(btmHalf, bedFootState, 3)) {
 			IBlockState bedHeadState = bedFootState
-							.withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite())
+							// .withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite())
 							.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
-			worldIn.setBlockState(topHalf, bedHeadState, 3);
+			boolean success = worldIn.setBlockState(topHalf, bedHeadState, 3);
+			if(!success) return EnumActionResult.FAIL;
 		}
 
 		TileColoredBed tileTopHalf = BlockColoredBed.getTileEntity(worldIn, topHalf);

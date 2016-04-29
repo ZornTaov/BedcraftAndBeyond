@@ -57,6 +57,7 @@ public class BedCraftBeyond {
 
   public static Logger logger = LogManager.getLogger(BedCraftBeyond.MOD_ID);
 
+  // Items
   public static Item coloredBedItem;
   public static Item chestBedItem;
   public static Item stoneBedItem;
@@ -64,7 +65,7 @@ public class BedCraftBeyond {
   public static Item scissors;
   public static Item drawerKey;
 
-  public static Block plankBlock;
+  // Blocks
   public static Block rugBlock;
   public static Block coloredBedBlock;
   public static Block stoneBedBlock;
@@ -82,7 +83,6 @@ public class BedCraftBeyond {
     stoneBedBlock = new BlockStoneBed();
     coloredBedBlock = new BlockColoredBed();
 
-    GameRegistry.register(plankBlock);
     GameRegistry.register(rugBlock);
     GameRegistry.register(stoneBedBlock);
     GameRegistry.register(coloredBedBlock);
@@ -114,11 +114,8 @@ public class BedCraftBeyond {
     NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
 
     GameRegistry.registerTileEntity(TileColoredBed.class, "CbedTile");
-    // GameRegistry.registerTileEntity(TileBedcraftChestBed.class, "CCbedTile");
 
     long start = System.currentTimeMillis();
-
-    OreDictionary.registerOre("plankWood", new ItemStack(BedCraftBeyond.plankBlock, 1, OreDictionary.WILDCARD_VALUE));
 
     proxy.compilePlanks();
 
@@ -193,7 +190,7 @@ public class BedCraftBeyond {
             'S', "blockStone",
             's', new ItemStack(Blocks.stone_slab, 1, 0)
     ));
-    
+
     ++recipesAdded;
 
     long elapsedTimeMillis = System.currentTimeMillis() - start;

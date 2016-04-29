@@ -40,6 +40,9 @@ public class BlockColoredBed extends BlockBedBase {
     setRegistryName(BedCraftBeyond.MOD_ID, "colored_bed");
     setUnlocalizedName("beds.colored");
     setDefaultState(getDefaultState()
+            .withProperty(FACING, EnumFacing.NORTH)
+            .withProperty(OCCUPIED, false)
+            .withProperty(PART, EnumPartType.HEAD)
             .withProperty(HasStorage, false)
             .withProperty(BlanketColor, EnumDyeColor.WHITE)
             .withProperty(SheetColor, EnumDyeColor.WHITE));
@@ -104,7 +107,7 @@ public class BlockColoredBed extends BlockBedBase {
   public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
     if(worldIn.getTileEntity(pos) == null) return state;
 
-    TileColoredBed bed = (TileColoredBed) getTileEntity(worldIn, pos);
+    TileColoredBed bed = getTileEntity(worldIn, pos);
     try {
       state = state.withProperty(BlanketColor, bed.getBlanketsColor());
       state = state.withProperty(SheetColor, bed.getSheetsColor());

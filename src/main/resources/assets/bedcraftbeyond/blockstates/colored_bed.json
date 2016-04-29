@@ -1,14 +1,13 @@
 {
     "forge_marker": 1,
+    "defaults": {},
     "variants": {
-        "normal": [{ "model": "stone" }],
+        "normal": [{ }],
         "facing": {
             "north": {},
             "south": {},
             "east": {},
-            "west": {},
-            "up": {},
-            "down": {}
+            "west": {}
         },
 
         "part": {

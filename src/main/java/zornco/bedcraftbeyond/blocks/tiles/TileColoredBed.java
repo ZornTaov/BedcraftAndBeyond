@@ -18,11 +18,9 @@ public class TileColoredBed extends TileEntity {
 	private EnumDyeColor blankets;
 	private EnumDyeColor sheets;
 	private int plankColor;
-	public EnumFacing facing;
 	public ResourceLocation plankType;
 
 	public TileColoredBed() {
-		facing = EnumFacing.NORTH;
 		blankets = EnumDyeColor.WHITE;
 		sheets = EnumDyeColor.WHITE;
 	}
@@ -33,7 +31,6 @@ public class TileColoredBed extends TileEntity {
 		tags.setInteger("blankets", blankets.getMetadata());
 		tags.setInteger("sheets", sheets.getMetadata());
 		tags.setInteger("plankColor", plankColor);
-		tags.setString("facing", facing.getName());
 
 		// TODO: Fix plank type
 		PlankHelper.validatePlank(tags, getPlankType());
@@ -46,7 +43,6 @@ public class TileColoredBed extends TileEntity {
 		this.blankets = EnumDyeColor.byMetadata(tags.getInteger("blankets"));
 		this.sheets = EnumDyeColor.byMetadata(tags.getInteger("sheets"));
 		this.plankColor = tags.getInteger("plankColor");
-		this.facing = EnumFacing.byName(tags.getString("facing"));
 		// this.plankType = PlankHelper.validatePlank(tags.getTag("plankType"));
 		// TODO: Fix plank type here
 		this.plankType = new ResourceLocation("minecraft", "planks@0");

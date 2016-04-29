@@ -180,27 +180,26 @@ public abstract class BlockBedBase extends BlockBed {
     return par1.getValue(PART) == BlockBed.EnumPartType.HEAD ? getBedItem(par1) : null;
   }
 
-
-
   @Override
   protected BlockStateContainer createBlockState() {
-    return new ExtendedBlockState(this, new IProperty[]{ PART, OCCUPIED }, new IUnlistedProperty[0] );
+    return new ExtendedBlockState(this, new IProperty[]{ PART, FACING, OCCUPIED }, new IUnlistedProperty[0] );
   }
 
   // States - rightmost is occupied, next is part (true = head)
   @Override
   public IBlockState getStateFromMeta(int meta) {
     IBlockState state = getDefaultState();
-    if((meta & 1) == 1) state = state.withProperty(BlockBed.OCCUPIED, true);
-    state = state.withProperty(BlockBed.PART, ((meta & 10) == 1) ? EnumPartType.HEAD : EnumPartType.FOOT);
+    state = state.withProperty(FACING, EnumFacing.getHorizontal(meta));
+    if((meta & 4) == 1) state = state.withProperty(BlockBed.OCCUPIED, true);
+    state = state.withProperty(BlockBed.PART, ((meta & 8) == 1) ? EnumPartType.HEAD : EnumPartType.FOOT);
     return state;
   }
 
   @Override
   public int getMetaFromState(IBlockState state) {
-    int meta = 0;
-    if(state.getValue(BlockBed.OCCUPIED)) meta = meta | 1;
-    if(state.getValue(BlockBed.PART) == EnumPartType.HEAD) meta = meta | 10;
+    int meta = state.getValue(FACING).getHorizontalIndex();
+    if(state.getValue(BlockBed.OCCUPIED)) meta |= 4;
+    if(state.getValue(BlockBed.PART) == EnumPartType.HEAD) meta |= 8;
     return meta;
   }
 

@@ -1,9 +1,9 @@
 {
 	"parent": "builtin/generated",
 	"textures": {
-		"layer0": "BedCraftBeyond:items/bed_0",
-		"layer1": "BedCraftBeyond:items/bed_1",
-		"layer2": "BedCraftBeyond:items/bed_2"
+		"layer0": "BedCraftBeyond:items/bed_blankets",
+		"layer1": "BedCraftBeyond:items/bed_sheets",
+		"layer2": "BedCraftBeyond:items/bed_foot"
 	},
 	"display": {
 		"thirdperson": {

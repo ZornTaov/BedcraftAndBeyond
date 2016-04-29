@@ -20,43 +20,11 @@ import java.util.List;
 
 public class ItemStoneBed extends Item {
 
-  //private IIcon[] stoneBedIcon;
-  private int bedKinds = 1;
-
   public ItemStoneBed() {
-    setRegistryName(BedCraftBeyond.MOD_ID, "SbedItem");
-    setUnlocalizedName("SbedItem");
+    setRegistryName(BedCraftBeyond.stoneBedBlock.getRegistryName());
+    setUnlocalizedName("beds.stone");
     setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
     setMaxStackSize(1);
-    this.setHasSubtypes(true);
-  }
-  /*@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister par1IconRegister)
-	{
-		this.stoneBedIcon = new IIcon[bedKinds];
-		for (int i = 0; i < bedKinds; i++) {
-			this.stoneBedIcon[i] = par1IconRegister.registerIcon("bedcraftbeyond:bed_stone_"+i);
-		}
-	}
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamage(int par1) {
-		if (par1 >= 0 && par1 < bedKinds)
-			return stoneBedIcon[par1];
-		return stoneBedIcon[0];
-	}*/
-
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  @Override
-  @SideOnly(Side.CLIENT)
-  /**
-   * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-   */
-  public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-    for (int var4 = 0; var4 < bedKinds; ++var4) {
-      par3List.add(new ItemStack(par1, 1, var4));
-    }
   }
 
   @Override
@@ -74,10 +42,11 @@ public class ItemStoneBed extends Item {
 
     IBlockState bedFootState = BedCraftBeyond.stoneBedBlock.getDefaultState()
             .withProperty(BlockBed.OCCUPIED, false)
+            .withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
             .withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
 
     if (worldIn.setBlockState(btmHalf, bedFootState, 3)) {
-      IBlockState bedHeadState = bedFootState.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
+      IBlockState bedHeadState = bedFootState.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD).withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite());
       worldIn.setBlockState(topHalf, bedHeadState, 3);
     }
 

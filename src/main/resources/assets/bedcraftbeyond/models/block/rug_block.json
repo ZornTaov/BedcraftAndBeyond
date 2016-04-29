@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "BedCraftBeyond:blocks/rugBlock"
+		"all": "BedCraftBeyond:blocks/rug_uncolored"
 	}
 }
