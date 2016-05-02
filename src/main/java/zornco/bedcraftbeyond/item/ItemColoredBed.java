@@ -2,6 +2,7 @@ package zornco.bedcraftbeyond.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
@@ -91,14 +93,13 @@ public class ItemColoredBed extends ItemBlock implements IItemColor {
 		BlockPos topHalf = btmHalf.offset(playerIn.getHorizontalFacing());
 
 		IBlockState bhead = BedCraftBeyond.coloredBedBlock.getDefaultState()
-						.withProperty(BlockBed.OCCUPIED, false)
-						.withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
-						.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
+						.withProperty(BlockBedBase.FACING, playerIn.getHorizontalFacing())
+						.withProperty(BlockBedBase.HEAD, true);
 
 		// TODO: Figure out why placement is not working - it's only the bottom half
 		if (!worldIn.setBlockState(btmHalf, bhead, 3)) return EnumActionResult.FAIL;
 
-		IBlockState bfoot = BedCraftBeyond.coloredBedBlock.getDefaultState().withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite()).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+		IBlockState bfoot = BedCraftBeyond.coloredBedBlock.getDefaultState().withProperty(BlockBedBase.FACING, playerIn.getHorizontalFacing().getOpposite());
 		worldIn.setBlockState(topHalf, bfoot, 2);
 
 		TileColoredBed tileTopHalf = BlockColoredBed.getTileEntity(worldIn, topHalf);

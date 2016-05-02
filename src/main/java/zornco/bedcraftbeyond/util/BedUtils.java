@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
@@ -57,17 +56,17 @@ public class BedUtils {
     IBlockState stateHead = w.getBlockState(pos);
     BlockPos footPos = pos.offset(stateHead.getValue(BlockColoredBed.FACING));
     IBlockState stateFoot = w.getBlockState(footPos);
-    IProperty toChange = BlockColoredBed.BlanketColor;
+    IProperty toChange = BlockColoredBed.BLANKETS;
 
     switch (piece){
       case BLANKETS:
-        toChange = BlockColoredBed.BlanketColor;
+        toChange = BlockColoredBed.BLANKETS;
         ((TileColoredBed) w.getTileEntity(pos)).setBlanketsColor(color);
         ((TileColoredBed) w.getTileEntity(footPos)).setBlanketsColor(color);
         break;
 
       case SHEETS:
-        toChange = BlockColoredBed.SheetColor;
+        toChange = BlockColoredBed.SHEETS;
         ((TileColoredBed) w.getTileEntity(pos)).setSheetsColor(color);
         ((TileColoredBed) w.getTileEntity(footPos)).setSheetsColor(color);
         break;

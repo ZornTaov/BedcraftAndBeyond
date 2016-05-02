@@ -10,9 +10,9 @@
             "west": {}
         },
 
-        "part": {
-            "head": {},
-            "foot": {}
+        "head": {
+            "true": {},
+            "false": {}
         },
 
         "storage": {
