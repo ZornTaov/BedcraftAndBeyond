@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.item;
+package zornco.bedcraftbeyond.item.colored_bed;
 
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;

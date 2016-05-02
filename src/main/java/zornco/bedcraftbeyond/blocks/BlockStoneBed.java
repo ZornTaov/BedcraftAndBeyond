@@ -1,11 +1,14 @@
 package zornco.bedcraftbeyond.blocks;
 
-import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockStoneBed extends BlockBedBase {
 
@@ -14,5 +17,13 @@ public class BlockStoneBed extends BlockBedBase {
 		setHardness(1.0f);
 		setUnlocalizedName("beds.stone");
 		setRegistryName(BedCraftBeyond.MOD_ID, "stone_bed");
+		setDefaultState(getDefaultState().withProperty(HEAD, false).withProperty(FACING, EnumFacing.NORTH));
+	}
+
+	@Override
+	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
+		drops.add(new ItemStack(BedCraftBeyond.stoneBedItem));
+		return drops;
 	}
 }

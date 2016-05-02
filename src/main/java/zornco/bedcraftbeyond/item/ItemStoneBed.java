@@ -1,30 +1,22 @@
 package zornco.bedcraftbeyond.item;
 
-import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.util.BedUtils;
+import zornco.bedcraftbeyond.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.blocks.BlockBedBase;
 
-import java.util.List;
-
-public class ItemStoneBed extends Item {
+public class ItemStoneBed extends ItemBedPlacer {
 
   public ItemStoneBed() {
-    setRegistryName(BedCraftBeyond.stoneBedBlock.getRegistryName());
+    super(BcbBlocks.stoneBed);
     setUnlocalizedName("beds.stone");
-    setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
-    setMaxStackSize(1);
   }
 
   @Override
@@ -34,24 +26,15 @@ public class ItemStoneBed extends Item {
     if (worldIn.isRemote)	return EnumActionResult.SUCCESS;
     if (side != EnumFacing.UP) return EnumActionResult.FAIL;
 
-    boolean canPlaceBedHere = BedUtils.testBedPlacement(worldIn, playerIn, pos, stack);
+    boolean canPlaceBedHere = testSimpleBedPlacement(worldIn, playerIn, pos, stack);
     if(!canPlaceBedHere) return EnumActionResult.FAIL;
 
-    BlockPos btmHalf = pos.up();
-    BlockPos topHalf = btmHalf.offset(playerIn.getHorizontalFacing());
-
-    IBlockState bedFootState = BedCraftBeyond.stoneBedBlock.getDefaultState()
-            .withProperty(BlockBed.OCCUPIED, false)
-            .withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
-            .withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
-
-    if (worldIn.setBlockState(btmHalf, bedFootState, 3)) {
-      IBlockState bedHeadState = bedFootState.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD).withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite());
-      worldIn.setBlockState(topHalf, bedHeadState, 3);
-    }
+    try { placeSimpleBedBlocks(worldIn, playerIn, pos.up(), BcbBlocks.stoneBed, stack); }
+    catch (Exception e) { return EnumActionResult.FAIL; }
 
     // If not creative mode, remove placer item
     if(!playerIn.capabilities.isCreativeMode) --stack.stackSize;
+    if(stack.stackSize < 1) playerIn.setHeldItem(hand, null);
 
     return EnumActionResult.SUCCESS;
   }

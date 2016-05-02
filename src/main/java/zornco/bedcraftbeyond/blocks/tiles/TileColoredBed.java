@@ -10,6 +10,10 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.BlockColoredBed;
+import zornco.bedcraftbeyond.network.ColoredBedUpdate;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 // This tile is only to be used ONCE on beds!
@@ -48,32 +52,39 @@ public class TileColoredBed extends TileEntity {
 		this.plankType = new ResourceLocation("minecraft", "planks@0");
 	}
 
+	// TODO: Update plank stuff
 	public ItemStack getPlankType(){
 		return new ItemStack(Blocks.planks, 1);
 	}
 
+	public NBTTagCompound getPlankData(){
+		NBTTagCompound plankData = new NBTTagCompound();
+		plankData.setInteger("color", plankColor);
+		plankData.setString("type", plankType.toString());
+		return plankData;
+	}
+
 	public void setPlankType(ItemStack plankType) {
 		this.plankType = plankType.getItem().getRegistryName();
-		updateClients();
-	}
-
-	public int getPlankColor() {
-		return plankColor;
-	}
-
-	public void setPlankColor(int plankColor) {
-		this.plankColor = plankColor;
-		updateClients();
+		// TODO: Set up the color hook here
+		updateClients(BlockColoredBed.EnumColoredPart.PLANKS);
 	}
 
 	public void setSheetsColor(EnumDyeColor color){
 		this.sheets = color;
-		updateClients();
+		updateClients(BlockColoredBed.EnumColoredPart.SHEETS);
 	}
 
 	public void setBlanketsColor(EnumDyeColor color){
 		this.blankets = color;
-		updateClients();
+		updateClients(BlockColoredBed.EnumColoredPart.BLANKETS);
+	}
+
+	public EnumDyeColor getPartColor(BlockColoredBed.EnumColoredPart part){
+		if(part == BlockColoredBed.EnumColoredPart.BLANKETS) return this.blankets;
+		if(part == BlockColoredBed.EnumColoredPart.SHEETS) return this.sheets;
+		// if(part == BlockColoredBed.EnumColoredPart.PLANKS) return this.plankColor;
+		return EnumDyeColor.WHITE;
 	}
 
 	public EnumDyeColor getSheetsColor(){ return this.sheets; }
@@ -95,15 +106,11 @@ public class TileColoredBed extends TileEntity {
 		}
 	}
 
-	public final void updateClients() {
-		if (worldObj.isRemote)
-			return;
+	public final void updateClients(BlockColoredBed.EnumColoredPart part) {
+		if (worldObj.isRemote) return;
 		markDirty();
-		/*
-		 * S35PacketUpdateTileEntity packet = this.getDescriptionPacket();
-		 * PacketDispatcher.sendPacketToAllInDimension(packet,
-		 * this.worldObj.provider.dimensionId);
-		 */
+		ColoredBedUpdate update = new ColoredBedUpdate(pos, part, getPartColor(part));
+		BedCraftBeyond.network.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
 	}
 
 }

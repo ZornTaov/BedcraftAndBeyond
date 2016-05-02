@@ -4,6 +4,7 @@ import net.minecraft.block.BlockBed;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,8 +15,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import scala.collection.parallel.ParIterableLike;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
+import zornco.bedcraftbeyond.client.colors.ColoredBedColorer;
 import zornco.bedcraftbeyond.client.colors.DyeColorSingleLayer;
 import zornco.bedcraftbeyond.core.CommonProxy;
 import zornco.bedcraftbeyond.util.ClientUtils;
@@ -50,6 +53,9 @@ public class ClientProxy extends CommonProxy {
   public void init(){
     IItemColor dye = new DyeColorSingleLayer();
     Minecraft.getMinecraft().getItemColors().registerItemColorHandler(dye, BedCraftBeyond.rugItem);
+
+    IBlockColor coloredBed = new ColoredBedColorer();
+    Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BedCraftBeyond.coloredBedBlock);
   }
 
   @Override

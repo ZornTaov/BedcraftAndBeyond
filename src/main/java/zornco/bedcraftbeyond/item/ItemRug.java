@@ -18,10 +18,6 @@ import java.util.List;
 public class ItemRug extends ItemBlock {
 
 	public static final String[] rugColorNames = new String[] {"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
-	//public static final String[] rugIconNames = new String[] {"rug_black", "rug_red", "rug_green", "rug_brown", "rug_blue", "rug_purple", "rug_cyan", "rug_silver", "rug_gray", "rug_pink", "rug_lime", "rug_yellow", "rug_lightBlue", "rug_magenta", "rug_orange", "rug_white"};
-
-	/*@SideOnly(Side.CLIENT)
-	private IIcon[] rugIconList;*/
 
 	public ItemRug(Block par2) {
 		super(par2);

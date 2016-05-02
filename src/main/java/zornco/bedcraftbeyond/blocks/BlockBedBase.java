@@ -43,9 +43,10 @@ public abstract class BlockBedBase extends Block {
   }
 
   @Override
-  public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
-    return true;
-  }
+  public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) { return true; }
+
+  @Override
+  public boolean isBedFoot(IBlockAccess world, BlockPos pos) { return !world.getBlockState(pos).getValue(HEAD); }
 
   @Override
   public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {

@@ -20,7 +20,6 @@ import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.blocks.tiles.TileBedcraftBed;
-import zornco.bedcraftbeyond.util.BedUtils;
 import zornco.bedcraftbeyond.util.ClientUtils;
 
 public class BlockBedRendererTESR extends TileEntitySpecialRenderer {

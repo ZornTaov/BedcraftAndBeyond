@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -29,6 +30,8 @@ import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.core.CommonProxy;
 import zornco.bedcraftbeyond.item.*;
+import zornco.bedcraftbeyond.item.colored_bed.ItemColoredBed;
+import zornco.bedcraftbeyond.item.colored_bed.ItemDrawerKey;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.io.File;
@@ -57,20 +60,8 @@ public class BedCraftBeyond {
 
   public static Logger logger = LogManager.getLogger(BedCraftBeyond.MOD_ID);
 
-  // Items
-  public static Item coloredBedItem;
-  public static Item chestBedItem;
-  public static Item stoneBedItem;
-  public static Item rugItem;
-  public static Item scissors;
-  public static Item drawerKey;
-
-  // Blocks
-  public static Block rugBlock;
-  public static Block coloredBedBlock;
-  public static Block stoneBedBlock;
-
   File confFile;
+  public static SimpleNetworkWrapper network;
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
@@ -78,29 +69,12 @@ public class BedCraftBeyond {
     bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
     bedsTab = new TabBeds();
 
-    /** Blocks **/
-    rugBlock = new BlockRug();
-    stoneBedBlock = new BlockStoneBed();
-    coloredBedBlock = new BlockColoredBed();
-
-    GameRegistry.register(rugBlock);
-    GameRegistry.register(stoneBedBlock);
-    GameRegistry.register(coloredBedBlock);
-
-    /** Items **/
-    coloredBedItem = new ItemColoredBed(coloredBedBlock);
-    scissors = new ItemScissors();
-    drawerKey = new ItemDrawerKey();
-    stoneBedItem = new ItemStoneBed();
-    rugItem = new ItemRug(rugBlock);
-
-    GameRegistry.register(rugItem);
-    GameRegistry.register(coloredBedItem);
-    GameRegistry.register(drawerKey);
-    GameRegistry.register(scissors);
-    GameRegistry.register(stoneBedItem);
+    BcbBlocks.registerBlocks();
+    BcbItems.registerItems();
 
     proxy.registerModels();
+    network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
+    zornco.bedcraftbeyond.network.Registration.registerMessages();
   }
 
   @SuppressWarnings("unchecked")
@@ -120,8 +94,8 @@ public class BedCraftBeyond {
     proxy.compilePlanks();
 
     /** Recipes **/
-    OreDictionary.registerOre("coloredBed", new ItemStack(BedCraftBeyond.coloredBedItem, 1, OreDictionary.WILDCARD_VALUE));
-    OreDictionary.registerOre("coloredChestBed", new ItemStack(BedCraftBeyond.chestBedItem, 1, OreDictionary.WILDCARD_VALUE));
+    OreDictionary.registerOre("coloredBed", new ItemStack(BcbItems.coloredBed, 1, OreDictionary.WILDCARD_VALUE));
+
     int recipesAdded = 0;
 
     // This will be made into an option as soon as someone shows me a recipe that requires the vanilla bed!
@@ -134,7 +108,7 @@ public class BedCraftBeyond {
       }
     }
 
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(drawerKey, 1), new Object[]{"xy", 'x', Items.iron_ingot, 'y', Items.gold_ingot}));
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.drawerKey, 1), "xy", 'x', "ingotIron", 'y', "ingotGold"));
 
     recipesAdded++;
     String[] dyes = {
@@ -157,22 +131,18 @@ public class BedCraftBeyond {
     };
 
 
+    for (int i = 0; i < ItemDye.dyeColors.length; i++)
+      GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4, i), "xxx", 'x', new ItemStack(Blocks.wool, 1, i));
+
     for (int i = 0; i < ItemDye.dyeColors.length; i++) {
-      GameRegistry.addRecipe(new ItemStack(rugBlock, 4, i),
-              new Object[]{"xxx",
-                      Character.valueOf('x'), new ItemStack(Blocks.wool, 1, i)
-              }
-      );
-    }
-    for (int i = 0; i < ItemDye.dyeColors.length; i++) {
-      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rugBlock, 1, 15 - i), new Object[]{"rug", dyes[i]}));
-      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rugBlock, 4, 15 - i), new Object[]{"rug", "rug", "rug", "rug", dyes[i]}));
-      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(rugBlock, 8, 15 - i), new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i]}));
+      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 1, 15 - i), new Object[]{"rug", dyes[i]}));
+      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 4, 15 - i), new Object[]{"rug", "rug", "rug", "rug", dyes[i]}));
+      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 8, 15 - i), new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i]}));
     }
 
     // Add plank beds
     for (String plank : PlankHelper.plankColorMap.keySet()) {
-      ItemStack bed = new ItemStack(BedCraftBeyond.coloredBedItem, 1, 241);
+      ItemStack bed = new ItemStack(BcbItems.coloredBed, 1, 241);
       bed.setTagCompound(new NBTTagCompound());
       bed.getTagCompound().setString("plankType", plank);
       GameRegistry.addRecipe(new ShapedOreRecipe(bed,
@@ -185,7 +155,7 @@ public class BedCraftBeyond {
     }
 
     // Add stone bed recipe
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BedCraftBeyond.stoneBedItem, 1, 0),
+    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.stoneBed, 1, 0),
             "SSS", "sss",
             'S', "blockStone",
             's', new ItemStack(Blocks.stone_slab, 1, 0)
@@ -198,7 +168,7 @@ public class BedCraftBeyond {
 
     GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.bed), "coloredBed"));
 
-    GameRegistry.addShapelessRecipe(new ItemStack(BedCraftBeyond.coloredBedItem, 1, 241), new ItemStack(Items.bed));
+    GameRegistry.addShapelessRecipe(new ItemStack(BcbItems.coloredBed, 1, 241), new ItemStack(Items.bed));
 
     BedCraftBeyond.logger.info(this.MOD_ID + " has added " + recipesAdded + " recipes for beds! That's a lot!");
   }
