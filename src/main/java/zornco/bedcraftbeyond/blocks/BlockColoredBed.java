@@ -58,6 +58,11 @@ public class BlockColoredBed extends BlockBedBase {
     return (state.getValue(PART) == EnumPartType.FOOT ? null : new TileColoredBed());
   }
 
+  @Override
+  public boolean hasTileEntity(IBlockState state) {
+    return state.getValue(PART) == EnumPartType.HEAD;
+  }
+
   public static TileColoredBed getTileEntity(IBlockAccess world, BlockPos bedPos){
     TileEntity te = world.getTileEntity(bedPos);
     if(te instanceof TileColoredBed) return (TileColoredBed) te;
@@ -96,11 +101,6 @@ public class BlockColoredBed extends BlockBedBase {
       BedUtils.setColorOfBed(BedUtils.EnumColoredBedPiece.SHEETS, pos, world, color);
 
     return true;
-  }
-
-  @Override
-  public Item getBedItem(IBlockState state) {
-    return BedCraftBeyond.coloredBedItem;
   }
 
   @Override

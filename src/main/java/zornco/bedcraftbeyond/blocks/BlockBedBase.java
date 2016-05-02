@@ -16,15 +16,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenHell;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
-import java.util.BitSet;
 import java.util.Random;
 
 public abstract class BlockBedBase extends BlockBed {
@@ -40,11 +37,6 @@ public abstract class BlockBedBase extends BlockBed {
   @Override
   public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
     return state.getBlock() instanceof BlockColoredBed;
-  }
-
-  @Override
-  public boolean hasTileEntity(IBlockState state) {
-    return true;
   }
 
   @Override
@@ -177,7 +169,7 @@ public abstract class BlockBedBase extends BlockBed {
    */
   @Override
   public Item getItemDropped(IBlockState par1, Random par2Random, int par3) {
-    return par1.getValue(PART) == BlockBed.EnumPartType.HEAD ? getBedItem(par1) : null;
+    return par1.getValue(PART) == BlockBed.EnumPartType.HEAD ? Item.getItemFromBlock(this) : null;
   }
 
   @Override
@@ -202,16 +194,4 @@ public abstract class BlockBedBase extends BlockBed {
     if(state.getValue(BlockBed.PART) == EnumPartType.HEAD) meta |= 8;
     return meta;
   }
-
-  @Override
-  public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-    if(world.setBlockToAir(pos)) {
-      world.removeTileEntity(pos);
-      return true;
-    }
-
-    return false;
-  }
-
-  public abstract Item getBedItem(IBlockState state);
 }

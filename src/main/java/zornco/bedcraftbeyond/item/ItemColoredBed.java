@@ -90,16 +90,16 @@ public class ItemColoredBed extends ItemBlock implements IItemColor {
 		BlockPos btmHalf = pos.up();
 		BlockPos topHalf = btmHalf.offset(playerIn.getHorizontalFacing());
 
-		IBlockState bedFootState = BedCraftBeyond.coloredBedBlock.getDefaultState()
+		IBlockState bhead = BedCraftBeyond.coloredBedBlock.getDefaultState()
 						.withProperty(BlockBed.OCCUPIED, false)
 						.withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
 						.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
 
 		// TODO: Figure out why placement is not working - it's only the bottom half
-		if (!worldIn.setBlockState(btmHalf, bedFootState, 3)) return EnumActionResult.FAIL;
+		if (!worldIn.setBlockState(btmHalf, bhead, 3)) return EnumActionResult.FAIL;
 
-		IBlockState bedHeadState = BedCraftBeyond.coloredBedBlock.getDefaultState().withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite()).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
-		// worldIn.setBlockState(topHalf, bedHeadState, 3);
+		IBlockState bfoot = BedCraftBeyond.coloredBedBlock.getDefaultState().withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite()).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+		worldIn.setBlockState(topHalf, bfoot, 2);
 
 		TileColoredBed tileTopHalf = BlockColoredBed.getTileEntity(worldIn, topHalf);
 		if (tileTopHalf != null) {

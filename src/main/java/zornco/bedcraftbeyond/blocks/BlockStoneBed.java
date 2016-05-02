@@ -15,7 +15,4 @@ public class BlockStoneBed extends BlockBedBase {
 		setUnlocalizedName("beds.stone");
 		setRegistryName(BedCraftBeyond.MOD_ID, "stone_bed");
 	}
-
-	public Item getBedItem(IBlockState state){ return BedCraftBeyond.stoneBedItem; }
-
 }
