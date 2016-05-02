@@ -6,6 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.item.BcbItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public class BlockStoneBed extends BlockBedBase {
 	@Override
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
 		ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-		drops.add(new ItemStack(BedCraftBeyond.stoneBedItem));
+		drops.add(new ItemStack(BcbItems.stoneBed));
 		return drops;
 	}
 }

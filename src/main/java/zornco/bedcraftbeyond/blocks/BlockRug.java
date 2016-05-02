@@ -112,7 +112,7 @@ public class BlockRug extends Block {
   public static boolean canConnectRugTo(IBlockAccess par1IBlockAccess, BlockPos pos) {
     Block var5 = par1IBlockAccess.getBlockState(pos).getBlock();
 
-    return (var5 == BedCraftBeyond.rugBlock) && !par1IBlockAccess.isAirBlock(pos) ? true : false;
+    return (var5 == BcbBlocks.stoneBed) && !par1IBlockAccess.isAirBlock(pos) ? true : false;
 
   }
 

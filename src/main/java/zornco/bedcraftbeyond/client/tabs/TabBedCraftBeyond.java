@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.item.BcbItems;
 
 public class TabBedCraftBeyond extends CreativeTabs {
 
@@ -14,7 +15,7 @@ public class TabBedCraftBeyond extends CreativeTabs {
 	}
 	@Override
 	public Item getTabIconItem() {
-		return BedCraftBeyond.drawerKey;
+		return BcbItems.drawerKey;
     }
 
 

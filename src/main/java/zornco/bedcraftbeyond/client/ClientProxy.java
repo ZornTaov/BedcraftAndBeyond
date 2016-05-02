@@ -17,10 +17,12 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import scala.collection.parallel.ParIterableLike;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.blocks.BlockColoredBed;
 import zornco.bedcraftbeyond.client.colors.ColoredBedColorer;
 import zornco.bedcraftbeyond.client.colors.DyeColorSingleLayer;
 import zornco.bedcraftbeyond.core.CommonProxy;
+import zornco.bedcraftbeyond.item.BcbItems;
 import zornco.bedcraftbeyond.util.ClientUtils;
 import zornco.bedcraftbeyond.util.PlankHelperClient;
 import zornco.bedcraftbeyond.util.RenderingHelper;
@@ -35,27 +37,27 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void registerModels() {
 
-    ModelLoader.setCustomStateMapper(BedCraftBeyond.coloredBedBlock, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockColoredBed.SHEETS, BlockColoredBed.BLANKETS}).build());
-    ModelLoader.setCustomStateMapper(BedCraftBeyond.stoneBedBlock, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED}).ignore(new IProperty[]{BlockBed.PART}).ignore(new IProperty[]{BlockBed.FACING}).build());
+    ModelLoader.setCustomStateMapper(BcbBlocks.coloredBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockColoredBed.SHEETS, BlockColoredBed.BLANKETS}).build());
+    ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED}).ignore(new IProperty[]{BlockBed.PART}).ignore(new IProperty[]{BlockBed.FACING}).build());
 
     for (int i = 0; i < EnumDyeColor.values().length; i++) {
-      RenderingHelper.registerBlockModelAsItem(BedCraftBeyond.rugBlock, i, "rugBlock");
+      RenderingHelper.registerBlockModelAsItem(BcbBlocks.rug, i, "rugBlock");
       //ModelBakery.registerItemVariants(Item.getItemFromBlock(BedCraftBeyond.rugBlock), names);
     }
 
-    RenderingHelper.registerItemModel(BedCraftBeyond.scissors);
-    RenderingHelper.registerItemModel(BedCraftBeyond.rugItem);
+    RenderingHelper.registerItemModel(BcbItems.scissors);
+    RenderingHelper.registerItemModel(BcbItems.rug);
 
-    RenderingHelper.registerItemModel(BedCraftBeyond.drawerKey);
-    RenderingHelper.registerItemModel(BedCraftBeyond.stoneBedItem);
+    RenderingHelper.registerItemModel(BcbItems.drawerKey);
+    RenderingHelper.registerItemModel(BcbItems.stoneBed);
   }
 
   public void init(){
     IItemColor dye = new DyeColorSingleLayer();
-    Minecraft.getMinecraft().getItemColors().registerItemColorHandler(dye, BedCraftBeyond.rugItem);
+    Minecraft.getMinecraft().getItemColors().registerItemColorHandler(dye, BcbItems.rug);
 
     IBlockColor coloredBed = new ColoredBedColorer();
-    Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BedCraftBeyond.coloredBedBlock);
+    Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.coloredBed);
   }
 
   @Override

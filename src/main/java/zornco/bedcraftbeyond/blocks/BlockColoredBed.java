@@ -21,6 +21,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
+import zornco.bedcraftbeyond.item.BcbItems;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,7 +120,7 @@ public class BlockColoredBed extends BlockBedBase {
   @Override
   public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
     // TODO: Check accuracy
-    ItemStack stack = new ItemStack(BedCraftBeyond.coloredBedBlock, 1, state.getBlock().getMetaFromState(state));
+    ItemStack stack = new ItemStack(BcbBlocks.coloredBed, 1, state.getBlock().getMetaFromState(state));
 
     TileColoredBed tile = getTileEntity(world, pos);
     stack.setTagCompound(new NBTTagCompound());
@@ -135,7 +136,7 @@ public class BlockColoredBed extends BlockBedBase {
     if(!state.getValue(HEAD)) return Collections.emptyList();
 
     ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-    ItemStack bedItem = new ItemStack(BedCraftBeyond.coloredBedItem);
+    ItemStack bedItem = new ItemStack(BcbItems.coloredBed);
     NBTTagCompound tags = new NBTTagCompound();
     state = getActualState(state, world, pos);
     tags.setInteger("blankets", state.getValue(BLANKETS).getMetadata());
