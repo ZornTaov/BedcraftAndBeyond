@@ -93,16 +93,13 @@ public class ItemColoredBed extends ItemBlock implements IItemColor {
 		IBlockState bedFootState = BedCraftBeyond.coloredBedBlock.getDefaultState()
 						.withProperty(BlockBed.OCCUPIED, false)
 						.withProperty(BlockBed.FACING, playerIn.getHorizontalFacing())
-						.withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+						.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
 
-		// TODO: Figure out why placement is not working. WTF.
-		if (worldIn.setBlockState(btmHalf, bedFootState, 3)) {
-			IBlockState bedHeadState = bedFootState
-							// .withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite())
-							.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
-			boolean success = worldIn.setBlockState(topHalf, bedHeadState, 3);
-			if(!success) return EnumActionResult.FAIL;
-		}
+		// TODO: Figure out why placement is not working - it's only the bottom half
+		if (!worldIn.setBlockState(btmHalf, bedFootState, 3)) return EnumActionResult.FAIL;
+
+		IBlockState bedHeadState = BedCraftBeyond.coloredBedBlock.getDefaultState().withProperty(BlockBed.FACING, playerIn.getHorizontalFacing().getOpposite()).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT);
+		// worldIn.setBlockState(topHalf, bedHeadState, 3);
 
 		TileColoredBed tileTopHalf = BlockColoredBed.getTileEntity(worldIn, topHalf);
 		if (tileTopHalf != null) {
@@ -113,6 +110,7 @@ public class ItemColoredBed extends ItemBlock implements IItemColor {
 
 		// If not creative mode, remove placer item
 		if(!playerIn.capabilities.isCreativeMode) --stack.stackSize;
+		if(stack.stackSize < 1) playerIn.setHeldItem(hand, null);
 
 		return EnumActionResult.SUCCESS;
 	}
