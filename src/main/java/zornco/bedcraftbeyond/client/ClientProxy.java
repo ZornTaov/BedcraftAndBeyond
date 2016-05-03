@@ -21,7 +21,7 @@ import zornco.bedcraftbeyond.client.colors.DyeColorSingleLayer;
 import zornco.bedcraftbeyond.core.CommonProxy;
 import zornco.bedcraftbeyond.item.BcbItems;
 import zornco.bedcraftbeyond.util.ClientUtils;
-import zornco.bedcraftbeyond.util.PlankHelperClient;
+import zornco.bedcraftbeyond.util.PlankReloadListener;
 import zornco.bedcraftbeyond.util.RenderingHelper;
 
 public class ClientProxy extends CommonProxy {
@@ -56,7 +56,7 @@ public class ClientProxy extends CommonProxy {
   public void compilePlanks() {
     super.compilePlanks();
 
-    ((IReloadableResourceManager) ClientUtils.mc().getResourceManager()).registerReloadListener(new PlankHelperClient());
+    ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new PlankReloadListener());
   }
 
   @Override
