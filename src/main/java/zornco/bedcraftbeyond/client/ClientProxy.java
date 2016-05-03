@@ -26,54 +26,54 @@ import zornco.bedcraftbeyond.util.RenderingHelper;
 
 public class ClientProxy extends CommonProxy {
 
-  @Override
-  public void registerRenderInformationInit() {
-    //RenderingRegistry.registerBlockHandler(new BlockRugRenderer());
-  }
+   @Override
+   public void registerRenderInformationInit() {
+      //RenderingRegistry.registerBlockHandler(new BlockRugRenderer());
+   }
 
-  @Override
-  public void registerModels() {
+   @Override
+   public void registerModels() {
 
-    ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
-    ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED}).ignore(new IProperty[]{BlockBed.PART}).ignore(new IProperty[]{BlockBed.FACING}).build());
+      ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
+      ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED}).ignore(new IProperty[]{BlockBed.PART}).ignore(new IProperty[]{BlockBed.FACING}).build());
 
-    RenderingHelper.registerItemModel(BcbItems.scissors);
-    RenderingHelper.registerItemModel(BcbItems.rug);
+      RenderingHelper.registerItemModel(BcbItems.scissors);
+      RenderingHelper.registerItemModel(BcbItems.rug);
 
-    RenderingHelper.registerItemModel(BcbItems.drawerKey);
-    RenderingHelper.registerItemModel(BcbItems.stoneBed);
-  }
+      RenderingHelper.registerItemModel(BcbItems.drawerKey);
+      RenderingHelper.registerItemModel(BcbItems.stoneBed);
+   }
 
-  public void init(){
-    IItemColor dye = new DyeColorSingleLayer();
-    Minecraft.getMinecraft().getItemColors().registerItemColorHandler(dye, BcbItems.rug);
+   public void init() {
+      IItemColor dye = new DyeColorSingleLayer();
+      Minecraft.getMinecraft().getItemColors().registerItemColorHandler(dye, BcbItems.rug);
 
-    IBlockColor coloredBed = new BedFabricColorer();
-    Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.woodenBed);
-  }
+      IBlockColor coloredBed = new BedFabricColorer();
+      Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.woodenBed);
+   }
 
-  @Override
-  public void compilePlanks() {
-    super.compilePlanks();
+   @Override
+   public void compilePlanks() {
+      super.compilePlanks();
 
-    ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new PlankReloadListener());
-  }
+      ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new PlankReloadListener());
+   }
 
-  @Override
-  public int getAverageBlockColour(ItemStack stack2) {
-    return ClientUtils.getAverageBlockColour(stack2);
-  }
+   @Override
+   public int getAverageBlockColour(ItemStack stack2) {
+      return ClientUtils.getAverageBlockColour(stack2);
+   }
 
-  @Override
-  public World getClientWorld() {
-    return FMLClientHandler.instance().getClient().theWorld;
-  }
+   @Override
+   public World getClientWorld() {
+      return FMLClientHandler.instance().getClient().theWorld;
+   }
 
-  @Override
-  public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-    TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-    // if (te != null && te instanceof TileBedcraftChestBed) return new GuiColoredChestBed(player.inventory, (TileBedcraftChestBed) te);
+   @Override
+   public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+      TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+      // if (te != null && te instanceof TileBedcraftChestBed) return new GuiColoredChestBed(player.inventory, (TileBedcraftChestBed) te);
 
-    return null;
-  }
+      return null;
+   }
 }

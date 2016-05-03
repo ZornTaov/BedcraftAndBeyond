@@ -1,13 +1,11 @@
 package zornco.bedcraftbeyond.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -51,20 +49,22 @@ public class PlankHelper {
                   BedCraftBeyond.logger.info("STACK1 NULL");
                   break;
                } else {
-                  BedCraftBeyond.logger.info("Planks, meta 0:" + stack1Name);
-                  list.add(stackNoMeta);
+                  List<ItemStack> subItems = new ArrayList<>();
+                  stack.getItem().getSubItems(stack.getItem(), CreativeTabs.tabAllSearch, subItems);
+                  BedCraftBeyond.logger.info("Number of sub items for registry item " + stack.getItem().getRegistryName() + ": " + subItems.size());
 
-                  for (int i = 1; i < 16; i++) {
-                     ItemStack stackWithMeta = new ItemStack(stack.getItem(), 1, i);
-                     String stack2Name = stackWithMeta.getDisplayName();
-                     if (stack2Name == null) {
-                        BedCraftBeyond.logger.info("STACK2 NULL");
-                        break;
-                     } else {
-                        BedCraftBeyond.logger.info("Planks, meta " + i + ":" + stack2Name);
-                        if (stack2Name.equals(stack1Name)) break;
-                        list.add(stackWithMeta);
+                  if(subItems.isEmpty()){ list.add(stackNoMeta); break; }
+
+                  for (ItemStack subPlank : subItems) {
+                     if (subPlank.getDisplayName() == null) {
+                        BedCraftBeyond.logger.info("Plank display name for " + subPlank.getItem().getRegistryName() + ", meta " + subPlank.getMetadata() + " is null. Skipping.");
+                        continue;
                      }
+
+                     BedCraftBeyond.logger.info("Got plank \"" + subPlank.getDisplayName() + "\"." +
+                        "Registry data: " + subPlank.getItem().getRegistryName() + ", meta " + subPlank.getMetadata());
+
+                     list.add(subPlank);
                   }
 
                   for (ItemStack itemStack : list) addPlankToList(itemStack);
@@ -198,7 +198,7 @@ public class PlankHelper {
    }
 
    public static ItemStack validatePlank(NBTTagCompound bedTags, int damage, ItemStack plankToAdd) {
-      if (!bedTags.hasKey("plank") && !bedTags.hasKey("plankNameSpace")) {
+      if (!bedTags.hasKey("plank") && !bedTags.hasKey("plankType")) {
          //this should only be called for 1.0.5 or lower
 
          if (plankToAdd != null) return PlankHelper.addPlankInfo(bedTags, plankToAdd);
@@ -211,33 +211,33 @@ public class PlankHelper {
          //check if block is from 1.0.5 or lower
          if (bedTags.hasKey("colorCombo")) frameNum = bedTags.getShort("colorCombo") >> 8;
 
-         //change to adding plankNameSpace
+         //change to adding plankType
          ItemStack plankIS = new ItemStack(Blocks.planks, 1, frameNum);
          String plankString = PlankHelper.plankStringfromItemStack(plankIS);
-         bedTags.setString("plankNameSpace", plankString);
+         bedTags.setString("plankType", plankString);
 
          return plankIS;
-      } else if (!bedTags.hasKey("plankNameSpace")) {
+      } else if (!bedTags.hasKey("plankType")) {
          NBTTagList list = bedTags.getTagList("plank", 10);
          NBTTagCompound plank = list.getCompoundTagAt(0);
-         //change Plank to plankNameSpace
+         //change Plank to plankType
          ItemStack plankIS = ItemStack.loadItemStackFromNBT(plank);
          if (isPlankKnown(plankIS)) {
             String plankString = PlankHelper.plankStringfromItemStack(plankIS);
-            bedTags.setString("plankNameSpace", plankString);
+            bedTags.setString("plankType", plankString);
             bedTags.removeTag("plank");//			return new ItemStack(Blocks.planks, 1, 0);
             return plankIS;
          } else {
-            bedTags.setString("plankNameSpace", oakNameSpace);
+            bedTags.setString("plankType", oakNameSpace);
             return oakItemStack;
          }
       } else {
-         if (isPlankKnown(bedTags.getString("plankNameSpace"))) {
-            String[] plank = bedTags.getString("plankNameSpace").split("@");
-            return new ItemStack((Item) (Item.itemRegistry.getObject(new ResourceLocation(plank[0]))), 1, Integer.parseInt(plank[1]));
+         if (isPlankKnown(bedTags.getString("plankType"))) {
+            String[] plank = bedTags.getString("plankType").split("@");
+            return new ItemStack(Item.itemRegistry.getObject(new ResourceLocation(plank[0])), 1, Integer.parseInt(plank[1]));
 
          } else {
-            bedTags.setString("plankNameSpace", oakNameSpace);
+            bedTags.setString("plankType", oakNameSpace);
             return oakItemStack;
          }
       }
