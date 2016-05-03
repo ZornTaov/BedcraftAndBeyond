@@ -5,10 +5,10 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.ItemDye;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import zornco.bedcraftbeyond.blocks.BlockColoredBed;
+import zornco.bedcraftbeyond.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
-public class ColoredBedColorer implements IBlockColor {
+public class BedFabricColorer implements IBlockColor {
 
   // PLANKS = 0
   // SHEETS = 1
@@ -22,10 +22,12 @@ public class ColoredBedColorer implements IBlockColor {
         return PlankHelper.oakColor;
 
       case 1:
-        return ItemDye.dyeColors[state.getValue(BlockColoredBed.SHEETS).getDyeDamage()];
+        EnumBedFabricType sheetsType = state.getValue(BlockWoodenBed.SHEETS);
+        return sheetsType.isDyeType() ? sheetsType.getDyeColor() : 0;
 
       case 2:
-        return ItemDye.dyeColors[state.getValue(BlockColoredBed.BLANKETS).getDyeDamage()];
+        EnumBedFabricType blanketsType = state.getValue(BlockWoodenBed.BLANKETS);
+        return blanketsType.isDyeType() ? blanketsType.getDyeColor() : 0;
 
       default:
         return 0;

@@ -81,14 +81,14 @@ public abstract class BlockBedBase extends Block {
           return true;
         }
 
-        state = state.withProperty(OCCUPIED, Boolean.valueOf(false));
+        state = state.withProperty(OCCUPIED, false);
         worldIn.setBlockState(pos, state, 2);
       }
 
       EntityPlayer.EnumStatus status = playerIn.trySleep(pos);
       switch(status){
         case OK:
-          state = state.withProperty(OCCUPIED, Boolean.valueOf(true));
+          state = state.withProperty(OCCUPIED, true);
           worldIn.setBlockState(pos, state, 2);
           break;
 

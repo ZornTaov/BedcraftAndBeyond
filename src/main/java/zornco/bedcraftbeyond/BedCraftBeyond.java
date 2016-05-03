@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond;
 
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -30,8 +29,6 @@ import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.core.CommonProxy;
 import zornco.bedcraftbeyond.item.*;
-import zornco.bedcraftbeyond.item.colored_bed.ItemColoredBed;
-import zornco.bedcraftbeyond.item.colored_bed.ItemDrawerKey;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.io.File;

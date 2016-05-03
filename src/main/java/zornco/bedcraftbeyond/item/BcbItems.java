@@ -1,14 +1,12 @@
 package zornco.bedcraftbeyond.item;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.blocks.BcbBlocks;
-import zornco.bedcraftbeyond.item.colored_bed.*;
 
 public class BcbItems {
 
   // Colored bed stuff
-  public static ItemColoredBed coloredBed;
+  public static ItemWoodenBed coloredBed;
   public static ItemBlanket blanket;
   public static ItemSheets sheets;
   public static ItemDrawer drawer;
@@ -20,19 +18,27 @@ public class BcbItems {
   public static ItemScissors scissors;
 
   private static void initItems(){
-    coloredBed = new ItemColoredBed();
+    coloredBed = new ItemWoodenBed(BcbBlocks.woodenBed);
     blanket = new ItemBlanket();
     sheets = new ItemSheets();
     drawer = new ItemDrawer();
     drawerKey = new ItemDrawerKey();
 
-    stoneBed = new ItemStoneBed();
+    stoneBed = new ItemStoneBed(BcbBlocks.stoneBed);
     rug = new ItemRug(BcbBlocks.rug);
     scissors = new ItemScissors();
   }
 
   private static void addItems(){
+    GameRegistry.register(coloredBed);
+    GameRegistry.register(blanket);
+    GameRegistry.register(sheets);
+    GameRegistry.register(drawer);
+    GameRegistry.register(drawerKey);
 
+    GameRegistry.register(stoneBed);
+    GameRegistry.register(rug);
+    GameRegistry.register(scissors);
   }
 
   public static void registerItems() {

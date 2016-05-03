@@ -7,7 +7,6 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,13 +14,18 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.blocks.properties.PropertyString;
 import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
+import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
 import zornco.bedcraftbeyond.item.BcbItems;
+import zornco.bedcraftbeyond.item.ItemBlanket;
+import zornco.bedcraftbeyond.item.ItemSheets;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,18 +35,17 @@ import java.util.List;
  * A colored bed has sheets and blankets that are separately dyeable.
  * It works the same as a regular bed otherwise.
  */
-public class BlockColoredBed extends BlockBedBase {
+public class BlockWoodenBed extends BlockBedBase {
 
   public static PropertyBool HAS_STORAGE = PropertyBool.create("storage");
-  public static PropertyBool HAS_BLANKETS = PropertyBool.create("has_blankets");
-  public static PropertyBool HAS_SHEETS = PropertyBool.create("has_sheets");
+  public static PropertyString FRAME_TYPE = new PropertyString("frame");
 
-  public static PropertyEnum<EnumDyeColor> BLANKETS = PropertyEnum.create("color_blankets", EnumDyeColor.class);
-  public static PropertyEnum<EnumDyeColor> SHEETS = PropertyEnum.create("color_sheets", EnumDyeColor.class);
+  public static PropertyEnum<EnumBedFabricType> BLANKETS = PropertyEnum.create("color_blankets", EnumBedFabricType.class);
+  public static PropertyEnum<EnumBedFabricType> SHEETS = PropertyEnum.create("color_sheets", EnumBedFabricType.class);
 
   public enum EnumColoredPart { BLANKETS, SHEETS, PLANKS }
 
-  public BlockColoredBed() {
+  public BlockWoodenBed() {
     setRegistryName(BedCraftBeyond.MOD_ID, "colored_bed");
     setUnlocalizedName("beds.colored");
     setDefaultState(getDefaultState()
@@ -50,15 +53,13 @@ public class BlockColoredBed extends BlockBedBase {
             .withProperty(OCCUPIED, false)
             .withProperty(HEAD, false)
             .withProperty(HAS_STORAGE, false)
-            .withProperty(HAS_BLANKETS, false)
-            .withProperty(HAS_SHEETS, false)
-            .withProperty(BLANKETS, EnumDyeColor.WHITE)
-            .withProperty(SHEETS, EnumDyeColor.WHITE));
+            .withProperty(BLANKETS, EnumBedFabricType.NONE)
+            .withProperty(SHEETS, EnumBedFabricType.NONE));
   }
 
   @Override
   protected BlockStateContainer createBlockState() {
-    return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, HAS_BLANKETS, HAS_SHEETS, BLANKETS, SHEETS}, new IUnlistedProperty[0] );
+    return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS}, new IUnlistedProperty[]{ FRAME_TYPE } );
   }
 
   @Override
@@ -76,9 +77,7 @@ public class BlockColoredBed extends BlockBedBase {
     if(te instanceof TileColoredBed) return (TileColoredBed) te;
 
     IBlockState state = world.getBlockState(bedPos);
-    if(!(state.getBlock() instanceof BlockColoredBed)) return null;
-
-    state = state.getActualState(world, bedPos);
+    if(!(state.getBlock() instanceof BlockWoodenBed)) return null;
     BlockPos actualTileHolder = bedPos.offset(state.getValue(BlockHorizontal.FACING));
 
     TileEntity realHolder = world.getTileEntity(actualTileHolder);
@@ -93,21 +92,34 @@ public class BlockColoredBed extends BlockBedBase {
     if (tile == null) return true;
     if (world.isRemote) return true;
 
-    // heldItem is a dye
-    EnumDyeColor color = EnumDyeColor.byDyeDamage(heldItem.getItemDamage());
-
     state = getActualState(state, world, pos);
-    if(state.getValue(HEAD))
-      setPartColor(EnumColoredPart.SHEETS, pos, world, color);
-    else
-      setPartColor(EnumColoredPart.BLANKETS, pos, world, color);
+    // Add/remove blankets and sheets
+
+    if(heldItem != null) {
+      if (heldItem.getItem() instanceof ItemBlanket){
+        boolean set = tile.setLinenPart(EnumColoredPart.BLANKETS, heldItem);
+        if(set){ --heldItem.stackSize; if(heldItem.stackSize < 1) player.setHeldItem(hand, null); }
+      }
+
+      if (heldItem.getItem() instanceof ItemSheets){
+        boolean set = tile.setLinenPart(EnumColoredPart.SHEETS, heldItem);
+        if(set){ --heldItem.stackSize; if(heldItem.stackSize < 1) player.setHeldItem(hand, null); }
+      }
+    }
+
+    if(heldItem == null) {
+      if (player.isSneaking()) {
+        player.addChatMessage(new TextComponentString(tile.getBlanketsColor().name() + ", " + tile.getSheetsColor().name()));
+      } else
+        onBedActivated(world, pos, state, player);
+    }
 
     return true;
   }
 
   @Override
   public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-    if(worldIn.getTileEntity(pos) == null) return state;
+    if(getTileEntity(worldIn, pos) == null) return state;
 
     TileColoredBed bed = getTileEntity(worldIn, pos);
     state = state.withProperty(BLANKETS, bed.getBlanketsColor());
@@ -120,7 +132,7 @@ public class BlockColoredBed extends BlockBedBase {
   @Override
   public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
     // TODO: Check accuracy
-    ItemStack stack = new ItemStack(BcbBlocks.coloredBed, 1, state.getBlock().getMetaFromState(state));
+    ItemStack stack = new ItemStack(BcbBlocks.woodenBed, 1, state.getBlock().getMetaFromState(state));
 
     TileColoredBed tile = getTileEntity(world, pos);
     stack.setTagCompound(new NBTTagCompound());
@@ -145,44 +157,5 @@ public class BlockColoredBed extends BlockBedBase {
     bedItem.setTagCompound(tags);
     drops.add(bedItem);
     return drops;
-  }
-
-  public static EnumDyeColor getPartColorFromItem(ItemStack stack, EnumColoredPart type){
-    if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-    NBTTagCompound stackNBT = stack.getTagCompound();
-    String key = type.toString().toLowerCase();
-
-    if(!stackNBT.hasKey(key)){
-      stackNBT.setInteger(key, EnumDyeColor.WHITE.getMetadata());
-      stack.setTagCompound(stackNBT);
-      return EnumDyeColor.WHITE;
-    }
-
-    return EnumDyeColor.byMetadata(stackNBT.getInteger(key));
-  }
-
-  public static void setPartColor(EnumColoredPart piece, BlockPos pos, World w, EnumDyeColor color){
-    IBlockState stateHead = w.getBlockState(pos);
-    IProperty toChange = BlockColoredBed.BLANKETS;
-    TileColoredBed tile = getTileEntity(w, pos);
-
-    switch (piece){
-      case BLANKETS:
-        toChange = BlockColoredBed.BLANKETS;
-        tile.setBlanketsColor(color);
-        break;
-
-      case SHEETS:
-        toChange = BlockColoredBed.SHEETS;
-        tile.setSheetsColor(color);
-        break;
-
-      case PLANKS:
-        BedCraftBeyond.logger.debug("Plank dynamic changing not yet implemented. Stahp please.");
-        break;
-    }
-
-    stateHead = stateHead.withProperty(toChange, color);
-    w.setBlockState(pos, stateHead, 3);
   }
 }

@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond.item;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,8 +15,8 @@ import zornco.bedcraftbeyond.blocks.BlockBedBase;
 
 public class ItemStoneBed extends ItemBedPlacer {
 
-  public ItemStoneBed() {
-    super(BcbBlocks.stoneBed);
+  public ItemStoneBed(Block b) {
+    super(b);
     setUnlocalizedName("beds.stone");
   }
 

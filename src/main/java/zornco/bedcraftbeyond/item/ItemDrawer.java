@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.item.colored_bed;
+package zornco.bedcraftbeyond.item;
 
 import net.minecraft.item.Item;
 import zornco.bedcraftbeyond.BedCraftBeyond;

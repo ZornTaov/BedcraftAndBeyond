@@ -8,18 +8,15 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import scala.collection.parallel.ParIterableLike;
-import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.blocks.BcbBlocks;
-import zornco.bedcraftbeyond.blocks.BlockColoredBed;
-import zornco.bedcraftbeyond.client.colors.ColoredBedColorer;
+import zornco.bedcraftbeyond.blocks.BlockWoodenBed;
+import zornco.bedcraftbeyond.client.colors.BedFabricColorer;
 import zornco.bedcraftbeyond.client.colors.DyeColorSingleLayer;
 import zornco.bedcraftbeyond.core.CommonProxy;
 import zornco.bedcraftbeyond.item.BcbItems;
@@ -37,13 +34,8 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void registerModels() {
 
-    ModelLoader.setCustomStateMapper(BcbBlocks.coloredBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockColoredBed.SHEETS, BlockColoredBed.BLANKETS}).build());
+    ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
     ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED}).ignore(new IProperty[]{BlockBed.PART}).ignore(new IProperty[]{BlockBed.FACING}).build());
-
-    for (int i = 0; i < EnumDyeColor.values().length; i++) {
-      RenderingHelper.registerBlockModelAsItem(BcbBlocks.rug, i, "rugBlock");
-      //ModelBakery.registerItemVariants(Item.getItemFromBlock(BedCraftBeyond.rugBlock), names);
-    }
 
     RenderingHelper.registerItemModel(BcbItems.scissors);
     RenderingHelper.registerItemModel(BcbItems.rug);
@@ -56,8 +48,8 @@ public class ClientProxy extends CommonProxy {
     IItemColor dye = new DyeColorSingleLayer();
     Minecraft.getMinecraft().getItemColors().registerItemColorHandler(dye, BcbItems.rug);
 
-    IBlockColor coloredBed = new ColoredBedColorer();
-    Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.coloredBed);
+    IBlockColor coloredBed = new BedFabricColorer();
+    Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.woodenBed);
   }
 
   @Override
