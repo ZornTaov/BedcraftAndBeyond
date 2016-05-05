@@ -1,0 +1,9 @@
+{
+  "wooden": {
+    "minecraft:planks": ["0-6"]
+  },
+
+  "stone": {
+    "minecraft:stone": [0]
+  }
+}

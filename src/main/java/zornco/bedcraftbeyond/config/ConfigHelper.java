@@ -16,11 +16,11 @@ public class ConfigHelper {
    public static File modConfigDir;
 
    // All the mods config directory (instance/config/)
-   public static File modConfigs;
+   public static File allModConfigsDir;
 
    public static void setupModDirs(){
       if(runConfigDirs) return;
-      modConfigDir = Paths.get(modConfigs.getPath(), BedCraftBeyond.MOD_ID).toFile();
+      modConfigDir = Paths.get(allModConfigsDir.getPath(), BedCraftBeyond.MOD_ID).toFile();
       if(!modConfigDir.exists()) modConfigDir.mkdir();
 
       config = new Configuration(Paths.get(modConfigDir.getPath(), BedCraftBeyond.MOD_ID + ".cfg").toFile());

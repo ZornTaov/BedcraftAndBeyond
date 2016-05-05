@@ -24,11 +24,6 @@ import zornco.bedcraftbeyond.common.item.BcbItems;
 public class ClientProxy extends CommonProxy {
 
    @Override
-   public void registerRenderInformationInit() {
-      //RenderingRegistry.registerBlockHandler(new BlockRugRenderer());
-   }
-
-   @Override
    public void registerModels() {
 
       ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
@@ -50,6 +45,9 @@ public class ClientProxy extends CommonProxy {
    }
 
    @Override
+   public void compileFrames() { }
+
+   @Override
    public void compilePlanks() {
       super.compilePlanks();
 
@@ -64,13 +62,5 @@ public class ClientProxy extends CommonProxy {
    @Override
    public World getClientWorld() {
       return FMLClientHandler.instance().getClient().theWorld;
-   }
-
-   @Override
-   public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-      TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-      // if (te != null && te instanceof TileBedcraftChestBed) return new GuiColoredChestBed(player.inventory, (TileBedcraftChestBed) te);
-
-      return null;
    }
 }
