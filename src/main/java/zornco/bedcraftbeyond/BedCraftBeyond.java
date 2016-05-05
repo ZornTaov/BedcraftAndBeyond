@@ -26,6 +26,7 @@ import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.BedHelper;
 import zornco.bedcraftbeyond.common.CommonProxy;
+import zornco.bedcraftbeyond.common.Crafting;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.common.item.BcbItems;
@@ -64,7 +65,7 @@ public class BedCraftBeyond {
   public void preInit(FMLPreInitializationEvent event) {
     ConfigHelper.modConfigs = event.getModConfigurationDirectory();
     ConfigHelper.setupModDirs();
-    
+
     bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
     bedsTab = new TabBeds();
 
@@ -95,79 +96,11 @@ public class BedCraftBeyond {
     /** Recipes **/
     OreDictionary.registerOre("coloredBed", new ItemStack(BcbItems.coloredBed, 1, OreDictionary.WILDCARD_VALUE));
 
-    int recipesAdded = 0;
-
-    // This will be made into an option as soon as someone shows me a recipe that requires the vanilla bed!
-    Iterator<IRecipe> iterator = CraftingManager.getInstance().getRecipeList().iterator();
-    while (iterator.hasNext()) {
-      ItemStack r = iterator.next().getRecipeOutput();
-      if (r != null && r.getItem() == Items.bed) {
-        iterator.remove();
-        logger.info("Removed Vanilla Bed.");
-      }
-    }
-
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.drawerKey, 1), "xy", 'x', "ingotIron", 'y', "ingotGold"));
-
-    recipesAdded++;
-    String[] dyes = {
-            "dyeBlack",
-            "dyeRed",
-            "dyeGreen",
-            "dyeBrown",
-            "dyeBlue",
-            "dyePurple",
-            "dyeCyan",
-            "dyeLightGray",
-            "dyeGray",
-            "dyePink",
-            "dyeLime",
-            "dyeYellow",
-            "dyeLightBlue",
-            "dyeMagenta",
-            "dyeOrange",
-            "dyeWhite"
-    };
-
-    GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4), "xxx", 'x', new ItemStack(Blocks.wool, 1));
-
-    /*for (int i = 0; i < ItemDye.dyeColors.length; i++) {
-      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 1, 15 - i), new Object[]{"rug", dyes[i]}));
-      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 4, 15 - i), new Object[]{"rug", "rug", "rug", "rug", dyes[i]}));
-      GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 8, 15 - i), new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i]}));
-    }*/
-
-    // Add plank beds
-    //    for (String plank : PlankHelper.plankColorMap.keySet()) {
-    //      ItemStack bed = new ItemStack(BcbItems.coloredBed, 1, 241);
-    //      bed.setTagCompound(new NBTTagCompound());
-    //      bed.getTagCompound().setString("plankType", plank);
-    //      GameRegistry.addRecipe(new ShapedOreRecipe(bed,
-    //              "bbb", "fff",
-    //              'b', "blockWool",
-    //              'f', new ItemStack(Item.itemRegistry.getObject(new ResourceLocation(plank.split("@")[0])), 1, Integer.parseInt(plank.split("@")[1]))
-    //      ));
-    //
-    //      recipesAdded++;
-    //    }
-
-    // Add stone bed recipe
-    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.stoneBed, 1, 0),
-            "SSS", "sss",
-            'S', "blockStone",
-            's', new ItemStack(Blocks.stone_slab, 1, 0)
-    ));
-
-    ++recipesAdded;
+    Crafting.addRecipes();
 
     long elapsedTimeMillis = System.currentTimeMillis() - start;
-    BedCraftBeyond.logger.info("Generated planklist and recipes in " + elapsedTimeMillis + " milliseconds.");
-
-    GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.bed), "coloredBed"));
-
-    GameRegistry.addShapelessRecipe(new ItemStack(BcbItems.coloredBed, 1, 241), new ItemStack(Items.bed));
-
-    BedCraftBeyond.logger.info(this.MOD_ID + " has added " + recipesAdded + " recipes for beds! That's a lot!");
+    BedCraftBeyond.logger.info("Generated wooden frame list and recipes in " + elapsedTimeMillis + " milliseconds.");
+    BedCraftBeyond.logger.info(this.MOD_ID + " has added " + Crafting.recipesAdded + " recipes for beds! That's a lot!");
   }
 
   @EventHandler
