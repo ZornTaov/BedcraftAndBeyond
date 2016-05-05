@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.common.blocks;
 
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;
@@ -20,12 +20,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.blocks.properties.PropertyString;
-import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
+import zornco.bedcraftbeyond.common.blocks.properties.PropertyString;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
-import zornco.bedcraftbeyond.item.BcbItems;
-import zornco.bedcraftbeyond.item.ItemBlanket;
-import zornco.bedcraftbeyond.item.ItemSheets;
+import zornco.bedcraftbeyond.common.item.BcbItems;
+import zornco.bedcraftbeyond.common.item.ItemBlanket;
+import zornco.bedcraftbeyond.common.item.ItemSheets;
 
 import java.util.ArrayList;
 import java.util.Collections;

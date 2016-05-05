@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.item;
+package zornco.bedcraftbeyond.common.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -14,9 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import zornco.bedcraftbeyond.blocks.BcbBlocks;
-import zornco.bedcraftbeyond.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
+import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.util.PlankHelper;
 

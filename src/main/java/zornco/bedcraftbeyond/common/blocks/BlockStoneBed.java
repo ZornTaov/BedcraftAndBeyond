@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.common.blocks;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.item.BcbItems;
+import zornco.bedcraftbeyond.common.item.BcbItems;
 
 import java.util.ArrayList;
 import java.util.List;

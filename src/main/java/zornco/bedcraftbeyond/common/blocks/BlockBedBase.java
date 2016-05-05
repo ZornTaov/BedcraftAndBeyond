@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.common.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
@@ -10,7 +10,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenHell;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import scala.util.parsing.combinator.PackratParsers;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 import java.util.Random;

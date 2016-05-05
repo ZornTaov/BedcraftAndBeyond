@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.common.blocks;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 

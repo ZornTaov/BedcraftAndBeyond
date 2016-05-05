@@ -3,8 +3,6 @@ package zornco.bedcraftbeyond.util;
 import java.util.*;
 import java.util.Map.Entry;
 
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -36,6 +34,7 @@ public class PlankHelper {
 
    public static void compilePlanksClient() {
 
+      // TODO: BoP registration not working
       for (ItemStack stack : planks) {
          //not bothering with items that are not blocks
          if (stack.getItem() instanceof ItemBlock) {

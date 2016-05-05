@@ -1,5 +1,5 @@
 
-package zornco.bedcraftbeyond.blocks.properties;
+package zornco.bedcraftbeyond.common.blocks.properties;
 
 import com.google.common.base.Optional;
 import net.minecraft.block.properties.IProperty;

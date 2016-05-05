@@ -14,15 +14,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import zornco.bedcraftbeyond.blocks.BcbBlocks;
-import zornco.bedcraftbeyond.blocks.BlockWoodenBed;
+import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.client.colors.BedFabricColorer;
 import zornco.bedcraftbeyond.client.colors.DyeColorSingleLayer;
-import zornco.bedcraftbeyond.core.CommonProxy;
-import zornco.bedcraftbeyond.item.BcbItems;
-import zornco.bedcraftbeyond.util.ClientUtils;
-import zornco.bedcraftbeyond.util.PlankReloadListener;
-import zornco.bedcraftbeyond.util.RenderingHelper;
+import zornco.bedcraftbeyond.common.CommonProxy;
+import zornco.bedcraftbeyond.common.item.BcbItems;
 
 public class ClientProxy extends CommonProxy {
 

@@ -1,12 +1,10 @@
-package zornco.bedcraftbeyond.item;
+package zornco.bedcraftbeyond.common.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.client.colors.IColoredItem;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;

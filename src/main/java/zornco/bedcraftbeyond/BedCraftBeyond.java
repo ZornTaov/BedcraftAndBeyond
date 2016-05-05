@@ -3,11 +3,9 @@ package zornco.bedcraftbeyond;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -24,12 +22,15 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import zornco.bedcraftbeyond.blocks.*;
-import zornco.bedcraftbeyond.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
-import zornco.bedcraftbeyond.core.CommonProxy;
+import zornco.bedcraftbeyond.common.BedHelper;
+import zornco.bedcraftbeyond.common.CommonProxy;
+import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileColoredBed;
+import zornco.bedcraftbeyond.common.item.BcbItems;
+import zornco.bedcraftbeyond.config.ConfigHelper;
 import zornco.bedcraftbeyond.item.*;
-import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.io.File;
 import java.util.Iterator;
@@ -57,12 +58,13 @@ public class BedCraftBeyond {
 
   public static Logger logger = LogManager.getLogger(BedCraftBeyond.MOD_ID);
 
-  File confFile;
   public static SimpleNetworkWrapper network;
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
-    confFile = event.getSuggestedConfigurationFile();
+    ConfigHelper.modConfigs = event.getModConfigurationDirectory();
+    ConfigHelper.setupModDirs();
+    
     bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
     bedsTab = new TabBeds();
 
@@ -127,29 +129,27 @@ public class BedCraftBeyond {
             "dyeWhite"
     };
 
+    GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4), "xxx", 'x', new ItemStack(Blocks.wool, 1));
 
-    for (int i = 0; i < ItemDye.dyeColors.length; i++)
-      GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4, i), "xxx", 'x', new ItemStack(Blocks.wool, 1, i));
-
-    for (int i = 0; i < ItemDye.dyeColors.length; i++) {
+    /*for (int i = 0; i < ItemDye.dyeColors.length; i++) {
       GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 1, 15 - i), new Object[]{"rug", dyes[i]}));
       GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 4, 15 - i), new Object[]{"rug", "rug", "rug", "rug", dyes[i]}));
       GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(BcbItems.rug, 8, 15 - i), new Object[]{"rug", "rug", "rug", "rug", "rug", "rug", "rug", "rug", dyes[i]}));
-    }
+    }*/
 
     // Add plank beds
-    for (String plank : PlankHelper.plankColorMap.keySet()) {
-      ItemStack bed = new ItemStack(BcbItems.coloredBed, 1, 241);
-      bed.setTagCompound(new NBTTagCompound());
-      bed.getTagCompound().setString("plankType", plank);
-      GameRegistry.addRecipe(new ShapedOreRecipe(bed,
-              "bbb", "fff",
-              'b', "blockWool",
-              'f', new ItemStack(Item.itemRegistry.getObject(new ResourceLocation(plank.split("@")[0])), 1, Integer.parseInt(plank.split("@")[1]))
-      ));
-
-      recipesAdded++;
-    }
+    //    for (String plank : PlankHelper.plankColorMap.keySet()) {
+    //      ItemStack bed = new ItemStack(BcbItems.coloredBed, 1, 241);
+    //      bed.setTagCompound(new NBTTagCompound());
+    //      bed.getTagCompound().setString("plankType", plank);
+    //      GameRegistry.addRecipe(new ShapedOreRecipe(bed,
+    //              "bbb", "fff",
+    //              'b', "blockWool",
+    //              'f', new ItemStack(Item.itemRegistry.getObject(new ResourceLocation(plank.split("@")[0])), 1, Integer.parseInt(plank.split("@")[1]))
+    //      ));
+    //
+    //      recipesAdded++;
+    //    }
 
     // Add stone bed recipe
     GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.stoneBed, 1, 0),
@@ -172,6 +172,7 @@ public class BedCraftBeyond {
 
   @EventHandler
   public void postInit(FMLPostInitializationEvent event) {
-    PlankHelper.readyToColor = true;
+    // PlankHelper.readyToColor = true;
+    BedHelper.compileWoodFrames();
   }
 }

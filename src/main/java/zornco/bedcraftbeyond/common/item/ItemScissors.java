@@ -1,7 +1,6 @@
-package zornco.bedcraftbeyond.item;
+package zornco.bedcraftbeyond.common.item;
 
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 public class ItemScissors extends Item {

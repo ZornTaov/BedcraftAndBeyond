@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.util;
+package zornco.bedcraftbeyond.client;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

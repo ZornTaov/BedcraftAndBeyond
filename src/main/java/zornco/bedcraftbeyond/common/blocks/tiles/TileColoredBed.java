@@ -1,6 +1,5 @@
-package zornco.bedcraftbeyond.blocks.tiles;
+package zornco.bedcraftbeyond.common.blocks.tiles;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,11 +10,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.blocks.BlockWoodenBed;
+import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.client.colors.IColoredItem;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
-import zornco.bedcraftbeyond.item.ItemBlanket;
-import zornco.bedcraftbeyond.item.ItemSheets;
+import zornco.bedcraftbeyond.common.item.ItemBlanket;
+import zornco.bedcraftbeyond.common.item.ItemSheets;
 import zornco.bedcraftbeyond.network.ColoredBedUpdate;
 import zornco.bedcraftbeyond.util.PlankHelper;
 

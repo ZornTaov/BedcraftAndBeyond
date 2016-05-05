@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.item;
+package zornco.bedcraftbeyond.common.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

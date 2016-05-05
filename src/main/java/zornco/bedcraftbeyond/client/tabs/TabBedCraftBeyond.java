@@ -2,10 +2,7 @@ package zornco.bedcraftbeyond.client.tabs;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.item.BcbItems;
+import zornco.bedcraftbeyond.common.item.BcbItems;
 
 public class TabBedCraftBeyond extends CreativeTabs {
 

@@ -1,7 +1,7 @@
-package zornco.bedcraftbeyond.item;
+package zornco.bedcraftbeyond.common.item;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import zornco.bedcraftbeyond.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 
 public class BcbItems {
 

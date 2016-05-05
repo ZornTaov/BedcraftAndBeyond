@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.blocks.tiles;
+package zornco.bedcraftbeyond.common.blocks.tiles;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
