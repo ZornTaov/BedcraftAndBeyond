@@ -1,12 +1,9 @@
 package zornco.bedcraftbeyond.common;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 
 public class Crafting {
@@ -29,6 +26,12 @@ public class Crafting {
               'S', "blockStone",
               's', new ItemStack(Blocks.stone_slab, 1, 0)
       ));
+      ++recipesAdded;
+
+      GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.woodenBed, 1, 0),
+              "SSS", "PPP",
+              'S', "slabWood",
+              'P', "frameMaterialWood"));
       ++recipesAdded;
 
       // Removed: Beds are now frames, we need this.

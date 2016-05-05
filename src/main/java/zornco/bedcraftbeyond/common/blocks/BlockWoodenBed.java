@@ -148,7 +148,7 @@ public class BlockWoodenBed extends BlockBedBase {
     if(!state.getValue(HEAD)) return Collections.emptyList();
 
     ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-    ItemStack bedItem = new ItemStack(BcbItems.coloredBed);
+    ItemStack bedItem = new ItemStack(BcbItems.woodenBed);
     NBTTagCompound tags = new NBTTagCompound();
     state = getActualState(state, world, pos);
     tags.setInteger("blankets", state.getValue(BLANKETS).getMetadata());

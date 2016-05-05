@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +19,6 @@ import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
 import zornco.bedcraftbeyond.common.Crafting;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
-import zornco.bedcraftbeyond.common.blocks.tiles.TileColoredBed;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.config.ConfigHelper;
 
@@ -74,7 +72,7 @@ public class BedCraftBeyond {
     long start = System.currentTimeMillis();
 
     /** Recipes **/
-    OreDictionary.registerOre("coloredBed", new ItemStack(BcbItems.coloredBed, 1, OreDictionary.WILDCARD_VALUE));
+    OreDictionary.registerOre("coloredBed", new ItemStack(BcbItems.woodenBed, 1, OreDictionary.WILDCARD_VALUE));
     Crafting.addRecipes();
 
     long elapsedTimeMillis = System.currentTimeMillis() - start;

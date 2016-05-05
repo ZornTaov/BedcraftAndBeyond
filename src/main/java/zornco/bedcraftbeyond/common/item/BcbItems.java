@@ -6,7 +6,7 @@ import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 public class BcbItems {
 
   // Colored bed stuff
-  public static ItemWoodenBed coloredBed;
+  public static ItemWoodenBed woodenBed;
   public static ItemBlanket blanket;
   public static ItemSheets sheets;
   public static ItemDrawer drawer;
@@ -18,7 +18,7 @@ public class BcbItems {
   public static ItemScissors scissors;
 
   private static void initItems(){
-    coloredBed = new ItemWoodenBed(BcbBlocks.woodenBed);
+    woodenBed = new ItemWoodenBed(BcbBlocks.woodenBed);
     blanket = new ItemBlanket();
     sheets = new ItemSheets();
     drawer = new ItemDrawer();
@@ -30,7 +30,7 @@ public class BcbItems {
   }
 
   private static void addItems(){
-    GameRegistry.register(coloredBed);
+    GameRegistry.register(woodenBed);
     GameRegistry.register(blanket);
     GameRegistry.register(sheets);
     GameRegistry.register(drawer);
