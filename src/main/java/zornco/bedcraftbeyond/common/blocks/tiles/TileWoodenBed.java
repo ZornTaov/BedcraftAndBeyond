@@ -11,22 +11,24 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.client.colors.IColoredItem;
+import zornco.bedcraftbeyond.client.colors.ILinenItem;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.item.ItemBlanket;
 import zornco.bedcraftbeyond.common.item.ItemSheets;
-import zornco.bedcraftbeyond.network.ColoredBedUpdate;
+import zornco.bedcraftbeyond.network.BedPartUpdate;
 import zornco.bedcraftbeyond.util.PlankHelper;
+
+import java.awt.*;
 
 // This tile is only to be used ONCE on beds!
 // Place it on the head of the bed. Use BlockWoodenBed.getTileEntity anywhere on a bed to fetch this instance.
-public class TileColoredBed extends TileEntity {
+public class TileWoodenBed extends TileEntity {
 	private ItemStack blankets;
 	private ItemStack sheets;
 	private int plankColor;
 	public ResourceLocation plankType;
 
-	public TileColoredBed() { }
+	public TileWoodenBed() { }
 
 	@Override
 	public void writeToNBT(NBTTagCompound tags) {
@@ -69,6 +71,22 @@ public class TileColoredBed extends TileEntity {
 		updateClients(BlockWoodenBed.EnumColoredPart.PLANKS);
 	}
 
+	public ItemStack getLinenPart(BlockWoodenBed.EnumColoredPart part, boolean extract){
+		ItemStack partCopy;
+		switch(part){
+			case SHEETS:
+				if(extract && sheets != null){ partCopy = sheets.copy(); sheets = null; return partCopy; }
+				return sheets;
+
+			case BLANKETS:
+				if(extract && blankets != null){ partCopy = blankets.copy(); blankets = null; return partCopy; }
+				return blankets;
+
+			default:
+				return null;
+		}
+	}
+
 	public boolean setLinenPart(BlockWoodenBed.EnumColoredPart part, ItemStack linen){
 		switch(part){
 			case SHEETS:
@@ -93,18 +111,27 @@ public class TileColoredBed extends TileEntity {
 		return false;
 	}
 
-	public EnumBedFabricType getPartColor(BlockWoodenBed.EnumColoredPart part){
-		ItemStack i = null;
-		if(part == BlockWoodenBed.EnumColoredPart.BLANKETS) i = blankets;
-		if(part == BlockWoodenBed.EnumColoredPart.SHEETS) i = sheets;
-		if(i == null) return EnumBedFabricType.NONE;
-		EnumBedFabricType type = ((IColoredItem) i.getItem()).getColor(i);
-		return type != null ? type : EnumBedFabricType.NONE;
+	public Color getPartColor(BlockWoodenBed.EnumColoredPart part){
+		ItemStack i = getLinenPart(part, false);
+		if(i == null) Color.WHITE.getRGB();
+		if(getPartType(part) != EnumBedFabricType.SOLID_COLOR) return Color.WHITE;
+
+		return ((ILinenItem) i.getItem()).getColor(i);
 	}
 
-	public EnumBedFabricType getSheetsColor(){ return getPartColor(BlockWoodenBed.EnumColoredPart.SHEETS); }
+	public EnumBedFabricType getPartType(BlockWoodenBed.EnumColoredPart type){
+		ItemStack part = getLinenPart(type, false);
+		if(part == null) return EnumBedFabricType.NONE;
 
-	public EnumBedFabricType getBlanketsColor(){ return getPartColor(BlockWoodenBed.EnumColoredPart.BLANKETS); }
+		if(!part.hasTagCompound()){ part.setTagCompound(new NBTTagCompound()); }
+		if(!part.getTagCompound().hasKey("type")) {
+			part.getTagCompound().setString("type", EnumBedFabricType.NONE.name());
+			return EnumBedFabricType.NONE;
+		}
+
+		try { return EnumBedFabricType.valueOf(part.getTagCompound().getString("type")); }
+		catch(Exception e){ return EnumBedFabricType.NONE; }
+	}
 
 	@Override
 	public final Packet getDescriptionPacket() {
@@ -125,7 +152,8 @@ public class TileColoredBed extends TileEntity {
 	public final void updateClients(BlockWoodenBed.EnumColoredPart part) {
 		if (worldObj.isRemote) return;
 		markDirty();
-		ColoredBedUpdate update = new ColoredBedUpdate(pos, part, getPartColor(part));
+
+		BedPartUpdate update = new BedPartUpdate(pos, part, getPartType(part), getPartColor(part).getRGB());
 		BedCraftBeyond.network.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
 	}
 

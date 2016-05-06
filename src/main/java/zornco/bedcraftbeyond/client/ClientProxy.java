@@ -6,11 +6,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import zornco.bedcraftbeyond.client.colors.ColorSingleLayerRenderer;
+import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.common.frames.FrameHelper;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
@@ -24,19 +27,27 @@ public class ClientProxy extends CommonProxy {
    @Override
    public void registerModels() {
 
-      ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
-      ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBed.OCCUPIED}).ignore(new IProperty[]{BlockBed.PART}).ignore(new IProperty[]{BlockBed.FACING}).build());
+      ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
+      ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED }).build());
 
       RenderingHelper.registerItemModel(BcbItems.scissors);
       RenderingHelper.registerItemModel(BcbItems.rug);
+
+      RenderingHelper.registerItemModel(BcbItems.blanket);
+      RenderingHelper.registerItemModel(BcbItems.sheets);
 
       RenderingHelper.registerItemModel(BcbItems.drawerKey);
       RenderingHelper.registerItemModel(BcbItems.stoneBed);
    }
 
    public void init() {
+      super.init();
+
+      ItemColors c = Minecraft.getMinecraft().getItemColors();
       IItemColor dye = new DyeColorSingleLayer();
-      Minecraft.getMinecraft().getItemColors().registerItemColorHandler(dye, BcbItems.rug);
+      IItemColor colorSingleLater = new ColorSingleLayerRenderer();
+      c.registerItemColorHandler(dye, BcbItems.rug );
+      c.registerItemColorHandler(colorSingleLater, BcbItems.blanket, BcbItems.sheets );
 
       IBlockColor coloredBed = new BedFabricColorer();
       Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.woodenBed);

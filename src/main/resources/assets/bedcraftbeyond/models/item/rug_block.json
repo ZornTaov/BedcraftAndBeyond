@@ -1,5 +1,5 @@
 {
-	"parent": "builtin/generated",
+	"parent": "bedcraftbeyond:item/item_base",
 	"textures": {
 		"layer0": "BedCraftBeyond:items/rug_gray"
 	},

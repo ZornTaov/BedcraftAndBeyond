@@ -10,18 +10,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.PropertyString;
-import zornco.bedcraftbeyond.common.blocks.tiles.TileColoredBed;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.common.item.ItemBlanket;
@@ -46,8 +49,8 @@ public class BlockWoodenBed extends BlockBedBase {
   public enum EnumColoredPart { BLANKETS, SHEETS, PLANKS }
 
   public BlockWoodenBed() {
-    setRegistryName(BedCraftBeyond.MOD_ID, "colored_bed");
-    setUnlocalizedName("beds.colored");
+    setRegistryName(BedCraftBeyond.MOD_ID, "wooden_bed");
+    setUnlocalizedName("beds.wooden");
     setDefaultState(getDefaultState()
             .withProperty(FACING, EnumFacing.NORTH)
             .withProperty(OCCUPIED, false)
@@ -64,7 +67,15 @@ public class BlockWoodenBed extends BlockBedBase {
 
   @Override
   public TileEntity createTileEntity(World world, IBlockState state) {
-    return state.getValue(HEAD) ? new TileColoredBed() : null;
+    return state.getValue(HEAD) ? new TileWoodenBed() : null;
+  }
+
+  @Override
+  public EnumBlockRenderType getRenderType(IBlockState state) {
+    if(state.getValue(BLANKETS) == EnumBedFabricType.SOLID_COLOR)
+      return EnumBlockRenderType.MODEL;
+
+    return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
   }
 
   @Override
@@ -72,22 +83,22 @@ public class BlockWoodenBed extends BlockBedBase {
     return state.getValue(HEAD);
   }
 
-  public static TileColoredBed getTileEntity(IBlockAccess world, BlockPos bedPos){
+  public static TileWoodenBed getTileEntity(IBlockAccess world, BlockPos bedPos){
     TileEntity te = world.getTileEntity(bedPos);
-    if(te instanceof TileColoredBed) return (TileColoredBed) te;
+    if(te instanceof TileWoodenBed) return (TileWoodenBed) te;
 
     IBlockState state = world.getBlockState(bedPos);
     if(!(state.getBlock() instanceof BlockWoodenBed)) return null;
     BlockPos actualTileHolder = bedPos.offset(state.getValue(BlockHorizontal.FACING));
 
     TileEntity realHolder = world.getTileEntity(actualTileHolder);
-    if(realHolder == null || !(realHolder instanceof TileColoredBed)) return null;
-    return (TileColoredBed) realHolder;
+    if(realHolder == null || !(realHolder instanceof TileWoodenBed)) return null;
+    return (TileWoodenBed) realHolder;
   }
 
   @Override
   public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-    TileColoredBed tile = getTileEntity(world, pos);
+    TileWoodenBed tile = getTileEntity(world, pos);
 
     if (tile == null) return true;
     if (world.isRemote) return true;
@@ -109,7 +120,15 @@ public class BlockWoodenBed extends BlockBedBase {
 
     if(heldItem == null) {
       if (player.isSneaking()) {
-        player.addChatMessage(new TextComponentString(tile.getBlanketsColor().name() + ", " + tile.getSheetsColor().name()));
+        ITextComponent message = new TextComponentString("");
+
+        if(tile.getPartType(EnumColoredPart.BLANKETS) != EnumBedFabricType.NONE)
+          message = new TextComponentString(TextFormatting.AQUA + "Blankets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.BLANKETS));
+        if(tile.getPartType(EnumColoredPart.SHEETS) != EnumBedFabricType.NONE)
+          message.appendSibling(new TextComponentString(TextFormatting.GOLD + "Sheets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.SHEETS)));
+
+        if(!message.getUnformattedText().isEmpty())
+          player.addChatMessage(message);
       } else
         onBedActivated(world, pos, state, player);
     }
@@ -121,9 +140,9 @@ public class BlockWoodenBed extends BlockBedBase {
   public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
     if(getTileEntity(worldIn, pos) == null) return state;
 
-    TileColoredBed bed = getTileEntity(worldIn, pos);
-    state = state.withProperty(BLANKETS, bed.getBlanketsColor());
-    state = state.withProperty(SHEETS, bed.getSheetsColor());
+    TileWoodenBed bed = getTileEntity(worldIn, pos);
+    state = state.withProperty(BLANKETS, bed.getPartType(EnumColoredPart.BLANKETS));
+    state = state.withProperty(SHEETS, bed.getPartType(EnumColoredPart.SHEETS));
 
     return state;
     // TODO: Add inventory and plank types
@@ -134,7 +153,7 @@ public class BlockWoodenBed extends BlockBedBase {
     // TODO: Check accuracy
     ItemStack stack = new ItemStack(BcbBlocks.woodenBed, 1, state.getBlock().getMetaFromState(state));
 
-    TileColoredBed tile = getTileEntity(world, pos);
+    TileWoodenBed tile = getTileEntity(world, pos);
     stack.setTagCompound(new NBTTagCompound());
     NBTTagCompound stackTags = stack.getTagCompound();
 

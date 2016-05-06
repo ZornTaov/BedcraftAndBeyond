@@ -55,6 +55,7 @@ public class BedCraftBeyond {
     bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
     bedsTab = new TabBeds();
 
+    zornco.bedcraftbeyond.util.ColorNamer.initColorList();
     BcbBlocks.registerBlocks();
     BcbItems.registerItems();
 

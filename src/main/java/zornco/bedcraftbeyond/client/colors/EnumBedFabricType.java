@@ -5,22 +5,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumBedFabricType implements IStringSerializable {
-  WHITE("white", 0),
-  ORANGE("orange", 1),
-  MAGENTA("magenta", 2),
-  LIGHT_BLUE("light_blue", 3),
-  YELLOW("yellow", 4),
-  LIME("lime", 5),
-  PINK("pink", 6),
-  GRAY("gray", 7),
-  SILVER("silver", 8),
-  CYAN("cyan", 9),
-  PURPLE("purple", 10),
-  BLUE("blue", 11),
-  BROWN("brown", 12),
-  GREEN("green", 13),
-  RED("red", 14),
-  BLACK("black", 15),
+  SOLID_COLOR("colored"),
   TEXTURED("textured"),
   RAINBOW("rainbow"),
   NONE("none");

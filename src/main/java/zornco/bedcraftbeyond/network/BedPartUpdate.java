@@ -10,20 +10,27 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.lwjgl.util.Color;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
 
-public class ColoredBedUpdate implements IMessage {
+public class BedPartUpdate implements IMessage {
 
   private BlockPos pos;
   private BlockWoodenBed.EnumColoredPart part;
   private EnumBedFabricType color;
+  private int partColor;
 
-  public ColoredBedUpdate(){  }
-  public ColoredBedUpdate(BlockPos pos, BlockWoodenBed.EnumColoredPart part, EnumBedFabricType color){
+  public BedPartUpdate(){  }
+  public BedPartUpdate(BlockPos pos, BlockWoodenBed.EnumColoredPart part, EnumBedFabricType color){
+    this(pos, part, color, Integer.MIN_VALUE);
+  }
+
+  public BedPartUpdate(BlockPos pos, BlockWoodenBed.EnumColoredPart part, EnumBedFabricType color, int partColor){
     this.pos = pos;
     this.part = part;
     this.color = color;
+    this.partColor = partColor;
   }
 
   /**
@@ -36,6 +43,7 @@ public class ColoredBedUpdate implements IMessage {
     pos = NBTUtil.getPosFromTag(ByteBufUtils.readTag(buf));
     color = EnumBedFabricType.valueOf(ByteBufUtils.readUTF8String(buf));
     part = BlockWoodenBed.EnumColoredPart.valueOf(ByteBufUtils.readUTF8String(buf));
+    partColor = buf.readInt();
   }
 
   /**
@@ -48,9 +56,10 @@ public class ColoredBedUpdate implements IMessage {
     ByteBufUtils.writeTag(buf, NBTUtil.createPosTag(pos));
     ByteBufUtils.writeUTF8String(buf, color.name());
     ByteBufUtils.writeUTF8String(buf, part.name());
+    buf.writeInt(partColor);
   }
 
-  public static class Handler implements IMessageHandler<ColoredBedUpdate, IMessage> {
+  public static class Handler implements IMessageHandler<BedPartUpdate, IMessage> {
 
     public Handler(){ }
 
@@ -63,7 +72,7 @@ public class ColoredBedUpdate implements IMessage {
      * @return an optional return message
      */
     @Override
-    public IMessage onMessage(ColoredBedUpdate message, MessageContext ctx) {
+    public IMessage onMessage(BedPartUpdate message, MessageContext ctx) {
       World w = Minecraft.getMinecraft().theWorld;
       IBlockState curState = w.getBlockState(message.pos);
       // BlockWoodenBed.setPartColor(message.part, message.pos, w, message.color);

@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.common.blocks.tiles.TileColoredBed;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
@@ -70,7 +70,7 @@ public class ItemWoodenBed extends ItemBedPlacer implements IItemColor {
 		try { placeSimpleBedBlocks(worldIn, playerIn, pos, BcbBlocks.woodenBed, stack); }
 		catch(Exception e) { return EnumActionResult.FAIL; }
 
-		TileColoredBed tileTopHalf = BlockWoodenBed.getTileEntity(worldIn, pos);
+		TileWoodenBed tileTopHalf = BlockWoodenBed.getTileEntity(worldIn, pos);
 		if (tileTopHalf != null) {
 			// tileTopHalf.setBlanketsColor(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.BLANKETS));
 			// tileTopHalf.setLinenPart(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.SHEETS));

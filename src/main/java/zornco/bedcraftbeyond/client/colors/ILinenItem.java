@@ -1,11 +1,13 @@
 package zornco.bedcraftbeyond.client.colors;
 
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import java.awt.Color;
 
-public interface IColoredItem {
+public interface ILinenItem {
 
   // if(!stack.hasTagCompound() || !stack.getTagCompound().hasKey("color")) return EnumBedFabricType.NONE;
   // return EnumBedFabricType.valueOf(stack.getTagCompound().getString("color"));
-  EnumBedFabricType getColor(ItemStack stack);
+  Color getColor(ItemStack stack);
 
 }

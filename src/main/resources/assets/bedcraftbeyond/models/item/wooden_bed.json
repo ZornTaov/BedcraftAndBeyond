@@ -1,0 +1,8 @@
+{
+	"parent": "bedcraftbeyond:item/item_base",
+	"textures": {
+		"layer0": "BedCraftBeyond:items/bed_blankets",
+		"layer1": "BedCraftBeyond:items/bed_sheets",
+		"layer2": "BedCraftBeyond:items/bed_foot"
+	}
+}
