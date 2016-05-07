@@ -21,6 +21,7 @@ import zornco.bedcraftbeyond.common.Crafting;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.config.ConfigHelper;
+import zornco.bedcraftbeyond.util.ColorHelper;
 
 @Mod(
         modid = BedCraftBeyond.MOD_ID,
@@ -55,7 +56,7 @@ public class BedCraftBeyond {
     bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
     bedsTab = new TabBeds();
 
-    zornco.bedcraftbeyond.util.ColorNamer.initColorList();
+    ColorHelper.initColorList();
     BcbBlocks.registerBlocks();
     BcbItems.registerItems();
 

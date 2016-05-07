@@ -2,6 +2,7 @@ package zornco.bedcraftbeyond.client.colors;
 
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.ItemStack;
+import zornco.bedcraftbeyond.util.ColorHelper;
 
 import java.awt.*;
 

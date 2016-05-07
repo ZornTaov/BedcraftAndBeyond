@@ -11,10 +11,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.client.colors.ILinenItem;
+import zornco.bedcraftbeyond.common.item.linens.ILinenItem;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
-import zornco.bedcraftbeyond.common.item.ItemBlanket;
-import zornco.bedcraftbeyond.common.item.ItemSheets;
+import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
+import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 import zornco.bedcraftbeyond.network.BedPartUpdate;
 import zornco.bedcraftbeyond.util.PlankHelper;
 

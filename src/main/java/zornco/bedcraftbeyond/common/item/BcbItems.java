@@ -1,7 +1,11 @@
 package zornco.bedcraftbeyond.common.item;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
+import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 
 public class BcbItems {
 
@@ -17,6 +21,9 @@ public class BcbItems {
   public static ItemRug rug;
   public static ItemScissors scissors;
 
+  // ItemBlocks
+  public static Item itemWorkbench;
+
   private static void initItems(){
     woodenBed = new ItemWoodenBed(BcbBlocks.woodenBed);
     blanket = new ItemBlanket();
@@ -27,6 +34,8 @@ public class BcbItems {
     stoneBed = new ItemStoneBed(BcbBlocks.stoneBed);
     rug = new ItemRug(BcbBlocks.rug);
     scissors = new ItemScissors();
+
+    itemWorkbench = new ItemBlock(BcbBlocks.workbench).setRegistryName(BcbBlocks.workbench.getRegistryName());
   }
 
   private static void addItems(){
@@ -39,6 +48,8 @@ public class BcbItems {
     GameRegistry.register(stoneBed);
     GameRegistry.register(rug);
     GameRegistry.register(scissors);
+
+    GameRegistry.register(itemWorkbench);
   }
 
   public static void registerItems() {

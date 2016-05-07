@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.renderer.tileentity.RenderEnderCrystal;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -31,7 +32,8 @@ public class ClientProxy extends CommonProxy {
       ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED }).build());
 
       RenderingHelper.registerItemModel(BcbItems.scissors);
-      RenderingHelper.registerItemModel(BcbItems.rug);
+      for(int i = 0; i < 16; ++i)
+         RenderingHelper.registerItemModel(BcbItems.rug, "inventory", i);
 
       RenderingHelper.registerItemModel(BcbItems.blanket);
       RenderingHelper.registerItemModel(BcbItems.sheets);

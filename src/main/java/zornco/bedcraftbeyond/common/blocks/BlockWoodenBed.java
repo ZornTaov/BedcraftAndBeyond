@@ -27,8 +27,8 @@ import zornco.bedcraftbeyond.common.blocks.properties.PropertyString;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.item.BcbItems;
-import zornco.bedcraftbeyond.common.item.ItemBlanket;
-import zornco.bedcraftbeyond.common.item.ItemSheets;
+import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
+import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,15 +120,18 @@ public class BlockWoodenBed extends BlockBedBase {
 
     if(heldItem == null) {
       if (player.isSneaking()) {
+        // TODO: Open bed gui here
         ITextComponent message = new TextComponentString("");
 
-        if(tile.getPartType(EnumColoredPart.BLANKETS) != EnumBedFabricType.NONE)
+        if(tile.getPartType(EnumColoredPart.BLANKETS) != EnumBedFabricType.NONE) {
           message = new TextComponentString(TextFormatting.AQUA + "Blankets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.BLANKETS));
-        if(tile.getPartType(EnumColoredPart.SHEETS) != EnumBedFabricType.NONE)
-          message.appendSibling(new TextComponentString(TextFormatting.GOLD + "Sheets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.SHEETS)));
-
-        if(!message.getUnformattedText().isEmpty())
           player.addChatMessage(message);
+        }
+
+        if(tile.getPartType(EnumColoredPart.SHEETS) != EnumBedFabricType.NONE) {
+          message = new TextComponentString(TextFormatting.GOLD + "Sheets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.SHEETS));
+          player.addChatMessage(message);
+        }
       } else
         onBedActivated(world, pos, state, player);
     }
@@ -170,9 +173,7 @@ public class BlockWoodenBed extends BlockBedBase {
     ItemStack bedItem = new ItemStack(BcbItems.woodenBed);
     NBTTagCompound tags = new NBTTagCompound();
     state = getActualState(state, world, pos);
-    tags.setInteger("blankets", state.getValue(BLANKETS).getMetadata());
-    tags.setInteger("sheets", state.getValue(SHEETS).getMetadata());
-    tags.setString("frame", "minecraft:planks@0");
+
     bedItem.setTagCompound(tags);
     drops.add(bedItem);
     return drops;
