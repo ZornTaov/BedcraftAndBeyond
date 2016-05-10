@@ -166,8 +166,8 @@ public class PlankHelper {
 
       String result = "Block: " + stack2.getDisplayName() + " meta: " + stack2.getItemDamage();
       try {
-         //int color = ClientUtils.getAverageItemColour(stack2);
-         //int color = ClientUtils.getAverageItemColour2(stack2);
+         //int color = TextureUtils.getAverageItemColour(stack2);
+         //int color = TextureUtils.getAverageItemColour2(stack2);
          if (color != -2) {
             //getPlankColorMap().put(stack2, color);
             getPlankColorMap().put(PlankHelper.plankStringfromItemStack(stack2), color);

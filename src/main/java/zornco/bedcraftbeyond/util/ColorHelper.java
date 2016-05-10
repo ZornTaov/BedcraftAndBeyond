@@ -115,4 +115,37 @@ public class ColorHelper {
               TextFormatting.GREEN + c.getGreen() + TextFormatting.WHITE + ", " +
               TextFormatting.BLUE + c.getBlue() + TextFormatting.RESET;
    }
+
+   public static NBTTagCompound getTagForColor(Color c){
+      NBTTagCompound color = new NBTTagCompound();
+      color.setInteger("r", c.getRed());
+      color.setInteger("g", c.getGreen());
+      color.setInteger("b", c.getBlue());
+      return color;
+   }
+
+   public static Color getColorFromTag(NBTTagCompound compound){
+      try {
+         return new Color(compound.getInteger("r"), compound.getInteger("g"), compound.getInteger("b"));
+      }
+
+      catch(Exception e){ return Color.WHITE; }
+   }
+
+   public static Color blendColours(Object o0, Object o1) {
+      assert (o0 instanceof Color || o0 instanceof Integer);
+      assert (o1 instanceof Color || o1 instanceof Integer);
+      Color c0 = o0 instanceof Color ? (Color) o0 : new Color((Integer) o0);
+      Color c1 = o1 instanceof Color ? (Color) o1 : new Color((Integer) o1);
+
+      double totalAlpha = c0.getAlpha() + c1.getAlpha();
+      double weight0 = c0.getAlpha() / totalAlpha;
+      double weight1 = c1.getAlpha() / totalAlpha;
+
+      double r = weight0 * c0.getRed() + weight1 * c1.getRed();
+      double g = weight0 * c0.getGreen() + weight1 * c1.getGreen();
+      double b = weight0 * c0.getBlue() + weight1 * c1.getBlue();
+      double a = Math.max(c0.getAlpha(), c1.getAlpha());
+      return new Color((int) r, (int) g, (int) b, (int) a);
+   }
 }

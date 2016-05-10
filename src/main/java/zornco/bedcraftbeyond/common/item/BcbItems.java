@@ -22,7 +22,7 @@ public class BcbItems {
   public static ItemScissors scissors;
 
   // ItemBlocks
-  public static Item itemWorkbench;
+  public static ItemDyeBottle dyeBottle;
 
   private static void initItems(){
     woodenBed = new ItemWoodenBed(BcbBlocks.woodenBed);
@@ -34,8 +34,7 @@ public class BcbItems {
     stoneBed = new ItemStoneBed(BcbBlocks.stoneBed);
     rug = new ItemRug(BcbBlocks.rug);
     scissors = new ItemScissors();
-
-    itemWorkbench = new ItemBlock(BcbBlocks.workbench).setRegistryName(BcbBlocks.workbench.getRegistryName());
+    dyeBottle = new ItemDyeBottle();
   }
 
   private static void addItems(){
@@ -49,7 +48,7 @@ public class BcbItems {
     GameRegistry.register(rug);
     GameRegistry.register(scissors);
 
-    GameRegistry.register(itemWorkbench);
+    GameRegistry.register(dyeBottle);
   }
 
   public static void registerItems() {

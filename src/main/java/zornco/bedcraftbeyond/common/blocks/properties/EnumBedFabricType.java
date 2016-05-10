@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.client.colors;
+package zornco.bedcraftbeyond.common.blocks.properties;
 
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemDye;

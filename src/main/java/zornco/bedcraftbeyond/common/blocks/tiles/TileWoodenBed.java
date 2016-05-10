@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.item.linens.ILinenItem;
-import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
+import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
 import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 import zornco.bedcraftbeyond.network.BedPartUpdate;

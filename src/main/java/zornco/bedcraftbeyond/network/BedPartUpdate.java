@@ -10,9 +10,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import org.lwjgl.util.Color;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
+import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 
 public class BedPartUpdate implements IMessage {
 

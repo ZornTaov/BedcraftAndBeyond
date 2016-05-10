@@ -1,6 +1,8 @@
 {
     "forge_marker": 1,
-    "defaults": {},
+    "defaults": {
+        "model": "bedcraftbeyond:wooden_bed"
+    },
     "variants": {
         "normal": [{ }],
         "facing": {

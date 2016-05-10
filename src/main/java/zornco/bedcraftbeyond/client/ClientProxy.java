@@ -1,25 +1,22 @@
 package zornco.bedcraftbeyond.client;
 
-import net.minecraft.block.BlockBed;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.tileentity.RenderEnderCrystal;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import zornco.bedcraftbeyond.client.colors.ColorSingleLayerRenderer;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.common.frames.FrameHelper;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.client.colors.BedFabricColorer;
-import zornco.bedcraftbeyond.client.colors.DyeColorSingleLayer;
 import zornco.bedcraftbeyond.common.CommonProxy;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 
@@ -40,18 +37,20 @@ public class ClientProxy extends CommonProxy {
 
       RenderingHelper.registerItemModel(BcbItems.drawerKey);
       RenderingHelper.registerItemModel(BcbItems.stoneBed);
+
+      B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
    }
 
    public void init() {
       super.init();
 
       ItemColors c = Minecraft.getMinecraft().getItemColors();
-      IItemColor dye = new DyeColorSingleLayer();
-      IItemColor colorSingleLater = new ColorSingleLayerRenderer();
+      IItemColor dye = new Colors.DyeColorizer();
+      IItemColor linenColorer = new Colors.LinenColorer();
       c.registerItemColorHandler(dye, BcbItems.rug );
-      c.registerItemColorHandler(colorSingleLater, BcbItems.blanket, BcbItems.sheets );
+      c.registerItemColorHandler(linenColorer, BcbItems.blanket, BcbItems.sheets );
 
-      IBlockColor coloredBed = new BedFabricColorer();
+      IBlockColor coloredBed = new Colors.BedColorizer();
       Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.woodenBed);
    }
 
@@ -65,11 +64,6 @@ public class ClientProxy extends CommonProxy {
       super.compilePlanks();
 
       ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new PlankReloadListener());
-   }
-
-   @Override
-   public int getAverageBlockColour(ItemStack stack2) {
-      return ClientUtils.getAverageBlockColour(stack2);
    }
 
    @Override

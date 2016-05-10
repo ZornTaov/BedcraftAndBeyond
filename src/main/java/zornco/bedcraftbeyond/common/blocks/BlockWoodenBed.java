@@ -20,12 +20,14 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.PropertyString;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
-import zornco.bedcraftbeyond.client.colors.EnumBedFabricType;
+import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
 import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
@@ -62,7 +64,7 @@ public class BlockWoodenBed extends BlockBedBase {
 
   @Override
   protected BlockStateContainer createBlockState() {
-    return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS}, new IUnlistedProperty[]{ FRAME_TYPE } );
+    return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS}, new IUnlistedProperty[]{ FRAME_TYPE, B3DLoader.B3DFrameProperty.INSTANCE } );
   }
 
   @Override
@@ -149,6 +151,12 @@ public class BlockWoodenBed extends BlockBedBase {
 
     return state;
     // TODO: Add inventory and plank types
+  }
+
+  @Override
+  public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+     B3DLoader.B3DState newState = new B3DLoader.B3DState(null, 0);
+     return ((IExtendedBlockState) state).withProperty(B3DLoader.B3DFrameProperty.INSTANCE, newState);
   }
 
   @Override
