@@ -8,8 +8,11 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import zornco.bedcraftbeyond.common.blocks.BlockRug;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
+import zornco.bedcraftbeyond.common.item.ItemDyeBottle;
+import zornco.bedcraftbeyond.common.item.ItemRug;
 import zornco.bedcraftbeyond.util.ColorHelper;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
@@ -17,10 +20,11 @@ import java.awt.*;
 
 public class Colors {
 
-   public static class DyeColorizer implements IItemColor {
+   public static class DyeBottleColorer implements IItemColor {
       @Override
       public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-         return ItemDye.dyeColors[EnumDyeColor.byDyeDamage(stack.getItemDamage()).getMetadata()];
+         if(tintIndex == 1) return ColorHelper.getColorFromStack(stack).getRGB();
+         return -1;
       }
    }
 
@@ -32,7 +36,15 @@ public class Colors {
       }
    }
 
-   public static class BedColorizer implements IBlockColor {
+   public static class WoolDamageColorer implements IItemColor {
+
+      @Override
+      public int getColorFromItemstack(ItemStack stack, int tintIndex){
+         return ItemDye.dyeColors[EnumDyeColor.byMetadata(stack.getItemDamage()).getDyeDamage()];
+      }
+   }
+
+   public static class BedColorer implements IBlockColor {
       @Override
       public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
          state = state.getBlock().getActualState(state, world, pos);

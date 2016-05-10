@@ -33,39 +33,19 @@
             "black": { "textures": {"texture": "blocks/wool_colored_black"}}
         },
         "shape": {
-            "slab": {
-                "model": "bedcraftbeyond:rug/carpet_slab"
-            },
-            "straight": {
-                "model": "bedcraftbeyond:rug/stairs"
-            },
-            "inner_left": {
-                "model": "bedcraftbeyond:rug/inner_stairs_left"
-            },
-            "inner_right": {
-                "model": "bedcraftbeyond:rug/inner_stairs_right"
-            },
-            "outer_left": {
-                "model": "bedcraftbeyond:rug/outer_stairs_left"
-            },
-            "outer_right": {
-                "model": "bedcraftbeyond:rug/outer_stairs_right"
-            },
-            "block": {
-            }
+            "slab": { "model": "bedcraftbeyond:rug/carpet_slab" },
+            "straight": { "model": "bedcraftbeyond:rug/stairs" },
+            "inner_left": { "model": "bedcraftbeyond:rug/inner_stairs_left" },
+            "inner_right": { "model": "bedcraftbeyond:rug/inner_stairs_right" },
+            "outer_left": { "model": "bedcraftbeyond:rug/outer_stairs_left" },
+            "outer_right": { "model": "bedcraftbeyond:rug/outer_stairs_right" },
+            "block": { }
         },
         "facing": {
-            "east": {
-            },
-            "south": {
-                "y": 90
-            },
-            "west": {
-                "y": 180
-            },
-            "north": {
-                "y": 270
-            }
+            "east": { },
+            "south": { "y": 90 },
+            "west": { "y": 180 },
+            "north": { "y": 270 }
         }
     }
 }

@@ -23,6 +23,15 @@ public class ItemDyeBottle extends Item {
    }
 
    @Override
+   public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+      Color c = ColorHelper.getColorFromStack(stack);
+      if (c != null) {
+         String closest = ColorHelper.getColorNameFromColor(c);
+         tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c) + (closest != null ? " (~" + closest + ")" : ""));
+      }
+   }
+
+   @Override
    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
       for(Color c : ColorHelper.colorList.keySet()){
          ItemStack dyeBottleStack = new ItemStack(this, 1);

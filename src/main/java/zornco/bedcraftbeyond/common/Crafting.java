@@ -36,6 +36,12 @@ public class Crafting {
 
       // Removed: Beds are now frames, we need this.
       // GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.bed), "coloredBed"));  ++recipesAdded;
+      GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.blanket),
+              "CCC", "CCC", 'C', Blocks.carpet));
+      ++recipesAdded;
+
+      GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.sheets),
+              "CCC", 'C', Blocks.carpet));
    }
 
 }

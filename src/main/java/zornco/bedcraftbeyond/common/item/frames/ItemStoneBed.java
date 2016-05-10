@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.common.item;
+package zornco.bedcraftbeyond.common.item.frames;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +9,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.item.ItemBedPlacer;
 
 public class ItemStoneBed extends ItemBedPlacer {
 

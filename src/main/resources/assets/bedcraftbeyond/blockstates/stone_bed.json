@@ -1,5 +1,6 @@
 {
     "forge_marker": 1,
+    "defaults": { "model": "stone" },
     "variants": {
         "normal": [{ }],
         "facing": {

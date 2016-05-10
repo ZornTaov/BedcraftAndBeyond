@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
@@ -38,6 +37,8 @@ public class ClientProxy extends CommonProxy {
       RenderingHelper.registerItemModel(BcbItems.drawerKey);
       RenderingHelper.registerItemModel(BcbItems.stoneBed);
 
+      RenderingHelper.registerItemModel(BcbItems.dyeBottle);
+
       B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
    }
 
@@ -45,12 +46,15 @@ public class ClientProxy extends CommonProxy {
       super.init();
 
       ItemColors c = Minecraft.getMinecraft().getItemColors();
-      IItemColor dye = new Colors.DyeColorizer();
+      IItemColor dyeBottleColorer = new Colors.DyeBottleColorer();
       IItemColor linenColorer = new Colors.LinenColorer();
-      c.registerItemColorHandler(dye, BcbItems.rug );
+      IItemColor woolDamageColorer = new Colors.WoolDamageColorer();
+
+      c.registerItemColorHandler(dyeBottleColorer, BcbItems.dyeBottle );
+      c.registerItemColorHandler(woolDamageColorer, BcbItems.rug);
       c.registerItemColorHandler(linenColorer, BcbItems.blanket, BcbItems.sheets );
 
-      IBlockColor coloredBed = new Colors.BedColorizer();
+      IBlockColor coloredBed = new Colors.BedColorer();
       Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.woodenBed);
    }
 

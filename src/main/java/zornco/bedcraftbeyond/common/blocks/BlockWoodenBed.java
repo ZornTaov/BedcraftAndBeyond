@@ -64,7 +64,8 @@ public class BlockWoodenBed extends BlockBedBase {
 
   @Override
   protected BlockStateContainer createBlockState() {
-    return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS}, new IUnlistedProperty[]{ FRAME_TYPE, B3DLoader.B3DFrameProperty.INSTANCE } );
+    return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS},
+            new IUnlistedProperty[]{ FRAME_TYPE, B3DLoader.B3DFrameProperty.INSTANCE } );
   }
 
   @Override
@@ -74,10 +75,7 @@ public class BlockWoodenBed extends BlockBedBase {
 
   @Override
   public EnumBlockRenderType getRenderType(IBlockState state) {
-    if(state.getValue(BLANKETS) == EnumBedFabricType.SOLID_COLOR)
-      return EnumBlockRenderType.MODEL;
-
-    return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+    return EnumBlockRenderType.MODEL;
   }
 
   @Override

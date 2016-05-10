@@ -1,9 +1,11 @@
 package zornco.bedcraftbeyond.util;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.util.Constants;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 import java.awt.Color;
@@ -59,25 +61,15 @@ public class ColorHelper {
       colorList.put(new Color(0xEE, 0x82, 0xEE), "Violet");
       colorList.put(new Color(0xFF, 0x00, 0x63), "Crimson");
 
-      BedCraftBeyond.logger.info("=======================================");
-      BedCraftBeyond.logger.info("Registered " + colorList.size() + " colors.");
-      BedCraftBeyond.logger.info("=======================================");
-   }
+      colorList.put(new Color(0x00, 0xA6, 0x58), "Zorn");
+      colorList.put(new Color(0x3A, 0x7F, 0xE1), "Xylex");
+      colorList.put(new Color(0x32, 0x17, 0x4D), "Delenas");
 
-   /**
-    * Get the closest color name from our list
-    *
-    * @param r
-    * @param g
-    * @param b
-    * @return
-    */
-   public static String getColorNameFromRgb(int r, int g, int b) {
-      return getColorNameFromColor(new Color(r, g, b), 1000);
+      BedCraftBeyond.logger.info(BedCraftBeyond.MOD_NAME + ": ColorHelper registered " + colorList.size() + " dye colors.");
    }
 
    public static String getColorNameFromColor(Color color) {
-      return getColorNameFromColor(color, 1000);
+      return getColorNameFromColor(color, 9001);
    }
 
    public static String getColorNameFromColor(Color color, int minMSE) {
@@ -103,11 +95,24 @@ public class ColorHelper {
               Math.abs(c1.getBlue() - c2.getBlue());
    }
 
+   /**
+    * Gets a color from a compound tag (color => r, g, b) or a integer tag (color => INT)
+    * If it fails to parse the tag, it returns Color.WHITE.
+    * @param stack The itemstack to try and get a color from.
+    * @return
+    */
    public static Color getColorFromStack(ItemStack stack){
-      if(!stack.hasTagCompound() || !stack.getTagCompound().hasKey("color")) return Color.WHITE;
-      NBTTagCompound color = stack.getTagCompound().getCompoundTag("color");
-      try { return new Color(color.getInteger("r"), color.getInteger("b"), color.getInteger("g")); }
-      catch(Exception e){ return Color.WHITE; }
+      if(!stack.hasTagCompound()) return Color.WHITE;
+      NBTTagCompound tags = stack.getTagCompound();
+      if(!tags.hasKey("color")) return Color.WHITE;
+      if(!tags.hasKey("color", Constants.NBT.TAG_COMPOUND)){
+         try { return new Color(tags.getInteger("color")); }
+         catch(Exception e){ return Color.WHITE; }
+      } else {
+         NBTTagCompound color = tags.getCompoundTag("color");
+         try { return new Color(color.getInteger("r"), color.getInteger("b"), color.getInteger("g")); }
+         catch (Exception e) { return Color.WHITE; }
+      }
    }
 
    public static String getFormattedColorValues(Color c){
@@ -122,14 +127,6 @@ public class ColorHelper {
       color.setInteger("g", c.getGreen());
       color.setInteger("b", c.getBlue());
       return color;
-   }
-
-   public static Color getColorFromTag(NBTTagCompound compound){
-      try {
-         return new Color(compound.getInteger("r"), compound.getInteger("g"), compound.getInteger("b"));
-      }
-
-      catch(Exception e){ return Color.WHITE; }
    }
 
    public static Color blendColours(Object o0, Object o1) {

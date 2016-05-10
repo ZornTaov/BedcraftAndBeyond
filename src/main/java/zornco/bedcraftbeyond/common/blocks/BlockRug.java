@@ -15,11 +15,13 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import sun.security.provider.SHA;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 import java.util.List;
@@ -58,6 +60,30 @@ public class BlockRug extends Block {
   @Override
   public boolean isFullCube(IBlockState state) { return false; }
 
+  @Override
+  public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+    state = getActualState(state, source, pos);
+    switch(state.getValue(SHAPE)){
+      case STRAIGHT:
+      case INNER_LEFT:
+      case INNER_RIGHT:
+      case OUTER_LEFT:
+      case OUTER_RIGHT:
+        return new AxisAlignedBB(0, -1, 0, 1, -1 + 0.5625, 1);
+      case BLOCK:
+        return new AxisAlignedBB(0, 0, 0, 1, 0.0625, 1);
+      case SLAB:
+        return new AxisAlignedBB(0, 0.5, 0, 1, 0.5625, 1);
+      default:
+        return new AxisAlignedBB(0,0,0, 1,1,1);
+    }
+  }
+
+  @Override
+  public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
+    return true;
+  }
+
   /**
    * checks to see if you can place this block can be placed on that side of a
    * block: BlockLever overrides
@@ -80,7 +106,7 @@ public class BlockRug extends Block {
 
   }
 
-  private static boolean isBlockValid(Block block) {
+  public static boolean isBlockValid(Block block) {
     return (block instanceof BlockStairs) || (block instanceof BlockSlab);
   }
 
@@ -174,18 +200,23 @@ public class BlockRug extends Block {
   }
 
   public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-    //get state of center block
+    //get state of block underneath
     IBlockState underState = worldIn.getBlockState(pos.down());
     Block underBlock = underState.getBlock();
     underState = underBlock.getActualState(underState, worldIn, pos.down());
+
+    // Stairs - facing up
     if (underBlock instanceof BlockStairs && underState.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.BOTTOM) {
       state = state.withProperty(SHAPE, BlockRug.EnumShape.getShape(underState.getValue(BlockStairs.SHAPE)));
       state = state.withProperty(FACING, underState.getValue(FACING));
+    // Slab - facing up
     } else if (underBlock instanceof BlockSlab && underState.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.BOTTOM) {
       state = state.withProperty(SHAPE, BlockRug.EnumShape.SLAB);
+    // Otherwise, use carpet style
     } else {
       state = state.withProperty(SHAPE, BlockRug.EnumShape.BLOCK);
     }
+
     if (state.getValue(SHAPE) == BlockRug.EnumShape.SLAB) {
       //state = applyLowerState(state, worldIn, pos.east(), EL, EnumFacing.EAST);
       //state = applyLowerState(state, worldIn, pos.south(), SL, EnumFacing.SOUTH);
@@ -298,7 +329,7 @@ public class BlockRug extends Block {
     return new BlockStateContainer(this, new IProperty[]{COLOR, FACING, SHAPE});//, EL, SL, WL, NL});//, EU, SU, WU, NU });
   }
 
-  public static enum EnumSideHalf implements IStringSerializable {
+  public enum EnumSideHalf implements IStringSerializable {
     HALF("half"),
     LEFT("left"),
     RIGHT("right"),
@@ -307,7 +338,7 @@ public class BlockRug extends Block {
 
     private final String name;
 
-    private EnumSideHalf(String name) {
+    EnumSideHalf(String name) {
       this.name = name;
     }
 
@@ -331,7 +362,7 @@ public class BlockRug extends Block {
 
     private final String name;
 
-    private EnumShape(String name) {
+    EnumShape(String name) {
       this.name = name;
     }
 

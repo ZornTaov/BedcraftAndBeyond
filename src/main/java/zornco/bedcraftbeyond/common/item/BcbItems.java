@@ -1,16 +1,16 @@
 package zornco.bedcraftbeyond.common.item;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.item.frames.ItemStoneBed;
+import zornco.bedcraftbeyond.common.item.frames.ItemWoodenFrame;
 import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
 import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 
 public class BcbItems {
 
   // Colored bed stuff
-  public static ItemWoodenBed woodenBed;
+  public static ItemWoodenFrame woodenBed;
   public static ItemBlanket blanket;
   public static ItemSheets sheets;
   public static ItemDrawer drawer;
@@ -25,7 +25,7 @@ public class BcbItems {
   public static ItemDyeBottle dyeBottle;
 
   private static void initItems(){
-    woodenBed = new ItemWoodenBed(BcbBlocks.woodenBed);
+    woodenBed = new ItemWoodenFrame(BcbBlocks.woodenBed);
     blanket = new ItemBlanket();
     sheets = new ItemSheets();
     drawer = new ItemDrawer();

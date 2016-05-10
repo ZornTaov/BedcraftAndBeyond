@@ -4,9 +4,7 @@ import com.sun.org.apache.regexp.internal.RESyntaxException;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class FrameRegistry {
 
@@ -31,6 +29,13 @@ public class FrameRegistry {
       return INSTANCE;
    }
 
+   public static void dumpFrameList(){
+      // This makes me sad.
+      getInstance().woodFrames.clear();
+      getInstance().stoneFrames.clear();
+      getInstance().allowedMeta.clear();
+   }
+
    public static boolean addToFrameList(EnumBedFrameType type, ResourceLocation registryName){
       HashMap<ResourceLocation, Boolean> set = null;
       switch(type){
@@ -44,17 +49,37 @@ public class FrameRegistry {
       return true;
    }
 
-   @Deprecated
-   public static boolean addToWoodList(ResourceLocation block){
-      return addToFrameList(EnumBedFrameType.WOOD, block);
-   }
+   public static boolean removeFromFrameList(EnumBedFrameType type, ResourceLocation registryName){
+      HashMap<ResourceLocation, Boolean> set = null;
+      switch(type){
+         case WOOD:
+            set = getInstance().woodFrames; break;
+         case STONE:
+            set = getInstance().stoneFrames; break;
+      }
 
-   @Deprecated
-   public static boolean addToStoneList(ResourceLocation block) {
-      return addToFrameList(EnumBedFrameType.STONE, block);
+      if(set.containsKey(registryName)){
+         if(set.get(registryName)) getInstance().allowedMeta.remove(registryName);
+         set.remove(registryName);
+         return true;
+      }
+
+      return false;
    }
 
    public static int getWoodFrameCount(){
       return getInstance().woodFrames.size();
+   }
+
+   public static Set<ResourceLocation> getWoodFrameSet(){
+      Set<ResourceLocation> allFrames = Collections.emptySet();
+      for(Map.Entry<ResourceLocation, Boolean> woodEntry : getInstance().woodFrames.entrySet()){
+         if(!woodEntry.getValue()){
+            allFrames.add(woodEntry.getKey());
+         } else {
+            // TODO: Implement meta list
+         }
+      }
+      return allFrames;
    }
 }

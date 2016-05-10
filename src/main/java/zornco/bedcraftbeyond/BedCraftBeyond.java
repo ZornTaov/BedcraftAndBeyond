@@ -2,6 +2,9 @@ package zornco.bedcraftbeyond;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -9,6 +12,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -27,7 +31,8 @@ import zornco.bedcraftbeyond.util.ColorHelper;
         modid = BedCraftBeyond.MOD_ID,
         name = BedCraftBeyond.MOD_NAME,
         version = "${version}",
-        acceptedMinecraftVersions = "[1.9,)")
+        acceptedMinecraftVersions = "[1.9,)",
+        guiFactory = "zornco.bedcraftbeyond.config.ConfigGuiFactory")
 public class BedCraftBeyond {
 
   public static final String MOD_ID = "bedcraftbeyond";
@@ -48,10 +53,14 @@ public class BedCraftBeyond {
 
   public static SimpleNetworkWrapper network;
 
+  public static Configuration config;
+
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
+
+    // Do not set up config here, it's setup in ConfigHelper
     ConfigHelper.allModConfigsDir = event.getModConfigurationDirectory();
-    ConfigHelper.setupModDirs();
+    ConfigHelper.setup();
 
     bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
     bedsTab = new TabBeds();
@@ -63,6 +72,8 @@ public class BedCraftBeyond {
     proxy.registerModels();
     network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
     zornco.bedcraftbeyond.network.Registration.registerMessages();
+
+    MinecraftForge.EVENT_BUS.register(instance);
   }
 
   @SuppressWarnings("unchecked")
@@ -86,5 +97,11 @@ public class BedCraftBeyond {
   public void postInit(FMLPostInitializationEvent event) {
     // PlankHelper.readyToColor = true;
     proxy.compileFrames();
+  }
+
+  @SubscribeEvent
+  public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+    if(eventArgs.getModID().equals(BedCraftBeyond.MOD_ID))
+      ConfigHelper.refreshConfigs();
   }
 }

@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.common.item;
+package zornco.bedcraftbeyond.common.item.frames;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,13 +19,16 @@ import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
+import zornco.bedcraftbeyond.common.frames.FrameHelper;
+import zornco.bedcraftbeyond.common.frames.FrameRegistry;
+import zornco.bedcraftbeyond.common.item.ItemBedPlacer;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.util.List;
 
-public class ItemWoodenBed extends ItemBedPlacer implements IItemColor {
+public class ItemWoodenFrame extends ItemBedPlacer implements IItemColor {
 
-	public ItemWoodenBed(Block b) {
+	public ItemWoodenFrame(Block b) {
 		super(b);
 		setUnlocalizedName("frames.wooden");
 		this.setHasSubtypes(true);
@@ -39,10 +43,11 @@ public class ItemWoodenBed extends ItemBedPlacer implements IItemColor {
 	public void getSubItems(Item item, CreativeTabs tab, List subItems)
 	{
 		if(tab instanceof TabBeds) {
-			for (String plank : PlankHelper.getPlankColorMap().keySet()) {
-				ItemStack bed = new ItemStack(item, 1, 241);
-				bed.setTagCompound(new NBTTagCompound());
-				PlankHelper.addPlankInfo(bed.getTagCompound(), PlankHelper.plankItemStackfromString(plank));
+			for (ResourceLocation regName : FrameRegistry.getWoodFrameSet()) {
+				ItemStack bed = new ItemStack(item, 1);
+				NBTTagCompound tags = new NBTTagCompound();
+				tags.setString("frameType", regName.toString());
+				bed.setTagCompound(tags);
 				subItems.add(bed);
 			}
 		}
@@ -94,7 +99,7 @@ public class ItemWoodenBed extends ItemBedPlacer implements IItemColor {
 				return 0; // ItemDye.dyeColors[BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.SHEETS).ordinal()];
 			case 2:
 				// TODO: Fix plank colors
-				// return ItemWoodenBed.woodColors[ItemWoodenBed.getColorFromInt(par1ItemStack.getItemDamage(), 0)];
+				// return ItemWoodenFrame.woodColors[ItemWoodenFrame.getColorFromInt(par1ItemStack.getItemDamage(), 0)];
 				// return PlankHelper.getPlankColor(PlankHelper.plankStringfromItemStack(PlankHelper.validatePlank(par1ItemStack)));
 				return PlankHelper.oakColor;
 			default:
