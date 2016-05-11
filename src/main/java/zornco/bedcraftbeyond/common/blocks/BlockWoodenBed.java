@@ -43,7 +43,7 @@ import java.util.List;
 public class BlockWoodenBed extends BlockBedBase {
 
   public static PropertyBool HAS_STORAGE = PropertyBool.create("storage");
-  public static PropertyString FRAME_TYPE = new PropertyString("frame");
+  // public static PropertyString FRAME_TYPE = new PropertyString("frame");
 
   public static PropertyEnum<EnumBedFabricType> BLANKETS = PropertyEnum.create("color_blankets", EnumBedFabricType.class);
   public static PropertyEnum<EnumBedFabricType> SHEETS = PropertyEnum.create("color_sheets", EnumBedFabricType.class);
@@ -65,7 +65,7 @@ public class BlockWoodenBed extends BlockBedBase {
   @Override
   protected BlockStateContainer createBlockState() {
     return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS},
-            new IUnlistedProperty[]{ FRAME_TYPE, B3DLoader.B3DFrameProperty.INSTANCE } );
+            new IUnlistedProperty[]{ B3DLoader.B3DFrameProperty.INSTANCE } );
   }
 
   @Override

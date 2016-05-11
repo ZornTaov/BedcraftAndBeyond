@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class FrameHelper {
 
@@ -107,6 +108,9 @@ public class FrameHelper {
          InputStream vanillaStream = vanilla.getInputStream();
          int num_added = addToFramesFromStream(vanillaStream, FrameRegistry.EnumBedFrameType.WOOD);
          BedCraftBeyond.logger.info("Added " + num_added + " wooden frame types from wooden_frames.json");
+
+         for(ResourceLocation rl : FrameRegistry.getWoodFrameSet())
+            BedCraftBeyond.logger.info(rl);
       } catch (IOException e) {
          e.printStackTrace();
       }
