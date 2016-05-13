@@ -6,7 +6,7 @@
         "facing": {
             "north": {},
             "south": {},
-            "west": {},
+            "west": { "y": 270 },
             "east": {}
         },
 

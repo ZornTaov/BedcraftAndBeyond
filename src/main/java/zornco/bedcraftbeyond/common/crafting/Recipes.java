@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.common;
+package zornco.bedcraftbeyond.common.crafting;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 
-public class Crafting {
+public class Recipes {
 
    public static int recipesAdded = 0;
    public static void addRecipes(){
@@ -42,6 +42,9 @@ public class Crafting {
 
       GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.sheets),
               "CCC", 'C', Blocks.carpet));
+
+      RecipeLinenItems rli = new RecipeLinenItems();
+      GameRegistry.addRecipe(rli);
    }
 
 }

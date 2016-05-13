@@ -27,6 +27,8 @@ item.beds.stone.name=Stone Bed
 item.scissorsItem.name=Scissors
 item.drawerKey.name=Drawer Key
 item.dye_bottle.name=Bottle of Dye
+item.linens.blankets.name=Blankets
+item.linens.sheets.name=Sheets
 
 # Rugs
 item.rugItem.Black.name=Black Rug

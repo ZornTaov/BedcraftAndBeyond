@@ -21,10 +21,7 @@ import zornco.bedcraftbeyond.config.ConfigSettings;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FrameHelper {
 
@@ -78,17 +75,30 @@ public class FrameHelper {
       for (ItemStack stack : OreDictionary.getOres("plankWood")) {
          //not bothering with items that are not blocks
          if (!(stack.getItem() instanceof ItemBlock)) continue;
-         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-            //iterate over sub items
-            ItemStack itemNoMeta = new ItemStack(stack.getItem());
-            ResourceLocation registryName = itemNoMeta.getItem().getRegistryName();
-            if (registryName == null) {
-               BedCraftBeyond.logger.info("Found a null registry entry trying to add oreDict frames: " + itemNoMeta.toString());
-               continue;
-            }
+         ResourceLocation regName = stack.getItem().getRegistryName();
+         if (regName == null) {
+            BedCraftBeyond.logger.error("Found a null registry entry trying to add oreDict frames: " + stack.toString()
+                    + ". This is a critical issue, report it to the mod author!");
+            continue;
+         }
 
-            BedCraftBeyond.logger.info("Got plank \"" + stack.getDisplayName() + "\"." + "Registry name: " + registryName);
+         // If set to use all metadatas from item
+         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             FrameRegistry.addToFrameList(FrameRegistry.EnumBedFrameType.WOOD, stack.getItem().getRegistryName());
+
+            if(ConfigSettings.listAllMetasWhenAdding) {
+               //iterate over sub items
+               ArrayList<ItemStack> subItems = new ArrayList<>();
+               stack.getItem().getSubItems(stack.getItem(), null, subItems);
+               for (ItemStack subItem : subItems)
+                  BedCraftBeyond.logger.info("Got oredict entry \"" + subItem.getDisplayName() + ". Adding to \"" + regName + "\", as meta " + subItem.getMetadata() + ".");
+            }
+         } else {
+            boolean added = FrameRegistry.addToFrameList(FrameRegistry.EnumBedFrameType.WOOD, regName, stack.getMetadata());
+            if(ConfigSettings.listAllMetasWhenAdding){
+               if(added) BedCraftBeyond.logger.info("Got oredict entry \"" + stack.getDisplayName() + "\". Adding to \"" + regName + "\",  as meta " + stack.getMetadata() + ".");
+               else BedCraftBeyond.logger.info("Skipping oredict entry \"" + stack.getDisplayName() + "\"; it's already added.");
+            }
          }
       }
    }
@@ -96,21 +106,21 @@ public class FrameHelper {
    @SideOnly(Side.CLIENT)
    public static void compileFramesClient(){
       Logger l = BedCraftBeyond.logger;
-      l.info("Loading frames from resource packs..");
-
       IResourceManager man = Minecraft.getMinecraft().getResourceManager();
       try {
          FrameRegistry.dumpFrameList();
+         if(ConfigSettings.addWoodenOredictFrames || ConfigSettings.addStoneOredictFrames)
+            l.info("Loading frame data from the ore dictionary...");
          if(ConfigSettings.addWoodenOredictFrames) addWoodenOredictFrames();
 
+         l.info("");
+
+         l.info("Loading frames from resource packs..");
          IResource vanilla = man.getResource(new ResourceLocation(BedCraftBeyond.MOD_ID, "wooden_frames.json"));
          l.info("Got wooden frames json from pack " + vanilla.getResourcePackName());
          InputStream vanillaStream = vanilla.getInputStream();
          int num_added = addToFramesFromStream(vanillaStream, FrameRegistry.EnumBedFrameType.WOOD);
-         BedCraftBeyond.logger.info("Added " + num_added + " wooden frame types from wooden_frames.json");
-
-         for(ResourceLocation rl : FrameRegistry.getWoodFrameSet())
-            BedCraftBeyond.logger.info(rl);
+         BedCraftBeyond.logger.info("wooden_frames.json results: +" + num_added + " -0");
       } catch (IOException e) {
          e.printStackTrace();
       }

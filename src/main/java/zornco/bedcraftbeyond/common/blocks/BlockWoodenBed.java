@@ -1,11 +1,12 @@
 package zornco.bedcraftbeyond.common.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,14 +21,11 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.b3d.B3DLoader;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
+import zornco.bedcraftbeyond.common.blocks.properties.EnumBedPartStatus;
 import zornco.bedcraftbeyond.common.blocks.properties.PropertyString;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
-import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
 import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
@@ -43,10 +41,12 @@ import java.util.List;
 public class BlockWoodenBed extends BlockBedBase {
 
   public static PropertyBool HAS_STORAGE = PropertyBool.create("storage");
-  // public static PropertyString FRAME_TYPE = new PropertyString("frame");
+  public static PropertyString FRAME_TYPE = new PropertyString("frame");
 
   public static PropertyEnum<EnumBedFabricType> BLANKETS = PropertyEnum.create("color_blankets", EnumBedFabricType.class);
   public static PropertyEnum<EnumBedFabricType> SHEETS = PropertyEnum.create("color_sheets", EnumBedFabricType.class);
+
+  public static PropertyEnum<EnumBedPartStatus> STATUS = PropertyEnum.create("status", EnumBedPartStatus.class);
 
   public enum EnumColoredPart { BLANKETS, SHEETS, PLANKS }
 
@@ -58,14 +58,24 @@ public class BlockWoodenBed extends BlockBedBase {
             .withProperty(OCCUPIED, false)
             .withProperty(HEAD, false)
             .withProperty(HAS_STORAGE, false)
+            .withProperty(STATUS, EnumBedPartStatus.FOOT_INVALID)
             .withProperty(BLANKETS, EnumBedFabricType.NONE)
             .withProperty(SHEETS, EnumBedFabricType.NONE));
   }
 
   @Override
   protected BlockStateContainer createBlockState() {
-    return new ExtendedBlockState(this, new IProperty[]{ HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS},
-            new IUnlistedProperty[]{ B3DLoader.B3DFrameProperty.INSTANCE } );
+    return new BlockStateContainer(this, HEAD, OCCUPIED, FACING, HAS_STORAGE, STATUS, BLANKETS, SHEETS);
+  }
+
+  private boolean hasBlanketsAndSheets(IBlockState state, IBlockAccess world, BlockPos pos){
+    return state.getValue(BLANKETS) != EnumBedFabricType.NONE &&
+            state.getValue(SHEETS) != EnumBedFabricType.NONE;
+  }
+
+  @Override
+  public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
+    return hasBlanketsAndSheets(state, world, pos);
   }
 
   @Override
@@ -75,7 +85,7 @@ public class BlockWoodenBed extends BlockBedBase {
 
   @Override
   public EnumBlockRenderType getRenderType(IBlockState state) {
-    return EnumBlockRenderType.MODEL;
+    return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
   }
 
   @Override
@@ -147,14 +157,14 @@ public class BlockWoodenBed extends BlockBedBase {
     state = state.withProperty(BLANKETS, bed.getPartType(EnumColoredPart.BLANKETS));
     state = state.withProperty(SHEETS, bed.getPartType(EnumColoredPart.SHEETS));
 
+    boolean bas = hasBlanketsAndSheets(state, worldIn, pos);
+    if(state.getValue(HEAD))
+      state = state.withProperty(STATUS, bas ? EnumBedPartStatus.HEAD_VALID : EnumBedPartStatus.HEAD_INVALID);
+    else
+      state = state.withProperty(STATUS, bas ? EnumBedPartStatus.FOOT_VALID : EnumBedPartStatus.FOOT_INVALID);
+
     return state;
     // TODO: Add inventory and plank types
-  }
-
-  @Override
-  public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-     B3DLoader.B3DState newState = new B3DLoader.B3DState(null, 0);
-     return ((IExtendedBlockState) state).withProperty(B3DLoader.B3DFrameProperty.INSTANCE, newState);
   }
 
   @Override

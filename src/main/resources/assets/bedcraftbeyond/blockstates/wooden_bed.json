@@ -1,7 +1,16 @@
 {
     "forge_marker": 1,
     "defaults": {
-        "model": "bedcraftbeyond:wooden_bed"
+        "model": "bedcraftbeyond:wooden_bed.b3d",
+        "textures": {
+            "frame": "bedcraftbeyond:blocks/wooden_bed/frame",
+            "feet": "bedcraftbeyond:blocks/wooden_bed/feet",
+            "blankets": "bedcraftbeyond:blocks/wooden_bed/blankets",
+            "sheets": "bedcraftbeyond:blocks/wooden_bed/sheets"
+        },
+        "custom": {
+            "mesh": ["Base"]
+        }
     },
     "variants": {
         "normal": [{ }],
@@ -12,7 +21,7 @@
             "west": {}
         },
 
-        "head": {
+        "valid": {
             "true": {},
             "false": {}
         },

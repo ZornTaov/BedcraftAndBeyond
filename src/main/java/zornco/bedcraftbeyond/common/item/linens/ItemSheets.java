@@ -1,10 +1,12 @@
 package zornco.bedcraftbeyond.common.item.linens;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.util.ColorHelper;
@@ -19,13 +21,26 @@ public class ItemSheets extends Item implements ILinenItem {
     setMaxStackSize(16);
     setUnlocalizedName("linens.sheets");
     setRegistryName(BedCraftBeyond.MOD_ID, "sheets");
+    setHasSubtypes(true);
+  }
+
+  @Override
+  public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    ItemStack stack = new ItemStack(this);
+    NBTTagCompound tags = new NBTTagCompound();
+    tags.setTag("color", ColorHelper.getTagForColor(Color.WHITE));
+    tags.setString("type", EnumBedFabricType.SOLID_COLOR.name());
+    stack.setTagCompound(tags);
+    subItems.add(stack);
   }
 
   @Override
   public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-    NBTTagCompound tags = new NBTTagCompound();
-    tags.setTag("color", ColorHelper.getTagForColor(Color.WHITE));
-    tags.setString("type", EnumBedFabricType.SOLID_COLOR.name());
+    NBTTagCompound tags = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
+    if(!tags.hasKey("color"))
+      tags.setTag("color", ColorHelper.getTagForColor(Color.WHITE));
+    if(!tags.hasKey("type"))
+      tags.setString("type", EnumBedFabricType.SOLID_COLOR.name());
     stack.setTagCompound(tags);
   }
 

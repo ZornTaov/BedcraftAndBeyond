@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -21,7 +22,8 @@ import org.apache.logging.log4j.Logger;
 import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
-import zornco.bedcraftbeyond.common.Crafting;
+import zornco.bedcraftbeyond.common.commands.CommandFrames;
+import zornco.bedcraftbeyond.common.crafting.Recipes;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.config.ConfigHelper;
@@ -86,11 +88,11 @@ public class BedCraftBeyond {
 
     /** Recipes **/
     OreDictionary.registerOre("coloredBed", new ItemStack(BcbItems.woodenBed, 1, OreDictionary.WILDCARD_VALUE));
-    Crafting.addRecipes();
+    Recipes.addRecipes();
 
     long elapsedTimeMillis = System.currentTimeMillis() - start;
     BedCraftBeyond.logger.info("Generated wooden frame list and recipes in " + elapsedTimeMillis + " milliseconds.");
-    BedCraftBeyond.logger.info(this.MOD_NAME + " has added " + Crafting.recipesAdded + " recipes! That's a lot!");
+    BedCraftBeyond.logger.info(this.MOD_NAME + " has added " + Recipes.recipesAdded + " recipes! That's a lot!");
   }
 
   @EventHandler
@@ -103,5 +105,10 @@ public class BedCraftBeyond {
   public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
     if(eventArgs.getModID().equals(BedCraftBeyond.MOD_ID))
       ConfigHelper.refreshConfigs();
+  }
+
+  @Mod.EventHandler
+  public void serverStarted(FMLServerStartingEvent ev){
+    ev.registerServerCommand(new CommandFrames());
   }
 }

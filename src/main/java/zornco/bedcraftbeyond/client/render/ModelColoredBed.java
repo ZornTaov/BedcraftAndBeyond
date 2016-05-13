@@ -3,6 +3,9 @@ package zornco.bedcraftbeyond.client.render;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.CapabilityItemHandler;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 
 /**
  * ModelColoredBed - Zorn_Taov

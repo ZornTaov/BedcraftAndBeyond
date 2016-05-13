@@ -164,4 +164,19 @@ public abstract class BlockBedBase extends Block {
     if(state.getValue(HEAD)) meta |= 8;
     return meta;
   }
+
+  @Override
+  public boolean isOpaqueCube(IBlockState state) {
+    return false;
+  }
+
+  @Override
+  public boolean isNormalCube(IBlockState state) {
+    return false;
+  }
+
+  @Override
+  public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+    return false;
+  }
 }

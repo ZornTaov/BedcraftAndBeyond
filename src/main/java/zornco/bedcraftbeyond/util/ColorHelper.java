@@ -110,7 +110,7 @@ public class ColorHelper {
          catch(Exception e){ return Color.WHITE; }
       } else {
          NBTTagCompound color = tags.getCompoundTag("color");
-         try { return new Color(color.getInteger("r"), color.getInteger("b"), color.getInteger("g")); }
+         try { return new Color(color.getInteger("r"), color.getInteger("g"), color.getInteger("b")); }
          catch (Exception e) { return Color.WHITE; }
       }
    }

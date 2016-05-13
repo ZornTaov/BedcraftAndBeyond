@@ -23,6 +23,7 @@ public class ConfigHelper {
 
    private static void setupConfigFile(){
       BedCraftBeyond.config = new Configuration(Paths.get(modConfigDir.getPath(), BedCraftBeyond.MOD_ID + ".cfg").toFile());
+      refreshConfigs();
    }
 
    private static void setupModDirs(){
