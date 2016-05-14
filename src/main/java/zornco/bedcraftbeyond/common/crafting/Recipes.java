@@ -3,7 +3,9 @@ package zornco.bedcraftbeyond.common.crafting;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 
 public class Recipes {
@@ -45,6 +47,7 @@ public class Recipes {
 
       RecipeLinenItems rli = new RecipeLinenItems();
       GameRegistry.addRecipe(rli);
+      RecipeSorter.register(BedCraftBeyond.MOD_ID + ":linen_dyes", RecipeLinenItems.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
    }
 
 }

@@ -13,4 +13,9 @@ public class ServerProxy extends CommonProxy {
    public void compileFrames() {
       FrameHelper.compileFramesServer();
    }
+
+   @Override
+   public void registerMessages() {
+      zornco.bedcraftbeyond.network.Registration.registerMessagesServer();
+   }
 }

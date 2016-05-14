@@ -11,6 +11,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.FMLCorePlugin;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -83,23 +85,10 @@ public class FrameHelper {
          }
 
          // If set to use all metadatas from item
-         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
             FrameRegistry.addToFrameList(FrameRegistry.EnumBedFrameType.WOOD, stack.getItem().getRegistryName());
-
-            if(ConfigSettings.listAllMetasWhenAdding) {
-               //iterate over sub items
-               ArrayList<ItemStack> subItems = new ArrayList<>();
-               stack.getItem().getSubItems(stack.getItem(), null, subItems);
-               for (ItemStack subItem : subItems)
-                  BedCraftBeyond.logger.info("Got oredict entry \"" + subItem.getDisplayName() + ". Adding to \"" + regName + "\", as meta " + subItem.getMetadata() + ".");
-            }
-         } else {
-            boolean added = FrameRegistry.addToFrameList(FrameRegistry.EnumBedFrameType.WOOD, regName, stack.getMetadata());
-            if(ConfigSettings.listAllMetasWhenAdding){
-               if(added) BedCraftBeyond.logger.info("Got oredict entry \"" + stack.getDisplayName() + "\". Adding to \"" + regName + "\",  as meta " + stack.getMetadata() + ".");
-               else BedCraftBeyond.logger.info("Skipping oredict entry \"" + stack.getDisplayName() + "\"; it's already added.");
-            }
-         }
+         else
+            FrameRegistry.addToFrameList(FrameRegistry.EnumBedFrameType.WOOD, regName, stack.getMetadata());
       }
    }
 
@@ -125,22 +114,19 @@ public class FrameHelper {
          e.printStackTrace();
       }
 
-      BedCraftBeyond.logger.info("Got a grand total of " + FrameRegistry.getWoodFrameCount() + " wooden frames to use.");
+      BedCraftBeyond.logger.info("Got a grand total of " + FrameRegistry.getFrameTypeCount(FrameRegistry.EnumBedFrameType.WOOD) + " wooden frames to use.");
    }
 
    @SideOnly(Side.SERVER)
    public static void compileFramesServer(){
-      File framesDir = Paths.get(ConfigHelper.modConfigDir.getPath(), "frames").toFile();
-      File[] framesFiles = framesDir.listFiles();
-      for(File f : framesFiles){
-         try {
-            JsonReader reader = new JsonReader(new FileReader(f));
-            reader.beginObject();
+      if(ConfigSettings.addWoodenOredictFrames)
+         addWoodenOredictFrames();
 
-            reader.endObject();
-         }
+      BedCraftBeyond.logger.info("Added " + FrameRegistry.getFrameTypeCount(FrameRegistry.EnumBedFrameType.WOOD) + " frames from oredict.");
 
-         catch(IOException ioe){ }
+      File woodenFramesFile = Paths.get(ConfigHelper.modConfigDir.getPath(), "wooden_frames.json").toFile();
+      if(woodenFramesFile.exists()){
+         // wooden_frames.json integration
       }
    }
 

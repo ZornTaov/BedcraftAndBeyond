@@ -73,7 +73,8 @@ public class BedCraftBeyond {
 
     proxy.registerModels();
     network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
-    zornco.bedcraftbeyond.network.Registration.registerMessages();
+
+    proxy.registerMessages();
 
     MinecraftForge.EVENT_BUS.register(instance);
   }

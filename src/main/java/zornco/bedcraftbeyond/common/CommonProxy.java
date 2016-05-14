@@ -19,8 +19,5 @@ public abstract class CommonProxy {
 
 	public abstract void compileFrames();
 
-	public void compilePlanks() {
-		PlankHelper.compilePlanks();
-		PlankHelper.compilePlanksClient();
-	}
+	public abstract void registerMessages();
 }

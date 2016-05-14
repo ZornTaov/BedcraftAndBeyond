@@ -27,7 +27,7 @@ import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.util.List;
 
-public class ItemWoodenFrame extends ItemBedPlacer implements IItemColor {
+public class ItemWoodenFrame extends ItemBedPlacer {
 
 	public ItemWoodenFrame(Block b) {
 		super(b);
@@ -105,23 +105,5 @@ public class ItemWoodenFrame extends ItemBedPlacer implements IItemColor {
 		if(stack.stackSize < 1) playerIn.setHeldItem(hand, null);
 
 		return EnumActionResult.SUCCESS;
-	}
-
-	@Override
-	public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-		switch (tintIndex)
-		{
-			case 0:
-				return 0; // ItemDye.dyeColors[BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.BLANKETS).ordinal()];
-			case 1:
-				return 0; // ItemDye.dyeColors[BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.SHEETS).ordinal()];
-			case 2:
-				// TODO: Fix plank colors
-				// return ItemWoodenFrame.woodColors[ItemWoodenFrame.getColorFromInt(par1ItemStack.getItemDamage(), 0)];
-				// return PlankHelper.getPlankColor(PlankHelper.plankStringfromItemStack(PlankHelper.validatePlank(par1ItemStack)));
-				return PlankHelper.oakColor;
-			default:
-				return 0;
-		}
 	}
 }

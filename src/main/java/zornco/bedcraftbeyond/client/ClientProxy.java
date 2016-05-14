@@ -18,6 +18,7 @@ import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.CommonProxy;
 import zornco.bedcraftbeyond.common.item.BcbItems;
+import zornco.bedcraftbeyond.network.Registration;
 
 public class ClientProxy extends CommonProxy {
 
@@ -64,10 +65,8 @@ public class ClientProxy extends CommonProxy {
    }
 
    @Override
-   public void compilePlanks() {
-      super.compilePlanks();
-
-      ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new PlankReloadListener());
+   public void registerMessages() {
+      Registration.registerMessagesClient();
    }
 
    @Override
