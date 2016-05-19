@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
-import zornco.bedcraftbeyond.common.commands.CommandFrames;
+import zornco.bedcraftbeyond.common.commands.CommandBedcraft;
 import zornco.bedcraftbeyond.common.crafting.Recipes;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.item.BcbItems;
@@ -110,6 +110,6 @@ public class BedCraftBeyond {
 
   @Mod.EventHandler
   public void serverStarted(FMLServerStartingEvent ev){
-    ev.registerServerCommand(new CommandFrames());
+    ev.registerServerCommand(new CommandBedcraft());
   }
 }

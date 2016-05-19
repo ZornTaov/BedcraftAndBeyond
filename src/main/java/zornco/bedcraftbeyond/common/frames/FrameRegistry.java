@@ -1,11 +1,12 @@
 package zornco.bedcraftbeyond.common.frames;
 
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.org.apache.regexp.internal.RESyntaxException;
-import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
 
@@ -35,7 +36,7 @@ public class FrameRegistry {
       getInstance().stoneFrames.clear();
    }
 
-   private static HashMap<ResourceLocation, Set<Integer>> getFrameSet(EnumBedFrameType type){
+   public static HashMap<ResourceLocation, Set<Integer>> getFrameSet(EnumBedFrameType type){
       HashMap<ResourceLocation, Set<Integer>> set = null;
       switch(type){
          case WOOD:
@@ -47,42 +48,51 @@ public class FrameRegistry {
       return set;
    }
 
-   public static boolean addToFrameList(EnumBedFrameType type, ResourceLocation registryName){
+   public static boolean addEntry(EnumBedFrameType type, ResourceLocation registryName){
+      return addEntry(type, registryName, OreDictionary.WILDCARD_VALUE);
+   }
+
+   public static boolean addEntry(EnumBedFrameType type, ResourceLocation registryName, int meta){
+      // DO not keep instances of meta < 0 in registry
+      if(meta < 0) return false;
+
       HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
-      if(!set.containsKey(registryName)){
-         set.put(registryName, new HashSet<Integer>());
+      if(set.containsKey(registryName))
+         if(meta != OreDictionary.WILDCARD_VALUE)
+            return set.get(registryName).add(meta);
+         else
+            return false;
+
+      if(meta == OreDictionary.WILDCARD_VALUE) {
+         set.put(registryName, new HashSet<>());
          return true;
+      }
+
+      HashSet<Integer> newSet = new HashSet<>();
+      newSet.add(meta);
+      set.put(registryName, newSet);
+      return true;
+   }
+
+   public static boolean removeEntry(EnumBedFrameType type, ResourceLocation registryName){
+    return removeEntry(type, registryName, OreDictionary.WILDCARD_VALUE);
+   }
+
+   public static boolean removeEntry(EnumBedFrameType type, ResourceLocation registryName, int meta){
+      HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
+      if(set.containsKey(registryName)){
+         if(meta == OreDictionary.WILDCARD_VALUE)
+            set.remove(registryName);
+         return set.get(registryName).remove(meta);
       }
 
       return false;
    }
 
-   public static boolean addToFrameList(EnumBedFrameType type, ResourceLocation registryName, int meta){
+   public static boolean clearEntryWhitelist(EnumBedFrameType type, ResourceLocation registryName){
       HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
-      boolean added = false;
-      if(set.containsKey(registryName))
-         added = set.get(registryName).add(meta);
-      else {
-         HashSet<Integer> newSet = new HashSet<>();
-         newSet.add(meta);
-         set.put(registryName, newSet);
-         added = true;
-      }
-
-      return added;
-   }
-
-   public static boolean removeFromFrameList(EnumBedFrameType type, ResourceLocation registryName){
-      HashMap<ResourceLocation, Set<Integer>> set = null;
-      switch(type){
-         case WOOD:
-            set = getInstance().woodFrames; break;
-         case STONE:
-            set = getInstance().stoneFrames; break;
-      }
-
       if(set.containsKey(registryName)){
-         set.remove(registryName);
+         set.get(registryName).clear();
          return true;
       }
 
@@ -95,6 +105,14 @@ public class FrameRegistry {
       for(ResourceLocation rl : set.keySet()){
          if(set.get(rl).size() == 0){
             // TODO: Possibly find a better means to add up subItems on a server
+            if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
+               List<ItemStack> stacks = new ArrayList<>();
+               Item i = Item.getByNameOrId(rl.toString());
+               i.getSubItems(i, CreativeTabs.tabAllSearch, stacks);
+               amt += stacks.size();
+               continue;
+            }
+
             ++amt; continue;
          }
 
@@ -102,19 +120,5 @@ public class FrameRegistry {
       }
 
       return amt;
-   }
-
-   public static Set<ResourceLocation> getWoodFrameSet(){
-      Set<ResourceLocation> allFrames = new HashSet<>();
-      for(Map.Entry<ResourceLocation, Set<Integer>> woodEntry : getInstance().woodFrames.entrySet()){
-         if(woodEntry.getValue().size() == 0) {
-            allFrames.add(woodEntry.getKey());
-            continue;
-         }
-
-         for(int i : woodEntry.getValue()) allFrames.add(new ResourceLocation(woodEntry.getKey() + "@" + i));
-      }
-
-      return allFrames;
    }
 }

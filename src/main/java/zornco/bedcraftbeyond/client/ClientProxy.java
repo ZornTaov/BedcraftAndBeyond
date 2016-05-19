@@ -6,14 +6,13 @@ import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
-import zornco.bedcraftbeyond.common.frames.FrameHelper;
+import zornco.bedcraftbeyond.common.frames.FrameLoader;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.CommonProxy;
@@ -61,7 +60,7 @@ public class ClientProxy extends CommonProxy {
 
    @Override
    public void compileFrames() {
-      FrameHelper.compileFramesClient();
+      FrameLoader.compileFramesClient();
    }
 
    @Override

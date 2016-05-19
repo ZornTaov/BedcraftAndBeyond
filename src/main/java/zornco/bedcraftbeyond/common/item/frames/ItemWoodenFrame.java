@@ -1,7 +1,6 @@
 package zornco.bedcraftbeyond.common.item.frames;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,7 +19,6 @@ import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
-import zornco.bedcraftbeyond.common.frames.FrameHelper;
 import zornco.bedcraftbeyond.common.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.item.ItemBedPlacer;
 import zornco.bedcraftbeyond.util.PlankHelper;
@@ -44,7 +42,7 @@ public class ItemWoodenFrame extends ItemBedPlacer {
 	public void getSubItems(Item item, CreativeTabs tab, List subItems)
 	{
 		if(tab instanceof TabBeds) {
-			for (ResourceLocation regName : FrameRegistry.getWoodFrameSet()) {
+			for (ResourceLocation regName : FrameRegistry.getFrameSet(FrameRegistry.EnumBedFrameType.WOOD).keySet()) {
 				ItemStack bed = new ItemStack(item, 1);
 				NBTTagCompound tags = new NBTTagCompound();
 				tags.setString("frameType", regName.toString());

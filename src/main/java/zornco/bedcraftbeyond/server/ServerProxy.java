@@ -1,7 +1,7 @@
 package zornco.bedcraftbeyond.server;
 
 import net.minecraft.world.World;
-import zornco.bedcraftbeyond.common.frames.FrameHelper;
+import zornco.bedcraftbeyond.common.frames.FrameLoader;
 import zornco.bedcraftbeyond.common.CommonProxy;
 
 public class ServerProxy extends CommonProxy {
@@ -11,7 +11,7 @@ public class ServerProxy extends CommonProxy {
 
    @Override
    public void compileFrames() {
-      FrameHelper.compileFramesServer();
+      FrameLoader.compileFramesServer();
    }
 
    @Override

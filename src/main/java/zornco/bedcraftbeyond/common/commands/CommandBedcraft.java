@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond.common.commands;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -17,14 +18,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class CommandFrames extends CommandBase {
+public class CommandBedcraft extends CommandBase {
 
    /**
     * Gets the name of the command
     */
    @Override
    public String getCommandName() {
-      return "bcbframes";
+      return BedCraftBeyond.MOD_ID;
    }
 
    /**
@@ -34,7 +35,7 @@ public class CommandFrames extends CommandBase {
     */
    @Override
    public String getCommandUsage(ICommandSender sender) {
-      return "/bcbframes [add/rem/dump] [wooden/stone]";
+      return "commands." + BedCraftBeyond.MOD_ID + ".usage";
    }
 
    @Override
@@ -53,28 +54,13 @@ public class CommandFrames extends CommandBase {
    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
       if(sender.getCommandSenderEntity().worldObj.isRemote) return;
       switch(args[0].toLowerCase()){
-         case "list":
-            if(args.length < 2) throw new CommandException("Must choose frame type to list.");
-            switch(args[1].toLowerCase()){
-               case "wood":
-               case "wooden":
-                  Set<ResourceLocation> frames = FrameRegistry.getWoodFrameSet();
-                  String framesJoined = StringUtils.join(frames, ", ");
-                  sender.addChatMessage(new TextComponentString(framesJoined));
-                  break;
-
-               case "stone":
-
-                  break;
-
-               default:
-                  throw new CommandException("Unknown frame type.");
-            }
+         case "frames":
+            CommandPartFrames cmf = new CommandPartFrames();
+            cmf.execute(server, sender, args);
             break;
 
-         case "reload":
-            sender.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".messages.reloadingFrames"));
-            BedCraftBeyond.proxy.compileFrames();
+         case "debug":
+
             break;
 
          default:
@@ -89,7 +75,26 @@ public class CommandFrames extends CommandBase {
 
    @Override
    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-      return null;
+      switch(args.length){
+         case 0:
+            return Collections.emptyList();
+
+         case 1:
+            return ImmutableList.of("frames", "debug");
+
+         default:
+            switch(args[0].toLowerCase()){
+               case "frames":
+                  CommandPartFrames cpf = new CommandPartFrames();
+                  return cpf.getTabOptions(server, sender, args, pos);
+
+               case "debug":
+                  return getTabCompletionCoordinate(args, args.length, pos);
+
+               default:
+                  return Collections.emptyList();
+            }
+      }
    }
 
    /**
