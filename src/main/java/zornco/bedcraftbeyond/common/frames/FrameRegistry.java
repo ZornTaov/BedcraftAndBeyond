@@ -78,12 +78,20 @@ public class FrameRegistry {
     return removeEntry(type, registryName, OreDictionary.WILDCARD_VALUE);
    }
 
-   public static boolean removeEntry(EnumBedFrameType type, ResourceLocation registryName, int meta){
+   /**
+    *
+    * @param type
+    * @param regName
+    * @param meta A specific meta index to remove from the whitelist. If equal to {@see OreDictionary.WILDCARD_VALUE}
+    *             then this completely removes the entry from the specified set.
+    * @return
+    */
+   public static boolean removeEntry(EnumBedFrameType type, ResourceLocation regName, int meta){
       HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
-      if(set.containsKey(registryName)){
+      if(set.containsKey(regName)){
          if(meta == OreDictionary.WILDCARD_VALUE)
-            set.remove(registryName);
-         return set.get(registryName).remove(meta);
+            set.remove(regName);
+         return set.get(regName).remove(meta);
       }
 
       return false;

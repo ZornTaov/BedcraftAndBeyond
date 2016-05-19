@@ -1,5 +1,7 @@
 package zornco.bedcraftbeyond.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class RangeHelper {
@@ -17,19 +19,17 @@ public class RangeHelper {
       }
    }
 
-   public static Range[] getRanges(int[] toBeProcessed){
-      Range[] result = new Range[toBeProcessed.length]; //larger array won't be needed
+   public static List<Range> getRanges(int[] toBeProcessed){
+      List<Range> result = new ArrayList<>(); //larger array won't be needed
       int startRange = toBeProcessed[0];
-      int ranges = 0;
       for(int a=0; a<toBeProcessed.length; a++){
          try{
             if(toBeProcessed[a] + 1 != toBeProcessed[a+1]){
-               result[ranges] = new Range(startRange, toBeProcessed[a]);
+               result.add(new Range(startRange, toBeProcessed[a]));
                startRange = toBeProcessed[a+1];
-               ranges++;
             }
          }catch(ArrayIndexOutOfBoundsException e){
-            result[ranges] = new Range(startRange, toBeProcessed[toBeProcessed.length-1]);
+            result.add(new Range(startRange, toBeProcessed[toBeProcessed.length-1]));
          }
       }
       return result;

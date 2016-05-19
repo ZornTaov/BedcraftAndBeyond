@@ -6,17 +6,11 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import org.apache.commons.lang3.StringUtils;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.common.frames.FrameRegistry;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class CommandBedcraft extends CommandBase {
 
@@ -55,7 +49,7 @@ public class CommandBedcraft extends CommandBase {
       if(sender.getCommandSenderEntity().worldObj.isRemote) return;
       switch(args[0].toLowerCase()){
          case "frames":
-            CommandPartFrames cmf = new CommandPartFrames();
+            CommandFragmentFrames cmf = new CommandFragmentFrames();
             cmf.execute(server, sender, args);
             break;
 
@@ -85,7 +79,7 @@ public class CommandBedcraft extends CommandBase {
          default:
             switch(args[0].toLowerCase()){
                case "frames":
-                  CommandPartFrames cpf = new CommandPartFrames();
+                  CommandFragmentFrames cpf = new CommandFragmentFrames();
                   return cpf.getTabOptions(server, sender, args, pos);
 
                case "debug":

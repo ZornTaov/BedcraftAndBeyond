@@ -53,3 +53,10 @@ item.rugItem.White.name=White Rug
 # Other
 itemGroup.bedcraftbeyond=BedCraft and Beyond
 itemGroup.bedcraftbeyond.beds=BedCraft Beds
+
+# Errors
+bedcraftbeyond.errors.bad_meta_format=Invalid meta format.
+bedcraftbeyond.errors.unknown_frame_type=Unknown frame type.
+bedcraftbeyond.errors.no_frame_type=No frame type selected.
+bedcraftbeyond.errors.missing_parameter=Not enough parameters to complete request.
+bedcraftbeyond.errors.no_subcommand=No sub-command given. Cannot complete request.
