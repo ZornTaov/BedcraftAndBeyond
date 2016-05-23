@@ -8,10 +8,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import zornco.bedcraftbeyond.blocks.ContainerColoredChestBed;
 import zornco.bedcraftbeyond.blocks.TileColoredChestBed;
+import zornco.bedcraftbeyond.gui.ContainerSuitcase;
+import zornco.bedcraftbeyond.gui.InventorySuitcase;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 public class CommonProxy implements IGuiHandler {
 
+	public static final int GUI_BED = 0;
+	public static final int GUI_SUITCASE = 1;
 	public void registerRenderInformationInit () {
 		// Nothing here as this is the server side proxy
 	}
@@ -29,16 +33,19 @@ public class CommonProxy implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int X, int Y, int Z)
 	{
-		TileEntity te = world.getTileEntity(new BlockPos(X, Y, Z));
-		if (te != null && te instanceof TileColoredChestBed)
-		{
-			TileColoredChestBed teccb = (TileColoredChestBed) te;
-			return new ContainerColoredChestBed(player.inventory, teccb);
+		switch (ID) {
+			case GUI_BED:
+	
+				TileEntity te = world.getTileEntity(new BlockPos(X, Y, Z));
+				if (te != null && te instanceof TileColoredChestBed)
+				{
+					TileColoredChestBed teccb = (TileColoredChestBed) te;
+					return new ContainerColoredChestBed(player.inventory, teccb);
+				}
+	        case GUI_SUITCASE:
+				return new ContainerSuitcase(player, player.inventory, new InventorySuitcase(player.getHeldItem()));
 		}
-		else
-		{
 			return null;
-		}
 	}
 
 	public World getClientWorld()

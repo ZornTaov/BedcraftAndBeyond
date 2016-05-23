@@ -34,6 +34,9 @@ import zornco.bedcraftbeyond.client.render.BlockBedRendererTESR;
 import zornco.bedcraftbeyond.client.render.TileRainbowBedRenderer;
 import zornco.bedcraftbeyond.client.render.TileStoneBedRenderer;
 import zornco.bedcraftbeyond.core.CommonProxy;
+import zornco.bedcraftbeyond.gui.ContainerSuitcase;
+import zornco.bedcraftbeyond.gui.GuiSuitcase;
+import zornco.bedcraftbeyond.gui.InventorySuitcase;
 import zornco.bedcraftbeyond.item.IName;
 import zornco.bedcraftbeyond.item.ItemBCBPlank;
 import zornco.bedcraftbeyond.item.ItemColoredBed;
@@ -97,6 +100,7 @@ public class ClientProxy extends CommonProxy {
 		
 		registerItemModel(BedCraftBeyond.drawerKey, ((IName) BedCraftBeyond.drawerKey).getName());
 		registerItemModel(BedCraftBeyond.stoneBedItem, ((IName) BedCraftBeyond.stoneBedItem).getName());
+		registerItemModel(BedCraftBeyond.suitcase, ((IName) BedCraftBeyond.suitcase).getName());
 	}
 
 	public void registerBlockModelAsItem(final Block block, final String blockName)
@@ -152,14 +156,18 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-		if (te != null && te instanceof TileColoredChestBed)
-		{
-			return new GuiColoredChestBed(player.inventory, (TileColoredChestBed) te);
+		switch (ID) {
+		case GUI_BED:
+			TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+			if (te != null && te instanceof TileColoredChestBed)
+			{
+				return new GuiColoredChestBed(player.inventory, (TileColoredChestBed) te);
+			}
+		case GUI_SUITCASE:
+			return new GuiSuitcase((ContainerSuitcase) new ContainerSuitcase(player, player.inventory, new InventorySuitcase(player.getHeldItem())));
 		}
-		else
-		{
-			return null;
-		}
+		
+
+		return null;
 	}
 }

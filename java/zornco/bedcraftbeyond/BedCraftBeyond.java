@@ -62,6 +62,7 @@ import zornco.bedcraftbeyond.item.ItemRainbowBed;
 import zornco.bedcraftbeyond.item.ItemRug;
 import zornco.bedcraftbeyond.item.ItemScissors;
 import zornco.bedcraftbeyond.item.ItemStoneBed;
+import zornco.bedcraftbeyond.item.ItemSuitcase;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
 @Mod(
@@ -94,6 +95,7 @@ public class BedCraftBeyond {
 	public static Item rugItem;
 	public static Item scissors;
 	public static Item drawerKey;
+	public static Item suitcase;
 
 	public static Block plankBlock;
 	public static Block rugBlock;
@@ -134,6 +136,7 @@ public class BedCraftBeyond {
 		chestBedItem = new ItemColoredChestBed().setMaxStackSize(1).setUnlocalizedName("CCbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		stoneBedItem = new ItemStoneBed().setMaxStackSize(1).setUnlocalizedName("SbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		rainbowBedItem = new ItemRainbowBed().setMaxStackSize(1).setUnlocalizedName("RbedItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+		suitcase = new ItemSuitcase().setMaxStackSize(1).setUnlocalizedName("suitcase").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		//registerItem(plankItem);
 		//rugItem = new ItemRug(GameRegistry.findBlock(BedCraftBeyond.MOD_ID, "rugBlock")).setUnlocalizedName("rugItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		//registerItem(rugItem);
@@ -141,6 +144,7 @@ public class BedCraftBeyond {
 		registerItem(chestBedItem);
 		registerItem(stoneBedItem);
 		registerItem(rainbowBedItem);
+		registerItem(suitcase);
 		//registerItem(scissors);
 		proxy.registerModels();
 
@@ -263,6 +267,15 @@ public class BedCraftBeyond {
 				"sss",
 				'S', new ItemStack(Blocks.stone, 1),
 				's', new ItemStack(Blocks.stone_slab, 1, 0)
+		});
+		GameRegistry.addRecipe(new ItemStack(BedCraftBeyond.suitcase, 1), new Object[]{
+				"www",
+				"wcw",
+				"rsr",
+				'w', new ItemStack(Blocks.wool, 1),
+				'c', new ItemStack(Blocks.chest, 1),
+				'r', new ItemStack(Blocks.stone, 1),
+				's', new ItemStack(Items.stick, 1)
 		});
 
 		long elapsedTimeMillis = System.currentTimeMillis()-start;
