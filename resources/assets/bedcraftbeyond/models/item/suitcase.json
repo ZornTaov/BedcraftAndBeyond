@@ -111,8 +111,13 @@
         },
         "ground": {
             "rotation": [ 0, 0, 0 ],
-            "translation": [ 0, 0, 0],
-            "scale":[ 0.5, 0.5, 0.5 ]
+            "translation": [ 0, -10, 0],
+            "scale":[ 3, 3, 3 ]
+        },
+        "fixed": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 0, -2],
+            "scale":[ 2, 2, 2 ]
         },
         "thirdperson": {
             "rotation": [ 220, 0, 0 ],
