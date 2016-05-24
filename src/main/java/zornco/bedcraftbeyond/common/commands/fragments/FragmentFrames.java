@@ -1,6 +1,8 @@
 package zornco.bedcraftbeyond.common.commands.fragments;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -9,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -81,16 +84,12 @@ public class FragmentFrames extends CommandFragment {
       switch(args[2].toLowerCase()){
          case "wood":
          case "wooden":
-            HashMap<ResourceLocation, Set<Integer>> frames = FrameRegistry.getFrameSet(FrameRegistry.EnumBedFrameType.WOOD);
+            HashMap<ResourceLocation, RangeSet<Integer>> frames = FrameRegistry.getFrameSet(FrameRegistry.EnumBedFrameType.WOOD);
             List<String> entries = new ArrayList<>();
             for(ResourceLocation rl : frames.keySet()){
-               if(frames.get(rl).size() == 0){ if(rl.toString() != "") entries.add(rl.toString()); continue; }
-               Set<Integer> allowedMetaSet = frames.get(rl);
-               int[] allowedMeta = ArrayUtils.toPrimitive(allowedMetaSet.toArray(new Integer[allowedMetaSet.size()]));
-
+               RangeSet<Integer> allowedMetaSet = frames.get(rl);
                // biomesoplenty:planks_0@{0-15}, minecraft:planks
-               List<RangeHelper.Range> ranges = RangeHelper.getRanges(allowedMeta);
-               entries.add(rl.toString() + "@" + StringUtils.join(ranges, ","));
+               entries.add(rl.toString() + "@" + StringUtils.join(allowedMetaSet, ","));
             }
 
             sender.addChatMessage(new TextComponentString(StringUtils.join(entries, ", ")));

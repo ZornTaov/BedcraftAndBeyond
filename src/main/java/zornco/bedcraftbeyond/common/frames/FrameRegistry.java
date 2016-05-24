@@ -1,26 +1,36 @@
 package zornco.bedcraftbeyond.common.frames;
 
+
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
+import com.google.common.collect.TreeRangeSet;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
+import sun.reflect.generics.tree.Tree;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 import java.util.*;
 
 public class FrameRegistry {
 
-   // Key is an ALLOWED block registry type. If a meta value is in the Set, though,
-   // then it is BLACKLISTED as a valid block type. If the set is empty, then all is good and any subtype will work.
-   private HashMap<ResourceLocation, Set<Integer>> woodFrames;
-   private HashMap<ResourceLocation, Set<Integer>> stoneFrames;
+   // Key is an ALLOWED block registry type. If a meta value is in the RangeSet, then it is a valid block type.
+   private HashMap<ResourceLocation, RangeSet<Integer>> woodFrames;
+   private HashMap<ResourceLocation, RangeSet<Integer>> stoneFrames;
 
+   /**
+    * Specifies the available frame types for making beds and things.
+    */
    public enum EnumBedFrameType { WOOD, STONE }
 
-   public static FrameRegistry INSTANCE = new FrameRegistry();
+   private static FrameRegistry INSTANCE = new FrameRegistry();
 
    private FrameRegistry(){
       woodFrames = new HashMap<>();
@@ -33,8 +43,8 @@ public class FrameRegistry {
       INSTANCE.stoneFrames.clear();
    }
 
-   public static HashMap<ResourceLocation, Set<Integer>> getFrameSet(EnumBedFrameType type){
-      HashMap<ResourceLocation, Set<Integer>> set = null;
+   public static HashMap<ResourceLocation, RangeSet<Integer>> getFrameSet(EnumBedFrameType type){
+      HashMap<ResourceLocation, RangeSet<Integer>> set = null;
       switch(type){
          case WOOD:
             set = INSTANCE.woodFrames; break;
@@ -46,6 +56,29 @@ public class FrameRegistry {
    }
 
    /**
+    * Checks if a given itemStack is registered in the registry for a given type.
+    * This checks item metadata and hopes that the meta is the same as the blockstate.
+    * If not, please use the method with a direct check for meta instead.
+    *
+    * @param type
+    * @param stack
+    * @return
+     */
+   // TODO: Check if this has issues with mods
+   public static boolean isValidFrameMaterial(EnumBedFrameType type, ItemStack stack){
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
+      Block b = Block.getBlockFromItem(stack.getItem());
+      ResourceLocation rl = b.getRegistryName();
+
+      return isValidFrameMaterial(type, rl, stack.getMetadata());
+   }
+
+   public static boolean isValidFrameMaterial(EnumBedFrameType type, ResourceLocation registryName, int meta){
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
+      return set.containsKey(registryName) && set.get(registryName).contains(meta);
+   }
+
+   /**
     * Adds an entry to the whitelist with a clear blacklist on meta.
     *
     * @param type
@@ -53,42 +86,50 @@ public class FrameRegistry {
     * @return
     */
    public static boolean addEntry(EnumBedFrameType type, ResourceLocation registryName) throws FrameException {
-      HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
       if(set.containsKey(registryName))
          throw new FrameException("That block is already in the valid block list for type = " + type.name());
 
-      set.put(registryName, new HashSet<>());
+      resetWhitelistForEntry(type, registryName);
       return true;
    }
 
-   public static boolean addBlacklistEntry(EnumBedFrameType type, ResourceLocation registryName, int meta) throws FrameException {
-      // DO not keep instances of meta < 0 in registry
-      if(meta < 0) throw new FrameException("Cannot add negative meta indexes to an entry blacklist.");
+   public static void resetWhitelistForEntry(EnumBedFrameType type, ResourceLocation registryName) {
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
+      if(set.containsKey(registryName)) set.get(registryName).clear();
+      else set.put(registryName, TreeRangeSet.create());
 
-      HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
+      set.get(registryName).add(Range.closedOpen(0, 15));
+   }
+
+   public static boolean addWhitelistEntry(EnumBedFrameType type, ResourceLocation registryName, int meta) throws FrameException {
+      // DO not keep instances of meta < 0 in registry
+      if(meta < 0) throw new FrameException("Cannot add negative meta indexes to an entry whitelist.");
+
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
       if(set.containsKey(registryName))
          if(meta != OreDictionary.WILDCARD_VALUE)
-            return set.get(registryName).add(meta);
-         else
-            return false;
+            set.get(registryName).add(Range.closed(meta, meta));
+         else {
+            resetWhitelistForEntry(type, registryName);
+            return true;
+         }
+
 
       if(meta == OreDictionary.WILDCARD_VALUE) {
-         set.put(registryName, new HashSet<>());
+         resetWhitelistForEntry(type, registryName);
          return true;
       }
 
-      HashSet<Integer> newSet = new HashSet<>();
-      newSet.add(meta);
+      RangeSet<Integer> newSet = TreeRangeSet.create();
+      newSet.add(Range.closed(meta, meta));
       set.put(registryName, newSet);
-      return true;
-   }
 
-   public static boolean clearBlacklistForEntry(EnumBedFrameType type, ResourceLocation registryName){
-    return removeBlacklistEntry(type, registryName, OreDictionary.WILDCARD_VALUE);
+      return set.get(registryName).contains(meta);
    }
 
    public static boolean removeEntry(EnumBedFrameType type, ResourceLocation registryName){
-      HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
       if(set.containsKey(registryName)){
          set.remove(registryName);
          return true;
@@ -98,49 +139,39 @@ public class FrameRegistry {
    }
 
    /**
-    * Removes a specific metadata entry from a given registry entry's blacklist.
-    * If passed OreDictionary.WILDCARD_VALUE, it clears the blacklist for an entry.
+    * Removes a set of integers (a range) from the whitelist for a given entry.
+    *
+    * @param type
+    * @param regName
+    * @param range The range of metadata to remove from the whitelist.
+     * @return
+     */
+   public static boolean removeWhitelistEntries(EnumBedFrameType type, ResourceLocation regName, Range<Integer> range){
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
+      set.get(regName).remove(range);
+      return set.get(regName).encloses(range);
+   }
+
+   /**
+    * Removes a specific metadata entry from a given registry entry's whitelist.
+    * If passed OreDictionary.WILDCARD_VALUE, it clears the whitelist for an entry.
     * @param type
     * @param regName
     * @param meta A specific meta index to remove from the whitelist. If equal to {@see OreDictionary.WILDCARD_VALUE}
     *             then this completely removes the entry from the specified set.
     * @return
     */
-   public static boolean removeBlacklistEntry(EnumBedFrameType type, ResourceLocation regName, int meta){
-      HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
+   public static boolean removeWhitelistEntry(EnumBedFrameType type, ResourceLocation regName, int meta){
+      HashMap<ResourceLocation, RangeSet<Integer>> set = getFrameSet(type);
       if(set.containsKey(regName)){
          if(meta == OreDictionary.WILDCARD_VALUE) {
             set.get(regName).clear();
             return true;
          }
 
-         return set.get(regName).remove(meta);
+         return removeWhitelistEntries(type, regName, Range.closed(meta, meta));
       }
 
       return false;
-   }
-
-   public static long getFrameTypeCount(EnumBedFrameType type) {
-      long amt = 0;
-      HashMap<ResourceLocation, Set<Integer>> set = getFrameSet(type);
-      for(ResourceLocation rl : set.keySet()){
-         if(set.get(rl).size() == 0){
-            // TODO: Possibly find a better means to add up subItems on a server?
-            if(FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT){
-               List<ItemStack> stacks = new ArrayList<>();
-               Item i = Item.getByNameOrId(rl.toString());
-               i.getSubItems(i, CreativeTabs.SEARCH, stacks);
-               amt += stacks.size();
-               continue;
-            }
-
-            BedCraftBeyond.logger.debug("You are on a server, exact frame count will be unknown due to client code.");
-            ++amt; continue;
-         }
-
-         amt += set.get(rl).size();
-      }
-
-      return amt;
    }
 }

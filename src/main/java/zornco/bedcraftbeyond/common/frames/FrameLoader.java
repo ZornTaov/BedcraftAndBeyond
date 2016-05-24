@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.command.CommandException;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -35,7 +34,7 @@ public class FrameLoader {
             if(entry.contains("@")){
                // TODO: Implement metadata only list
             } else {
-               FrameRegistry.clearBlacklistForEntry(type, b.getRegistryName());
+               FrameRegistry.resetWhitelistForEntry(type, b.getRegistryName());
                List<ItemStack> addedList = new ArrayList<>();
                b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
                removed += addedList.size();
@@ -89,7 +88,7 @@ public class FrameLoader {
             if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
                   FrameRegistry.addEntry(type, stack.getItem().getRegistryName());
             else
-               FrameRegistry.addBlacklistEntry(type, regName, stack.getMetadata());
+               FrameRegistry.addWhitelistEntry(type, regName, stack.getMetadata());
          } catch (FrameException e) {
             BedCraftBeyond.logger.error(e);
          }
@@ -122,9 +121,7 @@ public class FrameLoader {
          e.printStackTrace();
       }
 
-      BedCraftBeyond.logger.info("Got a grand total of " + FrameRegistry.getFrameTypeCount(FrameRegistry.EnumBedFrameType.WOOD) + " wooden frames to use.");
-      if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-         BedCraftBeyond.logger.info("Note: Dedicated server. This number is probably incorrect if you have 'all meta' entries in the registry.");
+      // TODO: Reimplement total available frame count?
    }
 
    @SideOnly(Side.SERVER)
@@ -132,11 +129,9 @@ public class FrameLoader {
       if(ConfigSettings.addWoodenOredictFrames)
          addFramesFromOredictEntries(FrameRegistry.EnumBedFrameType.WOOD, "plankWood");
 
-      BedCraftBeyond.logger.info("Added " + FrameRegistry.getFrameTypeCount(FrameRegistry.EnumBedFrameType.WOOD) + " frames from oredict.");
-
       File woodenFramesFile = Paths.get(ConfigHelper.modConfigDir.getPath(), "wooden_frames.json").toFile();
       if(woodenFramesFile.exists()){
-         // wooden_frames.json integration
+         // TODO: wooden_frames.json server integration
       }
    }
 

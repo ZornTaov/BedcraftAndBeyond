@@ -15,7 +15,7 @@ public abstract class CommandFragment {
 
    public static List<String> getTabOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos){ return Collections.emptyList(); }
 
-   protected List<String> getCoordinateArg(String[] args, BlockPos pos, int start){
+   protected static List<String> getCoordinateArg(String[] args, BlockPos pos, int start){
       if(pos == null) return ImmutableList.of("~");
       switch(args.length - start){
          case 0:
