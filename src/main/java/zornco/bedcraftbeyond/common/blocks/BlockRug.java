@@ -41,7 +41,7 @@ public class BlockRug extends Block {
 	public static final PropertyEnum<BlockRug.EnumSideHalf> NU = PropertyEnum.<BlockRug.EnumSideHalf>create("nu", BlockRug.EnumSideHalf.class);*/
 
   public BlockRug() {
-    super(Material.cloth);
+    super(Material.CLOTH);
     setHardness(0.8f);
     setUnlocalizedName("rugBlock");
     setRegistryName(BedCraftBeyond.MOD_ID, "rug_block");
@@ -110,25 +110,12 @@ public class BlockRug extends Block {
     return (block instanceof BlockStairs) || (block instanceof BlockSlab);
   }
 
-  /**
-   * Lets the block know when one of its neighbor changes. Doesn't know which
-   * neighbor changed (coordinates passed are their own) Args: pos,
-   * neighbor blockID
-   */
   @Override
-  public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
-
-    int valid = 0;
-
-    if (worldIn.isSideSolid(pos.down(), EnumFacing.DOWN) || this.isBlockValid(worldIn.getBlockState(pos.down()).getBlock())) {
-      valid++;
-    }
-
-    if (valid == 0) {
+  public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+    if (!worldIn.isSideSolid(pos.down(), EnumFacing.DOWN) || !isBlockValid(worldIn.getBlockState(pos.down()).getBlock())) {
       this.dropBlockAsItem(worldIn, pos, state, 0);
       worldIn.setBlockToAir(pos);
     }
-
   }
 
   /**
@@ -147,7 +134,7 @@ public class BlockRug extends Block {
    */
   @Override
   public int damageDropped(IBlockState state) {
-    return ((EnumDyeColor) state.getValue(COLOR)).getMetadata();
+    return state.getValue(COLOR).getMetadata();
   }
 
   /**

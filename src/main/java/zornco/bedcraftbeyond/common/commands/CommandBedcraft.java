@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.common.commands.fragments.FragmentFrames;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,7 @@ public class CommandBedcraft extends CommandBase {
       if(sender.getCommandSenderEntity().worldObj.isRemote) return;
       switch(args[0].toLowerCase()){
          case "frames":
-            CommandFragmentFrames cmf = new CommandFragmentFrames();
+            FragmentFrames cmf = new FragmentFrames();
             cmf.execute(server, sender, args);
             break;
 
@@ -79,7 +80,7 @@ public class CommandBedcraft extends CommandBase {
          default:
             switch(args[0].toLowerCase()){
                case "frames":
-                  CommandFragmentFrames cpf = new CommandFragmentFrames();
+                  FragmentFrames cpf = new FragmentFrames();
                   return cpf.getTabOptions(server, sender, args, pos);
 
                case "debug":

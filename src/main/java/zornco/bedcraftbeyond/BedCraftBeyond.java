@@ -33,7 +33,7 @@ import zornco.bedcraftbeyond.util.ColorHelper;
         modid = BedCraftBeyond.MOD_ID,
         name = BedCraftBeyond.MOD_NAME,
         version = "${version}",
-        acceptedMinecraftVersions = "[1.9,)",
+        acceptedMinecraftVersions = "[1.9.4,)",
         guiFactory = "zornco.bedcraftbeyond.config.ConfigGuiFactory")
 public class BedCraftBeyond {
 

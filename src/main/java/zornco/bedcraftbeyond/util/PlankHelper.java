@@ -22,7 +22,7 @@ public class PlankHelper {
    public static LinkedHashMap<String, Integer> plankColorMap = new LinkedHashMap<String, Integer>();
    public static final int oakColor = 0xaf8f58;
    public static final String oakNameSpace = "minecraft:planks@0";
-   public static final ItemStack oakItemStack = new ItemStack(Blocks.planks, 1, 0);
+   public static final ItemStack oakItemStack = new ItemStack(Blocks.PLANKS, 1, 0);
 
    public static void compilePlanks() {
       planks = new ArrayList<>(OreDictionary.getOres("plankWood"));
@@ -49,7 +49,7 @@ public class PlankHelper {
                   break;
                } else {
                   List<ItemStack> subItems = new ArrayList<>();
-                  stack.getItem().getSubItems(stack.getItem(), CreativeTabs.tabAllSearch, subItems);
+                  stack.getItem().getSubItems(stack.getItem(), CreativeTabs.SEARCH, subItems);
                   BedCraftBeyond.logger.info("Number of sub items for registry item " + stack.getItem().getRegistryName() + ": " + subItems.size());
 
                   if(subItems.isEmpty()){ list.add(stackNoMeta); break; }
@@ -211,7 +211,7 @@ public class PlankHelper {
          if (bedTags.hasKey("colorCombo")) frameNum = bedTags.getShort("colorCombo") >> 8;
 
          //change to adding plankType
-         ItemStack plankIS = new ItemStack(Blocks.planks, 1, frameNum);
+         ItemStack plankIS = new ItemStack(Blocks.PLANKS, 1, frameNum);
          String plankString = PlankHelper.plankStringfromItemStack(plankIS);
          bedTags.setString("plankType", plankString);
 
@@ -233,7 +233,7 @@ public class PlankHelper {
       } else {
          if (isPlankKnown(bedTags.getString("plankType"))) {
             String[] plank = bedTags.getString("plankType").split("@");
-            return new ItemStack(Item.itemRegistry.getObject(new ResourceLocation(plank[0])), 1, Integer.parseInt(plank[1]));
+            return new ItemStack(Item.REGISTRY.getObject(new ResourceLocation(plank[0])), 1, Integer.parseInt(plank[1]));
 
          } else {
             bedTags.setString("plankType", oakNameSpace);
@@ -244,13 +244,13 @@ public class PlankHelper {
 
    public static String plankStringfromItemStack(ItemStack plank) {
       //BedCraftBeyond.logger.info(plank.toString());
-      return Item.itemRegistry.getNameForObject(plank.getItem()) + "@" + plank.getItemDamage();
+      return Item.REGISTRY.getNameForObject(plank.getItem()) + "@" + plank.getItemDamage();
    }
 
    public static ItemStack plankItemStackfromString(String plank) {
       //BedCraftBeyond.logger.info(plank);
       String[] plankString = plank.split("@");
-      return new ItemStack((Item) (Item.itemRegistry.getObject(new ResourceLocation(plankString[0]))), 1, Integer.parseInt(plankString[1]));
+      return new ItemStack((Item) (Item.REGISTRY.getObject(new ResourceLocation(plankString[0]))), 1, Integer.parseInt(plankString[1]));
    }
 
    public static ItemStack addPlankInfo(NBTTagCompound bedTags, ItemStack plank) {

@@ -15,7 +15,7 @@ public class RangeHelper {
 
       @Override
       public String toString(){
-         return "{" +start+ "-" +end+ "}";
+         return (start == end) ? Integer.toString(start) : "{" + start + "-" + end + "}";
       }
    }
 

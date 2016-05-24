@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.command.CommandException;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -29,12 +30,12 @@ public class FrameLoader {
       int removed = 0;
       for(String entry : frames.blacklist){
          ResourceLocation entryRes = new ResourceLocation(entry);
-         Block b = Block.blockRegistry.getObject(entryRes);
+         Block b = Block.REGISTRY.getObject(entryRes);
          if(b != null){
             if(entry.contains("@")){
                // TODO: Implement metadata only list
             } else {
-               FrameRegistry.removeEntry(type, b.getRegistryName());
+               FrameRegistry.clearBlacklistForEntry(type, b.getRegistryName());
                List<ItemStack> addedList = new ArrayList<>();
                b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
                removed += addedList.size();
@@ -50,12 +51,17 @@ public class FrameLoader {
       int added = 0;
       for(String entry : frames.whitelist){
          ResourceLocation entryRes = new ResourceLocation(entry);
-         Block b = Block.blockRegistry.getObject(entryRes);
+         Block b = Block.REGISTRY.getObject(entryRes);
          if(b != null){
             if(entry.contains("@")){
                // TODO: Implement metadata only list
             } else {
-               FrameRegistry.addEntry(type, b.getRegistryName());
+               try {
+                  FrameRegistry.addEntry(type, b.getRegistryName());
+               } catch (FrameException e) {
+                  BedCraftBeyond.logger.error("Error adding entry to the frame registry: " + e.getMessage());
+               }
+
                List<ItemStack> addedList = Collections.emptyList();
                b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
                added += addedList.size();
@@ -78,11 +84,15 @@ public class FrameLoader {
             continue;
          }
 
-         // If set to use all metadatas from item
-         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
-            FrameRegistry.addEntry(type, stack.getItem().getRegistryName());
-         else
-            FrameRegistry.addEntry(type, regName, stack.getMetadata());
+         try {
+            // If set to use all metadatas from item
+            if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
+                  FrameRegistry.addEntry(type, stack.getItem().getRegistryName());
+            else
+               FrameRegistry.addBlacklistEntry(type, regName, stack.getMetadata());
+         } catch (FrameException e) {
+            BedCraftBeyond.logger.error(e);
+         }
       }
    }
 

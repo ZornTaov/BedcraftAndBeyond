@@ -19,14 +19,14 @@ public class Recipes {
       ++recipesAdded;
 
       // Rug
-      GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4), "xxx", 'x', new ItemStack(Blocks.wool, 1));
+      GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4), "xxx", 'x', new ItemStack(Blocks.WOOL, 1));
       ++recipesAdded;
 
       // Stone bed
       GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.stoneBed, 1, 0),
               "SSS", "sss",
               'S', "blockStone",
-              's', new ItemStack(Blocks.stone_slab, 1, 0)
+              's', new ItemStack(Blocks.STONE_SLAB, 1, 0)
       ));
       ++recipesAdded;
 
@@ -39,11 +39,11 @@ public class Recipes {
       // Removed: Beds are now frames, we need this.
       // GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.bed), "coloredBed"));  ++recipesAdded;
       GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.blanket),
-              "CCC", "CCC", 'C', Blocks.carpet));
+              "CCC", "CCC", 'C', Blocks.CARPET));
       ++recipesAdded;
 
       GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.sheets),
-              "CCC", 'C', Blocks.carpet));
+              "CCC", 'C', Blocks.CARPET));
 
       RecipeLinenItems rli = new RecipeLinenItems();
       GameRegistry.addRecipe(rli);

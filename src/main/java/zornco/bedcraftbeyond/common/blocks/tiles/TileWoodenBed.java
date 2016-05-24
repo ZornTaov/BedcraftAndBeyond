@@ -18,6 +18,7 @@ import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 import zornco.bedcraftbeyond.network.BedPartUpdate;
 import zornco.bedcraftbeyond.util.PlankHelper;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 
 // This tile is only to be used ONCE on beds!
@@ -30,8 +31,9 @@ public class TileWoodenBed extends TileEntity {
 
 	public TileWoodenBed() { }
 
+
 	@Override
-	public void writeToNBT(NBTTagCompound tags) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tags) {
 		super.writeToNBT(tags);
 		if(blankets != null) tags.setTag("blankets", blankets.writeToNBT(new NBTTagCompound()));
 		if(sheets != null) tags.setTag("sheets", sheets.writeToNBT(new NBTTagCompound()));
@@ -40,6 +42,7 @@ public class TileWoodenBed extends TileEntity {
 		// TODO: Fix plank type
 		PlankHelper.validatePlank(tags, getPlankType());
 		if (plankType != null) tags.setString("plankType", plankType.toString());
+		return tags;
 	}
 
 	@Override
@@ -55,7 +58,7 @@ public class TileWoodenBed extends TileEntity {
 
 	// TODO: Update plank stuff
 	public ItemStack getPlankType(){
-		return new ItemStack(Blocks.planks, 1);
+		return new ItemStack(Blocks.PLANKS, 1);
 	}
 
 	public NBTTagCompound getPlankData(){
@@ -133,8 +136,9 @@ public class TileWoodenBed extends TileEntity {
 		catch(Exception e){ return EnumBedFabricType.NONE; }
 	}
 
+	@Nullable
 	@Override
-	public final Packet getDescriptionPacket() {
+	public SPacketUpdateTileEntity getUpdatePacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
 		this.writeToNBT(nbt);
 		return new SPacketUpdateTileEntity(this.pos, -5, nbt);

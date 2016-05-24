@@ -54,9 +54,12 @@ item.rugItem.White.name=White Rug
 itemGroup.bedcraftbeyond=BedCraft and Beyond
 itemGroup.bedcraftbeyond.beds=BedCraft Beds
 
+# Messages
+bedcraftbeyond.frames.whitelisted=Success! Added %s to the frame registry whitelist as a %s frame type.
+bedcraftbeyond.frames.whitelisted.fail=Failure; Could not add%s to the frame registry whitelist.
+
 # Errors
 bedcraftbeyond.errors.bad_meta_format=Invalid meta format.
-bedcraftbeyond.errors.unknown_frame_type=Unknown frame type.
-bedcraftbeyond.errors.no_frame_type=No frame type selected.
-bedcraftbeyond.errors.missing_parameter=Not enough parameters to complete request.
-bedcraftbeyond.errors.no_subcommand=No sub-command given. Cannot complete request.
+
+bedcraftbeyond.errors.frames.unknown_frame_type=Unknown frame type.
+bedcraftbeyond.errors.frames.no_frame_type=No frame type selected.

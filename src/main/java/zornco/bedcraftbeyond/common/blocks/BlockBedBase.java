@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenHell;
+import net.minecraft.world.biome.BiomeHell;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -34,7 +34,7 @@ public abstract class BlockBedBase extends Block {
   public static PropertyBool OCCUPIED = PropertyBool.create("occupied");
 
   public BlockBedBase() {
-    super(Material.cloth);
+    super(Material.CLOTH);
     random = new Random();
     setHardness(1.0f);
     setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
@@ -47,10 +47,11 @@ public abstract class BlockBedBase extends Block {
   public boolean isBedFoot(IBlockAccess world, BlockPos pos) { return !world.getBlockState(pos).getValue(HEAD); }
 
   @Override
-  public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
+  public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+    state = state.getActualState(worldIn, pos);
+
     EnumFacing facing = state.getValue(FACING);
-    if (state.getValue(HEAD) && worldIn.getBlockState(pos.offset(facing)).getBlock() != this) {
-      worldIn.setBlockToAir(pos);
+    if (state.getValue(HEAD) && blockIn != this) {
       if (!worldIn.isRemote) this.dropBlockAsItem(worldIn, pos, state, 0);
     }
   }
@@ -70,7 +71,7 @@ public abstract class BlockBedBase extends Block {
       if (state.getBlock() != this) return true;
     }
 
-    if (worldIn.provider.canRespawnHere() && !(worldIn.getBiomeGenForCoords(pos) instanceof BiomeGenHell)) {
+    if (worldIn.provider.canRespawnHere() && !(worldIn.getBiomeGenForCoords(pos) instanceof BiomeHell)) {
       if (state.getValue(OCCUPIED)) {
         EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
 
@@ -83,7 +84,7 @@ public abstract class BlockBedBase extends Block {
         worldIn.setBlockState(pos, state, 2);
       }
 
-      EntityPlayer.EnumStatus status = playerIn.trySleep(pos);
+      EntityPlayer.SleepResult status = playerIn.trySleep(pos);
       switch(status){
         case OK:
           state = state.withProperty(OCCUPIED, true);
@@ -163,16 +164,6 @@ public abstract class BlockBedBase extends Block {
     if(state.getValue(OCCUPIED)) meta |= 4;
     if(state.getValue(HEAD)) meta |= 8;
     return meta;
-  }
-
-  @Override
-  public boolean isOpaqueCube(IBlockState state) {
-    return false;
-  }
-
-  @Override
-  public boolean isNormalCube(IBlockState state) {
-    return false;
   }
 
   @Override

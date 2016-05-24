@@ -11,6 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.common.blocks.BlockRug;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.common.item.ItemDyeBottle;
 import zornco.bedcraftbeyond.common.item.ItemRug;
 import zornco.bedcraftbeyond.util.ColorHelper;
@@ -40,25 +41,26 @@ public class Colors {
 
       @Override
       public int getColorFromItemstack(ItemStack stack, int tintIndex){
-         return ItemDye.dyeColors[EnumDyeColor.byMetadata(stack.getItemDamage()).getDyeDamage()];
+         return ItemDye.DYE_COLORS[EnumDyeColor.byMetadata(stack.getItemDamage()).getDyeDamage()];
       }
    }
 
    public static class BedColorer implements IBlockColor {
       @Override
       public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
-         state = state.getBlock().getActualState(state, world, pos);
+         state = state.getActualState(world, pos);
+         TileWoodenBed bed = (TileWoodenBed) world.getTileEntity(pos);
          switch(tintIndex){
             case 0:
                return PlankHelper.oakColor;
 
             case 1:
                EnumBedFabricType sheetsType = state.getValue(BlockWoodenBed.SHEETS);
-               return sheetsType.isDyeType() ? sheetsType.getDyeColor() : 0;
+               return sheetsType == EnumBedFabricType.SOLID_COLOR ? bed.getPartColor(BlockWoodenBed.EnumColoredPart.SHEETS).getRGB() : 0;
 
             case 2:
                EnumBedFabricType blanketsType = state.getValue(BlockWoodenBed.BLANKETS);
-               return blanketsType.isDyeType() ? blanketsType.getDyeColor() : 0;
+               return blanketsType == EnumBedFabricType.SOLID_COLOR ? bed.getPartColor(BlockWoodenBed.EnumColoredPart.BLANKETS).getRGB() : 0;
 
             default:
                return 0;
