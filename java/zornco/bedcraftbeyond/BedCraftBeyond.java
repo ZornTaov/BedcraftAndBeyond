@@ -140,11 +140,11 @@ public class BedCraftBeyond {
 		//registerItem(plankItem);
 		//rugItem = new ItemRug(GameRegistry.findBlock(BedCraftBeyond.MOD_ID, "rugBlock")).setUnlocalizedName("rugItem").setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		//registerItem(rugItem);
+		registerItem(suitcase);
+		registerItem(stoneBedItem);
 		registerItem(bedItem);
 		registerItem(chestBedItem);
-		registerItem(stoneBedItem);
 		registerItem(rainbowBedItem);
-		registerItem(suitcase);
 		//registerItem(scissors);
 		proxy.registerModels();
 
