@@ -24,9 +24,11 @@ tile.rugBlock.White.name=White Rug
 # Items
 item.CbedItem.name=Colored Bed
 item.CCbedItem.name=Colored Chest Bed
+item.RbedItem.name=Rainbow Bed
 item.SbedItem.name=Stone Bed
-item.scissorsItem.name=Scissors
-item.drawerKey.name=Drawer Key
+item.scissors.name=Scissors
+item.drawerkey.name=Drawer Key
+item.suitcase.name=Suitcase
 item.rugItem.Black.name=Black Rug
 item.rugItem.Red.name=Red Rug
 item.rugItem.Green.name=Green Rug
@@ -45,6 +47,11 @@ item.rugItem.Orange.name=Orange Rug
 item.rugItem.White.name=White Rug
 
 # GUI
+inventory.suitcase=Suitcase
+inventory.drawers=Drawers
+info.blanket=Blanket
+info.sheet=Sheet
+info.frame=Frame
 
 # Other
 itemGroup.bedcraftbeyond=Bed Craft and Beyond

@@ -8,13 +8,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.Constants;
 import zornco.bedcraftbeyond.item.ItemSuitcase;
 
 public class InventorySuitcase implements IInventory
 {
 
-private String name = "Inventory Item";
+	private String name = StatCollector.translateToLocal("inventory.suitcase");
 	
 	/** Provides NBT Tag Compound to reference */
 	private final ItemStack invItem;
@@ -32,15 +33,9 @@ private String name = "Inventory Item";
 	{
 		invItem = stack;
 
-		// Create a new NBT Tag Compound if one doesn't already exist, or you will crash
 		if (!stack.hasTagCompound()) {
 			stack.setTagCompound(new NBTTagCompound());
 		}
-		// note that it's okay to use stack instead of invItem right there
-		// both reference the same memory location, so whatever you change using
-		// either reference will change in the other
-
-		// Read the inventory contents from NBT
 		readFromNBT(stack.getTagCompound());
 	}
 
@@ -65,12 +60,10 @@ private String name = "Inventory Item";
 			if(stack.stackSize > amount)
 			{
 				stack = stack.splitStack(amount);
-				// Don't forget this line or your inventory will not be saved!
 				markDirty();
 			}
 			else
 			{
-				// this method also calls onInventoryChanged, so we don't need to call it again
 				setInventorySlotContents(slot, null);
 			}
 		}
@@ -95,18 +88,15 @@ private String name = "Inventory Item";
 			stack.stackSize = getInventoryStackLimit();
 		}
 
-		// Don't forget this line or your inventory will not be saved!
 		markDirty();
 	}
 
-	// 1.7.2+ renamed to getInventoryName
 	@Override
 	public String getName()
 	{
 		return name;
 	}
 
-	// 1.7.2+ renamed to hasCustomInventoryName
 	@Override
 	public boolean hasCustomName()
 	{
@@ -124,7 +114,6 @@ private String name = "Inventory Item";
 	 * anytime the inventory changes. Perfect. Much better than using onUpdate in an Item, as this will also
 	 * let you change things in your inventory without ever opening a Gui, if you want.
 	 */
-	 // 1.7.2+ renamed to markDirty
 	@Override
 	public void markDirty()
 	{
@@ -134,8 +123,7 @@ private String name = "Inventory Item";
 				inventory[i] = null;
 			}
 		}
-		
-		// This line here does the work:		
+			
 		writeToNBT(invItem.getTagCompound());
 	}
 
@@ -145,11 +133,9 @@ private String name = "Inventory Item";
 		return true;
 	}
 
-	// 1.7.2+ renamed to openInventory(EntityPlayer player)
 	@Override
 	public void openInventory(EntityPlayer player) {}
 
-	// 1.7.2+ renamed to closeInventory(EntityPlayer player)
 	@Override
 	public void closeInventory(EntityPlayer player) {}
 
@@ -172,17 +158,13 @@ private String name = "Inventory Item";
 	 */
 	public void readFromNBT(NBTTagCompound compound)
 	{
-		// Gets the custom taglist we wrote to this compound, if any
-		// 1.7.2+ change to compound.getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
-		NBTTagList items = compound.getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
+		NBTTagList items = compound.getTagList("SuitcaseInventory", Constants.NBT.TAG_COMPOUND);
 
 		for (int i = 0; i < items.tagCount(); ++i)
 		{
-			// 1.7.2+ change to items.getCompoundTagAt(i)
 			NBTTagCompound item = (NBTTagCompound) items.getCompoundTagAt(i);
 			int slot = item.getInteger("Slot");
 
-			// Just double-checking that the saved slot index is within our inventory array bounds
 			if (slot >= 0 && slot < getSizeInventory()) {
 				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
 			}
@@ -194,26 +176,20 @@ private String name = "Inventory Item";
 	 */
 	public void writeToNBT(NBTTagCompound tagcompound)
 	{
-		// Create a new NBT Tag List to store itemstacks as NBT Tags
 		NBTTagList items = new NBTTagList();
 
 		for (int i = 0; i < getSizeInventory(); ++i)
 		{
-			// Only write stacks that contain items
 			if (getStackInSlot(i) != null)
 			{
-				// Make a new NBT Tag Compound to write the itemstack and slot index to
 				NBTTagCompound item = new NBTTagCompound();
 				item.setInteger("Slot", i);
-				// Writes the itemstack in slot(i) to the Tag Compound we just made
 				getStackInSlot(i).writeToNBT(item);
 
-				// add the tag compound to our tag list
 				items.appendTag(item);
 			}
 		}
-		// Add the TagList to the ItemStack's Tag Compound with the name "ItemInventory"
-		tagcompound.setTag("ItemInventory", items);
+		tagcompound.setTag("SuitcaseInventory", items);
 	}
 
 	@Override

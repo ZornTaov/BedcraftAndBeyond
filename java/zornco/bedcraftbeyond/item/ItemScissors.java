@@ -23,10 +23,10 @@ public class ItemScissors extends Item implements IName {
 
 	private final String name = "scissors";
 	public ItemScissors() {
-		GameRegistry.registerItem(this, name);
-		setUnlocalizedName(BedCraftBeyond.MOD_ID + "_" + name);
+		setUnlocalizedName(name);
 		setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		this.maxStackSize = 1;
+		GameRegistry.registerItem(this, name);
 	}
 	public String getName()
 	{

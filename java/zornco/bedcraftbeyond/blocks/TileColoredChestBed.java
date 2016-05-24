@@ -13,7 +13,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.gui.ContainerColoredChestBed;
 
 public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	private int ticksSinceSync = -1;
@@ -207,8 +209,8 @@ public class TileColoredChestBed extends TileColoredBed implements IInventory {
 	@Override
 	public String getName() {
 		if (ownerName != "")
-			return ownerName + "'s Drawers";
-		return "Drawers";
+			return ownerName + "'s " + StatCollector.translateToLocal("inventory.drawers");
+		return StatCollector.translateToLocal("inventory.drawers");
 	}
 	@Override
 	public boolean hasCustomName() {

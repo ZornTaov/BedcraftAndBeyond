@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -128,12 +129,12 @@ public class ItemColoredBed extends Item implements IName
 	 */
 	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
 	{
-		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 2)]+" Blanket");
-		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 1)]+" Sheet");
+		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 2)]+" "+StatCollector.translateToLocal("info.blanket"));
+		par3List.add(ItemColoredBed.colorNames[getColorFromInt(par1ItemStack.getItemDamage(), 1)]+" "+StatCollector.translateToLocal("info.sheet"));
 
 		this.plankType = PlankHelper.validatePlank(par1ItemStack);
 		String name = this.plankType.getDisplayName();
-		par3List.add(name+" Frame");
+		par3List.add(name+" "+StatCollector.translateToLocal("info.frame"));
 
 	}
 

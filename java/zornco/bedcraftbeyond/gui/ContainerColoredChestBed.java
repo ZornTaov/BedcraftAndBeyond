@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -82,7 +82,7 @@ public class ContainerColoredChestBed extends Container {
 
         for (i = 0; i < chestInventory.getSizeInventory(); ++i)
         {
-            this.addSlotToContainer(new Slot(chestInventory, i, 8 + i * 18, 36));
+            this.addSlotToContainer(new Slot(chestInventory, i, 8 + i * 18, 37));
         }
 
         for (i = 0; i < 3; ++i)

@@ -35,6 +35,7 @@ import zornco.bedcraftbeyond.client.render.TileRainbowBedRenderer;
 import zornco.bedcraftbeyond.client.render.TileStoneBedRenderer;
 import zornco.bedcraftbeyond.core.CommonProxy;
 import zornco.bedcraftbeyond.gui.ContainerSuitcase;
+import zornco.bedcraftbeyond.gui.GuiColoredChestBed;
 import zornco.bedcraftbeyond.gui.GuiSuitcase;
 import zornco.bedcraftbeyond.gui.InventorySuitcase;
 import zornco.bedcraftbeyond.item.IName;

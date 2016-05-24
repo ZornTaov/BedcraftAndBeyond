@@ -9,10 +9,10 @@ import zornco.bedcraftbeyond.BedCraftBeyond;
 public class ItemDrawerKey extends Item implements IName {
 	private final String name = "drawerkey";
 	public ItemDrawerKey() {
-		GameRegistry.registerItem(this, name);
-		setUnlocalizedName(BedCraftBeyond.MOD_ID + "_" + name);
+		setUnlocalizedName(name);
 		setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		this.maxStackSize = 1;
+		GameRegistry.registerItem(this, name);
 	}
 	public String getName()
 	{
