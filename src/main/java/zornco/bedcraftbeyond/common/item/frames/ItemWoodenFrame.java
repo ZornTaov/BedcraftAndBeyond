@@ -41,26 +41,12 @@ public class ItemWoodenFrame extends ItemBedPlacer {
 	 */
 	public void getSubItems(Item item, CreativeTabs tab, List subItems)
 	{
-		if(tab instanceof TabBeds) {
-			for (ResourceLocation regName : FrameRegistry.getFrameSet(FrameRegistry.EnumBedFrameType.WOOD).keySet()) {
-				ItemStack bed = new ItemStack(item, 1);
-				NBTTagCompound tags = new NBTTagCompound();
-				tags.setString("frameType", regName.toString());
-				tags.setInteger("frameMeta", 0);
-				bed.setTagCompound(tags);
-				subItems.add(bed);
-			}
-		}
-
-		if(subItems.size() == 0){
-			ItemStack bed = new ItemStack(item, 1);
-			NBTTagCompound tags = new NBTTagCompound();
-			tags.setString("frameType", "minecraft:planks");
-			tags.setInteger("frameMeta", 0);
-			bed.setTagCompound(tags);
-			subItems.add(bed);
-		}
-
+		ItemStack bed = new ItemStack(item, 1);
+		NBTTagCompound tags = new NBTTagCompound();
+		tags.setString("frameType", "minecraft:planks");
+		tags.setInteger("frameMeta", 0);
+		bed.setTagCompound(tags);
+		subItems.add(bed);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

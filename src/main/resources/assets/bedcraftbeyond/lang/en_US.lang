@@ -54,12 +54,33 @@ item.rugItem.White.name=White Rug
 itemGroup.bedcraftbeyond=BedCraft and Beyond
 itemGroup.bedcraftbeyond.beds=BedCraft Beds
 
-# Messages
-bedcraftbeyond.frames.whitelisted=Success! Added %s to the frame registry whitelist as a %s frame type.
-bedcraftbeyond.frames.whitelisted.fail=Failure; Could not add%s to the frame registry whitelist.
+### FRAMES!!
 
-# Errors
-bedcraftbeyond.errors.bad_meta_format=Invalid meta format.
+# Frame Messages
+bedcraftbeyond.frames.messages.reset_complete=Reset whitelist for type %s.
+bedcraftbeyond.frames.messages.reset_entry_complete=Reset whitelist for entry %s, under type %s.
 
-bedcraftbeyond.errors.frames.unknown_frame_type=Unknown frame type.
-bedcraftbeyond.errors.frames.no_frame_type=No frame type selected.
+bedcraftbeyond.frames.messages.frame_valid=Block %s (meta %s) is a valid frame type for %s.
+bedcraftbeyond.frames.messages.frame_invalid=Block %s (meta %s) is NOT a valid frame type for %s.
+
+# Frame Errors
+bedcraftbeyond.frames.errors.invalid_meta=Invalid metadata for whitelist entry '%s': '%d'.
+bedcraftbeyond.frames.errors.already_added=Entry %s is already added to the whitelist for type %s.
+bedcraftbeyond.frames.errors.already_added_meta=Entry %s already has meta %s added to its whitelist for type %s.
+bedcraftbeyond.frames.errors.not_valid_entry=Invalid frame entry: %s is not in the valid frame list.
+bedcraftbeyond.frames.errors.unknown_frame_type=Unknown frame type.
+bedcraftbeyond.frames.errors.no_frame_type=No frame type selected.
+
+# Blacklist Frame Command
+bedcraftbeyond.frames.blacklisted=Successfully whitelisted %s (and its variants) to frame type %s.
+bedcraftbeyond.frames.blacklisted.fail=Failed to whitelist %s (and its variants) to frame type %s.
+
+bedcraftbeyond.frames.blacklisted.by_meta=Successfully blacklisted %s (meta %s) to %s frame type.
+bedcraftbeyond.frames.blacklisted.by_meta.fail=Failed to blacklist %s (meta %s) to %s frame type.
+
+# Whitelist Frame Command
+bedcraftbeyond.frames.whitelisted=Successfully whitelisted %s (and its variants) to frame type %s.
+bedcraftbeyond.frames.whitelisted.fail=Failed to whitelist %s (and its variants) to frame type %s.
+
+bedcraftbeyond.frames.whitelisted.by_meta=Successfully whitelisted %s (meta %s) to frame type %s.
+bedcrafybeyond.frames.whitelisted.by_meta.fail=Failed to whitelist %s (meta %s) to frame type %s.

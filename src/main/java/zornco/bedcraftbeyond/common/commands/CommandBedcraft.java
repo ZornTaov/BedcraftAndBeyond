@@ -50,8 +50,7 @@ public class CommandBedcraft extends CommandBase {
       if(sender.getCommandSenderEntity().worldObj.isRemote) return;
       switch(args[0].toLowerCase()){
          case "frames":
-            FragmentFrames cmf = new FragmentFrames();
-            cmf.execute(server, sender, args);
+            FragmentFrames.execute(server, sender, args);
             break;
 
          case "debug":
@@ -80,8 +79,7 @@ public class CommandBedcraft extends CommandBase {
          default:
             switch(args[0].toLowerCase()){
                case "frames":
-                  FragmentFrames cpf = new FragmentFrames();
-                  return cpf.getTabOptions(server, sender, args, pos);
+                  return FragmentFrames.getTabOptions(server, sender, args, pos);
 
                case "debug":
                   return getTabCompletionCoordinate(args, args.length, pos);

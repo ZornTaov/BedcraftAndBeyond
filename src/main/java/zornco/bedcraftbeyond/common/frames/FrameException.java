@@ -1,7 +1,14 @@
 package zornco.bedcraftbeyond.common.frames;
 
-public class FrameException extends Exception {
-   public FrameException(String message){
-      super(message);
-   }
+import net.minecraft.command.CommandException;
+
+public class FrameException extends CommandException {
+
+    public FrameException(String message) {
+        super(message);
+    }
+
+    public FrameException(String message, Object... params) {
+        super(message, params);
+    }
 }
