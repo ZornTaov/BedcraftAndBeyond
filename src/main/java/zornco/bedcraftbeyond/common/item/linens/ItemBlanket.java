@@ -20,7 +20,7 @@ public class ItemBlanket extends Item implements ILinenItem {
    public ItemBlanket() {
       setCreativeTab(BedCraftBeyond.bedsTab);
       setMaxStackSize(16);
-      setUnlocalizedName("linens.blanket");
+      setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.blanket");
       setRegistryName(BedCraftBeyond.MOD_ID, "blanket");
       setHasSubtypes(true);
    }

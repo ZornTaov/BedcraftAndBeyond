@@ -1,69 +1,48 @@
-# Blocks
-tile.beds.wooden.name=Wooden Bed
-tile.beds.stone.name=Stone Bed
+# Beds
+tile.bedcraftbeyond.beds.wooden.name=Wooden Bed
+tile.bedcraftbeyond.beds.stone.name=Stone Bed
 
 # Rugs
-tile.rugBlock.Black.name=Black Rug
-tile.rugBlock.Red.name=Red Rug
-tile.rugBlock.Green.name=Green Rug
-tile.rugBlock.Brown.name=Brown Rug
-tile.rugBlock.Blue.name=Blue Rug
-tile.rugBlock.Purple.name=Purple Rug
-tile.rugBlock.Cyan.name=Cyan Rug
-tile.rugBlock.LightGray.name=Light Gray Rug
-tile.rugBlock.Gray.name=Gray Rug
-tile.rugBlock.Pink.name=Pink Rug
-tile.rugBlock.Lime.name=Lime Rug
-tile.rugBlock.Yellow.name=Yellow Rug
-tile.rugBlock.LightBlue.name=Light Blue Rug
-tile.rugBlock.Magenta.name=Magenta Rug
-tile.rugBlock.Orange.name=Orange Rug
-tile.rugBlock.White.name=White Rug
+tile.bedcraftbeyond.rug.Black.name=Black Rug
+tile.bedcraftbeyond.rug.Red.name=Red Rug
+tile.bedcraftbeyond.rug.Green.name=Green Rug
+tile.bedcraftbeyond.rug.Brown.name=Brown Rug
+tile.bedcraftbeyond.rug.Blue.name=Blue Rug
+tile.bedcraftbeyond.rug.Purple.name=Purple Rug
+tile.bedcraftbeyond.rug.Cyan.name=Cyan Rug
+tile.bedcraftbeyond.rug.LightGray.name=Light Gray Rug
+tile.bedcraftbeyond.rug.Gray.name=Gray Rug
+tile.bedcraftbeyond.rug.Pink.name=Pink Rug
+tile.bedcraftbeyond.rug.Lime.name=Lime Rug
+tile.bedcraftbeyond.rug.Yellow.name=Yellow Rug
+tile.bedcraftbeyond.rug.LightBlue.name=Light Blue Rug
+tile.bedcraftbeyond.rug.Magenta.name=Magenta Rug
+tile.bedcraftbeyond.rug.Orange.name=Orange Rug
+tile.bedcraftbeyond.rug.White.name=White Rug
+
 
 # Items
-item.beds.wooden.name=Wooden Bed
-item.beds.drawer.name=Bed Drawer
-item.beds.stone.name=Stone Bed
-item.scissorsItem.name=Scissors
-item.drawerKey.name=Drawer Key
-item.dye_bottle.name=Bottle of Dye
-item.linens.blankets.name=Blankets
-item.linens.sheets.name=Sheets
+item.bedcraftbeyond.beds.wooden.name=Wooden Bed
+item.bedcraftbeyond.beds.drawer.name=Bed Drawer
+item.bedcraftbeyond.beds.stone.name=Stone Bed
 
-# Rugs
-item.rugItem.Black.name=Black Rug
-item.rugItem.Red.name=Red Rug
-item.rugItem.Green.name=Green Rug
-item.rugItem.Brown.name=Brown Rug
-item.rugItem.Blue.name=Blue Rug
-item.rugItem.Purple.name=Purple Rug
-item.rugItem.Cyan.name=Cyan Rug
-item.rugItem.LightGray.name=Light Gray Rug
-item.rugItem.Gray.name=Gray Rug
-item.rugItem.Pink.name=Pink Rug
-item.rugItem.Lime.name=Lime Rug
-item.rugItem.Yellow.name=Yellow Rug
-item.rugItem.LightBlue.name=Light Blue Rug
-item.rugItem.Magenta.name=Magenta Rug
-item.rugItem.Orange.name=Orange Rug
-item.rugItem.White.name=White Rug
+item.bedcraftbeyond.scissors.name=Scissors
+item.bedcraftbeyond.drawerKey.name=Drawer Key
+item.bedcraftbeyond.dyeBottle.name=Bottle of Dye
+item.bedcraftbeyond.linens.blankets.name=Blankets
+item.bedcraftbeyond.linens.sheets.name=Sheets
 
-# GUI
 
-# Other
+# Creative Tabs
 itemGroup.bedcraftbeyond=BedCraft and Beyond
 itemGroup.bedcraftbeyond.beds=BedCraft Beds
 
-### FRAMES!!
-
-# Frame Messages
+# Commands - Frames / Errors and Messages
 bedcraftbeyond.frames.messages.reset_complete=Reset whitelist for type %s.
-bedcraftbeyond.frames.messages.reset_entry_complete=Reset whitelist for entry %s, under type %s.
-
+bedcraftbeyond.frames.messages.reset_entry_complete=Reset whitelist for entry %s under type %s.
 bedcraftbeyond.frames.messages.frame_valid=Block %s (meta %s) is a valid frame type for %s.
 bedcraftbeyond.frames.messages.frame_invalid=Block %s (meta %s) is NOT a valid frame type for %s.
 
-# Frame Errors
 bedcraftbeyond.frames.errors.invalid_meta=Invalid metadata for whitelist entry '%s': '%d'.
 bedcraftbeyond.frames.errors.already_added=Entry %s is already added to the whitelist for type %s.
 bedcraftbeyond.frames.errors.already_added_meta=Entry %s already has meta %s added to its whitelist for type %s.
@@ -71,16 +50,15 @@ bedcraftbeyond.frames.errors.not_valid_entry=Invalid frame entry: %s is not in t
 bedcraftbeyond.frames.errors.unknown_frame_type=Unknown frame type.
 bedcraftbeyond.frames.errors.no_frame_type=No frame type selected.
 
-# Blacklist Frame Command
+# Frames Messages - Blacklisting
 bedcraftbeyond.frames.blacklisted=Successfully whitelisted %s (and its variants) to frame type %s.
 bedcraftbeyond.frames.blacklisted.fail=Failed to whitelist %s (and its variants) to frame type %s.
-
 bedcraftbeyond.frames.blacklisted.by_meta=Successfully blacklisted %s (meta %s) to %s frame type.
 bedcraftbeyond.frames.blacklisted.by_meta.fail=Failed to blacklist %s (meta %s) to %s frame type.
 
-# Whitelist Frame Command
+
+# Frames Messages - Whitelisting
 bedcraftbeyond.frames.whitelisted=Successfully whitelisted %s (and its variants) to frame type %s.
 bedcraftbeyond.frames.whitelisted.fail=Failed to whitelist %s (and its variants) to frame type %s.
-
 bedcraftbeyond.frames.whitelisted.by_meta=Successfully whitelisted %s (meta %s) to frame type %s.
-bedcrafybeyond.frames.whitelisted.by_meta.fail=Failed to whitelist %s (meta %s) to frame type %s.
+bedcraftbeyond.frames.whitelisted.by_meta.fail=Failed to whitelist %s (meta %s) to frame type %s.

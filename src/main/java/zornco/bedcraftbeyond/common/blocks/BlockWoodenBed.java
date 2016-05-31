@@ -52,7 +52,7 @@ public class BlockWoodenBed extends BlockBedBase {
 
   public BlockWoodenBed() {
     setRegistryName(BedCraftBeyond.MOD_ID, "wooden_bed");
-    setUnlocalizedName("beds.wooden");
+    setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.wooden");
     setDefaultState(getDefaultState()
             .withProperty(FACING, EnumFacing.NORTH)
             .withProperty(OCCUPIED, false)

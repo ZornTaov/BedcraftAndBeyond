@@ -8,7 +8,7 @@ public class ItemDrawer extends Item {
   public ItemDrawer(){
     setCreativeTab(BedCraftBeyond.bedsTab);
     setMaxStackSize(4);
-    setUnlocalizedName("beds.drawer");
+    setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.drawer");
     setRegistryName(BedCraftBeyond.MOD_ID, "drawer");
   }
 

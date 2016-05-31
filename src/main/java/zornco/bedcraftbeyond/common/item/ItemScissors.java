@@ -5,10 +5,9 @@ import zornco.bedcraftbeyond.BedCraftBeyond;
 
 public class ItemScissors extends Item {
 
-	private final String name = "scissors";
 	public ItemScissors() {
-		setUnlocalizedName(BedCraftBeyond.MOD_ID + "_" + name);
-		setRegistryName(BedCraftBeyond.MOD_ID, name);
+		setUnlocalizedName(BedCraftBeyond.MOD_ID + ".scissors");
+		setRegistryName(BedCraftBeyond.MOD_ID, "scissors");
 		setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		setMaxStackSize(1);
 	}

@@ -43,7 +43,7 @@ public class BlockRug extends Block {
   public BlockRug() {
     super(Material.CLOTH);
     setHardness(0.8f);
-    setUnlocalizedName("rugBlock");
+    setUnlocalizedName(BedCraftBeyond.MOD_ID + ".rug");
     setRegistryName(BedCraftBeyond.MOD_ID, "rug_block");
 
     this.setDefaultState(this.blockState.getBaseState()

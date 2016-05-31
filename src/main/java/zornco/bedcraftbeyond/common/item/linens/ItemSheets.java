@@ -19,7 +19,7 @@ public class ItemSheets extends Item implements ILinenItem {
   public ItemSheets(){
     setCreativeTab(BedCraftBeyond.bedsTab);
     setMaxStackSize(16);
-    setUnlocalizedName("linens.sheets");
+    setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.sheets");
     setRegistryName(BedCraftBeyond.MOD_ID, "sheets");
     setHasSubtypes(true);
   }

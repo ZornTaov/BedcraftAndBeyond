@@ -19,7 +19,7 @@ public class ItemDyeBottle extends Item {
       setMaxStackSize(16);
       setHasSubtypes(true);
       setRegistryName(BedCraftBeyond.MOD_ID, "dye_bottle");
-      setUnlocalizedName("dye_bottle");
+      setUnlocalizedName(BedCraftBeyond.MOD_ID + ".dyeBottle");
    }
 
    @Override

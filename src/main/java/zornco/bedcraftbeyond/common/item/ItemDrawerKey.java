@@ -7,7 +7,7 @@ public class ItemDrawerKey extends Item {
 
 	public ItemDrawerKey() {
 		setRegistryName(BedCraftBeyond.MOD_ID, "drawerkey");
-		setUnlocalizedName(BedCraftBeyond.MOD_ID + "_" + "drawerkey");
+		setUnlocalizedName(BedCraftBeyond.MOD_ID + "." + "drawerKey");
 		setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
 		setMaxStackSize(1);
 	}

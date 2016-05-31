@@ -77,6 +77,8 @@ public class BedCraftBeyond {
     proxy.registerMessages();
 
     MinecraftForge.EVENT_BUS.register(instance);
+
+    // TODO: If en_US.lang not found, run JsonCompiler.main('en_US')
   }
 
   @SuppressWarnings("unchecked")
