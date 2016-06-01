@@ -1,23 +1,18 @@
 package zornco.bedcraftbeyond.common.commands.fragments;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Range;
-import com.google.common.collect.RangeSet;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import org.apache.commons.lang3.StringUtils;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.commands.CommandFragment;
 import zornco.bedcraftbeyond.common.commands.FramesCommandsUtils;
 import zornco.bedcraftbeyond.common.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.frames.FrameWhitelist;
-import zornco.bedcraftbeyond.util.RangeHelper;
 
 import java.util.*;
 

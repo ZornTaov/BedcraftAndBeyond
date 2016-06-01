@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond.common.frames;
 
-import com.google.common.collect.Interner;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeSet;
 import com.google.common.collect.TreeRangeSet;

@@ -9,15 +9,14 @@ import zornco.bedcraftbeyond.util.PlankHelper;
 
 public abstract class CommonProxy {
 
-	public void registerModels() { }
+    public void registerModels() {
+    }
 
-	public void init() {
-		BcbBlocks.registerTiles();
-	}
+    public void init() {
+        BcbBlocks.registerTiles();
+    }
 
-	public abstract World getClientWorld();
+    public abstract void compileFrames();
 
-	public abstract void compileFrames();
-
-	public abstract void registerMessages();
+    public abstract void registerMessages();
 }

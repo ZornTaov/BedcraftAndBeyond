@@ -1,8 +1,8 @@
 package zornco.bedcraftbeyond.config;
 
 public class ConfigSettings {
-   public static boolean addWoodenOredictFrames;
-   public static boolean addStoneOredictFrames;
+   public static boolean ADD_OREDICT_WOODEN;
+   public static boolean ADD_OREDICT_STONE;
 
-   public static boolean listAllMetasWhenAdding = true;
+   public static int DRAWER_ITEM_LIMIT;
 }

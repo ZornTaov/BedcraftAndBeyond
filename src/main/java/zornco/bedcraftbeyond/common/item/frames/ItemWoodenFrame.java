@@ -13,6 +13,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
@@ -27,67 +28,71 @@ import java.util.List;
 
 public class ItemWoodenFrame extends ItemBedPlacer {
 
-	public ItemWoodenFrame(Block b) {
-		super(b);
-		setUnlocalizedName("frames.wooden");
-		this.setHasSubtypes(true);
-	}
+    public ItemWoodenFrame(Block b) {
+        super(b);
+        setUnlocalizedName("frames.wooden");
+        this.setHasSubtypes(true);
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	@SideOnly(Side.CLIENT)
-	/**
-	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
-	 */
-	public void getSubItems(Item item, CreativeTabs tab, List subItems)
-	{
-		ItemStack bed = new ItemStack(item, 1);
-		NBTTagCompound tags = new NBTTagCompound();
-		tags.setString("frameType", "minecraft:planks");
-		tags.setInteger("frameMeta", 0);
-		bed.setTagCompound(tags);
-		subItems.add(bed);
-	}
+        GameRegistry.register(this);
+    }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Override
-	@SideOnly(Side.CLIENT)
-	/**
-	 * allows items to add custom lines of information to the mouseover description
-	 */
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tags, boolean advanced) {
-		// TODO: Fix frame type display (Oak Wood Planks, etc)
-		if(!stack.hasTagCompound()) return;
-		NBTTagCompound nbt = stack.getTagCompound();
-		if(!nbt.hasKey("frameType")) return;
-		String frameType = nbt.getString("frameType");
-		Block b = Block.getBlockFromName(frameType + "@0");
-		if(b != null) tags.add(I18n.format(b.getUnlocalizedName()));
-	}
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    @SideOnly(Side.CLIENT)
+    /**
+     * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
+     */
+    public void getSubItems(Item item, CreativeTabs tab, List subItems) {
+        ItemStack bed = new ItemStack(item, 1);
+        NBTTagCompound tags = new NBTTagCompound();
+        tags.setString("frameType", "minecraft:planks");
+        tags.setInteger("frameMeta", 0);
+        bed.setTagCompound(tags);
+        subItems.add(bed);
+    }
 
-	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-		if (worldIn.isRemote)	return EnumActionResult.SUCCESS;
-		if (side != EnumFacing.UP) return EnumActionResult.FAIL;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    @SideOnly(Side.CLIENT)
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tags, boolean advanced) {
+        // TODO: Fix frame type display (Oak Wood Planks, etc)
+        if (!stack.hasTagCompound()) return;
+        NBTTagCompound nbt = stack.getTagCompound();
+        if (!nbt.hasKey("frameType")) return;
+        String frameType = nbt.getString("frameType");
+        Block b = Block.getBlockFromName(frameType + "@0");
+        if (b != null) tags.add(I18n.format(b.getUnlocalizedName()));
+    }
 
-		boolean canPlaceBedHere = testSimpleBedPlacement(worldIn, playerIn, pos, stack);
-		if(!canPlaceBedHere) return EnumActionResult.FAIL;
+    @Override
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (worldIn.isRemote) return EnumActionResult.SUCCESS;
+        if (side != EnumFacing.UP) return EnumActionResult.FAIL;
 
-		pos = pos.up();
-		try { placeSimpleBedBlocks(worldIn, playerIn, pos, BcbBlocks.woodenBed, stack); }
-		catch(Exception e) { return EnumActionResult.FAIL; }
+        boolean canPlaceBedHere = testSimpleBedPlacement(worldIn, playerIn, pos, stack);
+        if (!canPlaceBedHere) return EnumActionResult.FAIL;
 
-		TileWoodenBed tileTopHalf = BlockWoodenBed.getTileEntity(worldIn, pos);
-		if (tileTopHalf != null) {
-			// tileTopHalf.setBlanketsColor(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.BLANKETS));
-			// tileTopHalf.setLinenPart(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.SHEETS));
-			tileTopHalf.setPlankType(PlankHelper.validatePlank(stack));
-		}
+        pos = pos.up();
+        try {
+            placeSimpleBedBlocks(worldIn, playerIn, pos, BcbBlocks.woodenBed, stack);
+        } catch (Exception e) {
+            return EnumActionResult.FAIL;
+        }
 
-		// If not creative mode, remove placer item
-		if(!playerIn.capabilities.isCreativeMode) --stack.stackSize;
-		if(stack.stackSize < 1) playerIn.setHeldItem(hand, null);
+        TileWoodenBed tileTopHalf = BlockWoodenBed.getTileEntity(worldIn, pos);
+        if (tileTopHalf != null) {
+            // tileTopHalf.setBlanketsColor(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.BLANKETS));
+            // tileTopHalf.setLinenPart(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.SHEETS));
+            tileTopHalf.setPlankType(PlankHelper.validatePlank(stack));
+        }
 
-		return EnumActionResult.SUCCESS;
-	}
+        // If not creative mode, remove placer item
+        if (!playerIn.capabilities.isCreativeMode) --stack.stackSize;
+        if (stack.stackSize < 1) playerIn.setHeldItem(hand, null);
+
+        return EnumActionResult.SUCCESS;
+    }
 }

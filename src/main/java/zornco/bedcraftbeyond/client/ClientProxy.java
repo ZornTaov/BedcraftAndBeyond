@@ -6,10 +6,8 @@ import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.common.frames.FrameLoader;
@@ -38,6 +36,7 @@ public class ClientProxy extends CommonProxy {
       RenderingHelper.registerItemModel(BcbItems.stoneBed);
 
       RenderingHelper.registerItemModel(BcbItems.dyeBottle);
+      RenderingHelper.registerItemModel(BcbItems.template);
 
       B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
    }
@@ -66,10 +65,5 @@ public class ClientProxy extends CommonProxy {
    @Override
    public void registerMessages() {
       Registration.registerMessagesClient();
-   }
-
-   @Override
-   public World getClientWorld() {
-      return FMLClientHandler.instance().getClient().theWorld;
    }
 }

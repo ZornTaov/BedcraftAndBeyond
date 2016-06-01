@@ -14,41 +14,42 @@ import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 public class ItemBedPlacer extends ItemBlock {
 
 
-  public ItemBedPlacer(Block block) {
-    super(block);
-    setRegistryName(block.getRegistryName());
-    setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
-    setMaxStackSize(1);
-  }
+    public ItemBedPlacer(Block block) {
+        super(block);
+        setRegistryName(block.getRegistryName());
+        setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+        setMaxStackSize(1);
+    }
 
-  protected void placeSimpleBedBlocks(World world, EntityPlayer player, BlockPos initPos, Block bedBlock, ItemStack placer) throws Exception {
-    BlockPos btmHalf = initPos;
-    BlockPos topHalf = btmHalf.offset(player.getHorizontalFacing());
+    protected void placeSimpleBedBlocks(World world, EntityPlayer player, BlockPos initPos, Block bedBlock, ItemStack placer) throws Exception {
+        BlockPos btmHalf = initPos;
+        BlockPos topHalf = btmHalf.offset(player.getHorizontalFacing());
 
-    IBlockState bhead = bedBlock.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
+        IBlockState bhead = bedBlock.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
             .withProperty(BlockBedBase.HEAD, true);
-    if (!world.setBlockState(btmHalf, bhead, 3)) throw new Exception("Failed to set head blockstate.");
+        if (!world.setBlockState(btmHalf, bhead, 3)) throw new Exception("Failed to set head blockstate.");
 
-    IBlockState bfoot = bedBlock.getDefaultState()
+        IBlockState bfoot = bedBlock.getDefaultState()
             .withProperty(BlockBedBase.HEAD, false)
             .withProperty(BlockBedBase.FACING, player.getHorizontalFacing().getOpposite());
-    if(!world.setBlockState(topHalf, bfoot, 2)) throw new Exception("Failed to set foot blockstate.");
-  }
+        if (!world.setBlockState(topHalf, bfoot, 2)) throw new Exception("Failed to set foot blockstate.");
+    }
 
-  public static boolean testSimpleBedPlacement(World world, EntityPlayer player, BlockPos initialPosition, ItemStack placer){
-    if(!world.getBlockState(initialPosition).getBlock().isReplaceable(world, initialPosition))
-      initialPosition = initialPosition.offset(EnumFacing.UP);
+    public static boolean testSimpleBedPlacement(World world, EntityPlayer player, BlockPos initialPosition, ItemStack placer) {
+        if (!world.getBlockState(initialPosition).getBlock().isReplaceable(world, initialPosition))
+            initialPosition = initialPosition.offset(EnumFacing.UP);
 
-    BlockPos btmPos = initialPosition;
+        BlockPos btmPos = initialPosition;
 
-    IBlockState stateInEditing = world.getBlockState(btmPos);
-    if(!stateInEditing.getBlock().isReplaceable(world, btmPos) && !world.isAirBlock(btmPos)) return false;
+        IBlockState stateInEditing = world.getBlockState(btmPos);
+        if (!stateInEditing.getBlock().isReplaceable(world, btmPos) && !world.isAirBlock(btmPos)) return false;
 
-    EnumFacing playerFacing = player.getHorizontalFacing();
+        EnumFacing playerFacing = player.getHorizontalFacing();
 
-    BlockPos topPos = initialPosition.offset(playerFacing);
-    if (!world.getBlockState(topPos).getBlock().isReplaceable(world, topPos) && !world.isAirBlock(topPos)) return false;
+        BlockPos topPos = initialPosition.offset(playerFacing);
+        if (!world.getBlockState(topPos).getBlock().isReplaceable(world, topPos) && !world.isAirBlock(topPos))
+            return false;
 
-    return true;
-  }
+        return true;
+    }
 }

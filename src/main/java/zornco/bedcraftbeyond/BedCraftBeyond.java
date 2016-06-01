@@ -24,9 +24,9 @@ import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
 import zornco.bedcraftbeyond.common.commands.CommandBedcraft;
 import zornco.bedcraftbeyond.common.crafting.Recipes;
-import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.config.ConfigHelper;
+import zornco.bedcraftbeyond.common.gui.GuiHandler;
 import zornco.bedcraftbeyond.util.ColorHelper;
 
 @Mod(
@@ -42,7 +42,7 @@ public class BedCraftBeyond {
 
   // The instance of your mod that Forge uses.
   @Instance(BedCraftBeyond.MOD_ID)
-  public static BedCraftBeyond instance;
+  public static BedCraftBeyond INSTANCE;
 
   // Says where the client and server 'proxy' code is loaded.
   @SidedProxy(clientSide = "zornco.bedcraftbeyond.client.ClientProxy", serverSide = "zornco.bedcraftbeyond.server.ServerProxy")
@@ -68,17 +68,15 @@ public class BedCraftBeyond {
     bedsTab = new TabBeds();
 
     ColorHelper.initColorList();
-    BcbBlocks.registerBlocks();
-    BcbItems.registerItems();
 
     proxy.registerModels();
     network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
 
     proxy.registerMessages();
 
-    MinecraftForge.EVENT_BUS.register(instance);
+    MinecraftForge.EVENT_BUS.register(INSTANCE);
 
-    // TODO: If en_US.lang not found, run JsonCompiler.main('en_US')
+    GuiHandler.INSTANCE = new GuiHandler();
   }
 
   @SuppressWarnings("unchecked")
@@ -86,6 +84,7 @@ public class BedCraftBeyond {
   public void init(FMLInitializationEvent event) {
 
     proxy.init();
+    NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, GuiHandler.INSTANCE);
 
     long start = System.currentTimeMillis();
 

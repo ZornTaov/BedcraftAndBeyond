@@ -1,11 +1,6 @@
 package zornco.bedcraftbeyond.config;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.client.config.GuiConfigEntries;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.oredict.RecipeSorter;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 import java.io.File;
@@ -43,8 +38,9 @@ public class ConfigHelper {
    }
 
    public static void refreshConfigs(){
-      ConfigSettings.addWoodenOredictFrames = BedCraftBeyond.config.getBoolean("addWoodenFrames", "frames", true, "Add wooden frames from the ore dictionary.");
-      ConfigSettings.addStoneOredictFrames = BedCraftBeyond.config.getBoolean("addStoneFrames", "frames", true, "Add stone frames from the ore dictionary.");
+      ConfigSettings.ADD_OREDICT_WOODEN = BedCraftBeyond.config.getBoolean("addWoodenFrames", "frames", true, "Add wooden frames from the ore dictionary.");
+      ConfigSettings.ADD_OREDICT_STONE = BedCraftBeyond.config.getBoolean("addStoneFrames", "frames", true, "Add stone frames from the ore dictionary.");
+      ConfigSettings.DRAWER_ITEM_LIMIT = BedCraftBeyond.config.getInt("drawerLimit", "beds", 12, 3, 15, "Number of slots the drawer gives to a bed frame.");
 
       if(BedCraftBeyond.config.hasChanged())
          BedCraftBeyond.config.save();

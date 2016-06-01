@@ -6,7 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.util.ColorHelper;

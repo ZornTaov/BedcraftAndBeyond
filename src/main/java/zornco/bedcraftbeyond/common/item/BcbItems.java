@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond.common.item;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.item.frames.ItemStoneBed;
 import zornco.bedcraftbeyond.common.item.frames.ItemWoodenFrame;
@@ -9,49 +8,22 @@ import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 
 public class BcbItems {
 
-  // Colored bed stuff
-  public static ItemWoodenFrame woodenBed;
-  public static ItemBlanket blanket;
-  public static ItemSheets sheets;
-  public static ItemDrawer drawer;
-  public static ItemDrawerKey drawerKey;
+    // Bed stuff
+    public static ItemWoodenFrame woodenBed = new ItemWoodenFrame(BcbBlocks.woodenBed);
+    public static ItemBlanket blanket = new ItemBlanket();
+    public static ItemSheets sheets = new ItemSheets();
+    public static ItemDrawer drawer = new ItemDrawer();
+    public static ItemDrawerKey drawerKey = new ItemDrawerKey();
 
-  // Other stuff
-  public static ItemStoneBed stoneBed;
-  public static ItemRug rug;
-  public static ItemScissors scissors;
+    // Crafting
+    public static ItemTemplate template = new ItemTemplate();
 
-  // ItemBlocks
-  public static ItemDyeBottle dyeBottle;
+    // Other stuff
+    public static ItemStoneBed stoneBed = new ItemStoneBed(BcbBlocks.stoneBed);
+    public static ItemRug rug = new ItemRug();
+    public static ItemScissors scissors = new ItemScissors();
 
-  private static void initItems(){
-    woodenBed = new ItemWoodenFrame(BcbBlocks.woodenBed);
-    blanket = new ItemBlanket();
-    sheets = new ItemSheets();
-    drawer = new ItemDrawer();
-    drawerKey = new ItemDrawerKey();
+    // ItemBlocks
+    public static ItemDyeBottle dyeBottle = new ItemDyeBottle();
 
-    stoneBed = new ItemStoneBed(BcbBlocks.stoneBed);
-    rug = new ItemRug(BcbBlocks.rug);
-    scissors = new ItemScissors();
-    dyeBottle = new ItemDyeBottle();
-  }
-
-  private static void addItems(){
-    GameRegistry.register(woodenBed);
-    GameRegistry.register(blanket);
-    GameRegistry.register(sheets);
-    GameRegistry.register(drawer);
-    GameRegistry.register(drawerKey);
-
-    GameRegistry.register(stoneBed);
-    GameRegistry.register(rug);
-    GameRegistry.register(scissors);
-
-    GameRegistry.register(dyeBottle);
-  }
-
-  public static void registerItems() {
-    initItems(); addItems();
-  }
 }

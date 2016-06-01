@@ -100,9 +100,9 @@ public class FrameLoader {
         IResourceManager man = Minecraft.getMinecraft().getResourceManager();
         try {
             FrameRegistry.dumpFrameList();
-            if (ConfigSettings.addWoodenOredictFrames || ConfigSettings.addStoneOredictFrames)
+            if (ConfigSettings.ADD_OREDICT_WOODEN || ConfigSettings.ADD_OREDICT_STONE)
                 l.info("Loading frame data from the ore dictionary...");
-            if (ConfigSettings.addWoodenOredictFrames)
+            if (ConfigSettings.ADD_OREDICT_WOODEN)
                 addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
 
             l.info("");
@@ -126,7 +126,7 @@ public class FrameLoader {
 
     @SideOnly(Side.SERVER)
     public static void compileFramesServer() {
-        if (ConfigSettings.addWoodenOredictFrames)
+        if (ConfigSettings.ADD_OREDICT_WOODEN)
             addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
 
         File woodenFramesFile = Paths.get(ConfigHelper.modConfigDir.getPath(), "wooden_frames.json").toFile();

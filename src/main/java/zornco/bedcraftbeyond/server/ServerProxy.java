@@ -7,9 +7,6 @@ import zornco.bedcraftbeyond.common.CommonProxy;
 public class ServerProxy extends CommonProxy {
 
    @Override
-   public World getClientWorld() { return null; }
-
-   @Override
    public void compileFrames() {
       FrameLoader.compileFramesServer();
    }

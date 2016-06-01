@@ -1,7 +1,5 @@
 package zornco.bedcraftbeyond.util;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
@@ -9,10 +7,7 @@ import net.minecraftforge.common.util.Constants;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Java Code to get a color name from rgb/hex value/awt color

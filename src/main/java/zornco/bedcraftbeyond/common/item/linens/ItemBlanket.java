@@ -11,8 +11,6 @@ import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.util.ColorHelper;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ItemBlanket extends Item implements ILinenItem {
