@@ -17,6 +17,11 @@ public class RecipeWoodFrame implements CarpenterRecipe {
     private int woodSlabID = OreDictionary.getOreID("slabWood");
 
     @Override
+    public int getNumberOfSlots() {
+        return 2;
+    }
+
+    @Override
     public boolean matches(TileCarpenter.CarpenterCraftingItemHandler inv) {
         // Wood should be in first slot, slabs in second
         ItemStack wood = inv.extractItem(0, 3, true);

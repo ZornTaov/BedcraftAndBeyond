@@ -14,12 +14,15 @@ import javax.vecmath.Vector2f;
 public class ContainerCarpenter extends Container {
 
     private TileCarpenter carpenter;
+    private int CRAFTING_START;
 
     public ContainerCarpenter(EntityPlayer player, TileCarpenter tile) {
         this.carpenter = tile;
         try {
             GuiUtils.createStandardInventory(player, new Vector2f(6, 92)).forEach(this::addSlotToContainer);
-            GuiUtils.createSlotGrid(tile.craftingInv, 0, new Vector2f(3, 2), new Vector2f(24, 16)).forEach(this::addSlotToContainer);
+            if(tile.craftingInv.getSlots() != 0)
+                GuiUtils.createSlotGrid(tile.craftingInv, 0, new Vector2f(3, 2), new Vector2f(24, 16)).forEach(this::addSlotToContainer);
+            CRAFTING_START = player.inventory.mainInventory.length;
 
             GuiUtils.createSlotGrid(tile.outputs, 0, new Vector2f(1, 3), new Vector2f(132, 16)).forEach(this::addSlotToContainer);
             addSlotToContainer(new SlotTemplate(tile.template, 0, 97, 62));
@@ -35,7 +38,7 @@ public class ContainerCarpenter extends Container {
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         if(getSlot(index).getStack() == null) return null;
         ItemStack stack = getSlot(index).getStack().copy();
-        if (index >= 0 && index <= playerIn.inventory.mainInventory.length) {
+        if (index >= 0 && index < CRAFTING_START) {
             // Moving from player inventory somewhere into the gui
             try {
                 if (stack != null && stack.getItem() instanceof ItemTemplate) {
@@ -62,13 +65,16 @@ public class ContainerCarpenter extends Container {
             return null;
         }
 
-        if (index >= 36 && index <= 42) {
+        if (index >= CRAFTING_START && index <= CRAFTING_START + carpenter.craftingInv.getSlots()) {
             // Moving from a crafting slot (or the template slot, 42) to the player's inventory.
             boolean added = playerIn.inventory.addItemStackToInventory(stack);
             if (added) getSlot(index).putStack(null);
             else return null;
         }
 
+        if(index >= 42 && index <= 45){
+            return null;
+        }
         return null;
     }
 

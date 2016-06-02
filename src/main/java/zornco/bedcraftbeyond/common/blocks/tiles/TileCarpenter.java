@@ -1,39 +1,40 @@
 package zornco.bedcraftbeyond.common.blocks.tiles;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBed;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipe;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipes;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipeOutput;
+import zornco.bedcraftbeyond.common.item.ItemTemplate;
+import zornco.bedcraftbeyond.network.MessageSlotsUpdate;
 
 public class TileCarpenter extends TileEntity {
 
     public CarpenterCraftingItemHandler craftingInv = new CarpenterCraftingItemHandler(this, 6);
-    public ItemStackHandler template = new ItemStackHandler(1);
+    public CarpenterTemplateHandler template = new CarpenterTemplateHandler(this);
     public CarpenterOutputItemHandler outputs = new CarpenterOutputItemHandler(this, CarpenterRecipeOutput.MAX_OUTPUTS);
 
     private CarpenterRecipe currentRecipe;
 
-    public TileCarpenter(){
+    public TileCarpenter(){ }
 
+    public TileCarpenter(World w){
+        setWorldObj(w);
     }
 
     protected void checkRecipe(){
-        BedCraftBeyond.logger.info("Checking recipe");
-        ItemStack templateItem =template.getStackInSlot(0);
-        if(templateItem == null) return;
-        if(!templateItem.hasTagCompound() || !templateItem.getTagCompound().hasKey("recipe")) return;
-        ResourceLocation recipe = new ResourceLocation(templateItem.getTagCompound().getString("recipe"));
-        if(!CarpenterRecipes.recipes.containsKey(recipe)) return;
-        currentRecipe = CarpenterRecipes.recipes.get(recipe);
-        if(!currentRecipe.matches(craftingInv)) return;
-        outputs.setOutputs(currentRecipe.doCraft(craftingInv, true));
+
     }
 
     protected void clearGrid(){
@@ -51,8 +52,9 @@ public class TileCarpenter extends TileEntity {
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        craftingInv.deserializeNBT(compound.getCompoundTag("crafting"));
         template.deserializeNBT(compound.getCompoundTag("template"));
+        craftingInv.deserializeNBT(compound.getCompoundTag("crafting"));
+
         super.readFromNBT(compound);
     }
 
@@ -68,12 +70,44 @@ public class TileCarpenter extends TileEntity {
         }
 
         @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            return super.insertItem(slot, stack, simulate);
+        }
+
+        @Override
         protected void onContentsChanged(int slot) {
-            // TODO: CarpenterRegistry.checkRecipe();
-            master.checkRecipe();
+            ItemStack templateItem = master.template.getStackInSlot(0);
+            if(templateItem == null) return;
+            if(!templateItem.hasTagCompound() || !templateItem.getTagCompound().hasKey("recipe")) return;
+            ResourceLocation recipe = new ResourceLocation(templateItem.getTagCompound().getString("recipe"));
+            if(!CarpenterRecipes.recipes.containsKey(recipe)) return;
+            master.currentRecipe = CarpenterRecipes.recipes.get(recipe);
+            if(!master.currentRecipe.matches(master.craftingInv)) return;
+
+            // Simulate a craft to show the crafter what to expect
+            master.outputs.setOutputs(master.currentRecipe.doCraft(master.craftingInv, true));
         }
     }
 
+    public static class CarpenterTemplateHandler extends ItemStackHandler {
+        private TileCarpenter master;
+        public CarpenterTemplateHandler(TileCarpenter master){
+            super(1);
+            this.master = master;
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            ItemStack inserted = super.insertItem(slot, stack, simulate);
+            return inserted;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            ItemStack extracted = super.extractItem(slot, amount, simulate);
+            return extracted;
+        }
+    }
     public static class CarpenterOutputItemHandler extends ItemStackHandler {
 
         private TileCarpenter master;

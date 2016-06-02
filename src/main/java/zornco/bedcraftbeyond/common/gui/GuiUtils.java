@@ -6,6 +6,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
@@ -21,17 +22,23 @@ public class GuiUtils {
         float totalSlots = gridSize.x * gridSize.y;
 
         Vector2f slotPos = new Vector2f(1, 1);
-        for (int slot = start; slot < start + totalSlots; ++slot) {
-            Vector2f slotPosition = new Vector2f();
-            slotPosition.x = (int) startPos.x + ((slotPos.x - 1) * SLOT_SIZE) + 1;
-            slotPosition.y = (int) startPos.y + ((slotPos.y - 1) * SLOT_SIZE) + 1;
-            slots.add(new SlotItemHandler(inventory, slot, (int) slotPosition.x, (int) slotPosition.y));
+        try {
+            for (int slot = start; slot < start + totalSlots; ++slot) {
+                Vector2f slotPosition = new Vector2f();
+                slotPosition.x = (int) startPos.x + ((slotPos.x - 1) * SLOT_SIZE) + 1;
+                slotPosition.y = (int) startPos.y + ((slotPos.y - 1) * SLOT_SIZE) + 1;
+                slots.add(new SlotItemHandler(inventory, slot, (int) slotPosition.x, (int) slotPosition.y));
 
-            ++slotPos.x;
-            if (slotPos.x == gridSize.x + 1) {
-                slotPos.x = 1;
-                ++slotPos.y;
+                ++slotPos.x;
+                if (slotPos.x == gridSize.x + 1) {
+                    slotPos.x = 1;
+                    ++slotPos.y;
+                }
             }
+        }
+
+        catch(Exception e){
+            BedCraftBeyond.logger.error(e);
         }
 
         return slots;

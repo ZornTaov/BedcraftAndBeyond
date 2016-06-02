@@ -1,6 +1,7 @@
 package zornco.bedcraftbeyond.common.item.frames;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -51,20 +53,20 @@ public class ItemWoodenFrame extends ItemBedPlacer {
         subItems.add(bed);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"deprecation"})
     @Override
     @SideOnly(Side.CLIENT)
-    /**
-     * allows items to add custom lines of information to the mouseover description
-     */
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tags, boolean advanced) {
-        // TODO: Fix frame type display (Oak Wood Planks, etc)
         if (!stack.hasTagCompound()) return;
         NBTTagCompound nbt = stack.getTagCompound();
         if (!nbt.hasKey("frameType")) return;
         String frameType = nbt.getString("frameType");
-        Block b = Block.getBlockFromName(frameType + "@0");
-        if (b != null) tags.add(I18n.format(b.getUnlocalizedName()));
+        Block b = Block.getBlockFromName(frameType);
+
+        // TODO: Stop depending on meta here in next version (because no meta?)
+        IBlockState state = b.getStateFromMeta(nbt.hasKey("frameMeta") ? nbt.getInteger("frameMeta") : 0);
+        ItemStack frameStack = b.getPickBlock(state, null, player.getEntityWorld(), null, player);
+        if(frameStack != null) tags.add(TextFormatting.GREEN + "Frame: " + TextFormatting.RESET + frameStack.getDisplayName());
     }
 
     @Override
