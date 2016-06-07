@@ -15,7 +15,7 @@ public class ItemDrawer extends Item implements ICapabilityProvider {
     private ItemStackHandler items = new ItemStackHandler(ConfigSettings.DRAWER_ITEM_LIMIT);
 
     public ItemDrawer() {
-        setCreativeTab(BedCraftBeyond.bedsTab);
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(4);
         setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.drawer");
         setRegistryName(BedCraftBeyond.MOD_ID, "drawer");

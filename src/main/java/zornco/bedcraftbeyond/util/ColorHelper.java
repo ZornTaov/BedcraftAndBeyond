@@ -39,7 +39,7 @@ public class ColorHelper {
         colorList.put(new Color(0x3A, 0x7F, 0xE1), "Xylex");
         colorList.put(new Color(0x32, 0x17, 0x4D), "Delenas");
 
-        BedCraftBeyond.logger.info(BedCraftBeyond.MOD_NAME + ": ColorHelper registered " + colorList.size() + " dye colors.");
+        BedCraftBeyond.LOGGER.info("ColorHelper registered " + colorList.size() + " additional dye colors.");
     }
 
     public static String getColorNameFromColor(Color color) {

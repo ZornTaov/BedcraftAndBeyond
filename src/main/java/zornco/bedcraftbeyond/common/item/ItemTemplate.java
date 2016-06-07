@@ -32,12 +32,10 @@ public class ItemTemplate extends Item {
             debug.getTagCompound().setString("recipe", rl.toString());
             subItems.add(debug);
         }
-
-
-        super.getSubItems(itemIn, tab, subItems);
     }
 
     @Override
+    // TODO: Make a better way to show which recipe the template is for.
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         if(stack.hasTagCompound() && stack.getTagCompound().hasKey("recipe"))
             tooltip.add(TextFormatting.AQUA + stack.getTagCompound().getString("recipe"));

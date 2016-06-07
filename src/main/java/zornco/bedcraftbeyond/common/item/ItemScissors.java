@@ -9,7 +9,7 @@ public class ItemScissors extends Item {
     public ItemScissors() {
         setUnlocalizedName(BedCraftBeyond.MOD_ID + ".scissors");
         setRegistryName(BedCraftBeyond.MOD_ID, "scissors");
-        setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+        setCreativeTab(BedCraftBeyond.MAIN_TAB);
         setMaxStackSize(1);
 
         GameRegistry.register(this);

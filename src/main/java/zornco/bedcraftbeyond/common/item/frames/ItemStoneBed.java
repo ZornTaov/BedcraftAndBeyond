@@ -10,9 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
-import zornco.bedcraftbeyond.common.item.ItemBedPlacer;
 
-public class ItemStoneBed extends ItemBedPlacer {
+public class ItemStoneBed extends ItemFramePlacer {
 
     public ItemStoneBed(Block b) {
         super(b);

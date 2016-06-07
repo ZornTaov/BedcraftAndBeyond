@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond;
 
+import akka.dispatch.sysmsg.Suspend;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.helpers.SystemClock;
 import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
@@ -30,87 +32,88 @@ import zornco.bedcraftbeyond.common.gui.GuiHandler;
 import zornco.bedcraftbeyond.util.ColorHelper;
 
 @Mod(
-        modid = BedCraftBeyond.MOD_ID,
-        name = BedCraftBeyond.MOD_NAME,
-        version = "${version}",
-        acceptedMinecraftVersions = "[1.9.4,)",
-        guiFactory = "zornco.bedcraftbeyond.config.ConfigGuiFactory")
+    modid = BedCraftBeyond.MOD_ID,
+    name = BedCraftBeyond.MOD_NAME,
+    version = "${version}",
+    acceptedMinecraftVersions = "[1.9.4,)",
+    guiFactory = "zornco.bedcraftbeyond.config.ConfigGuiFactory")
 public class BedCraftBeyond {
 
-  public static final String MOD_ID = "bedcraftbeyond";
-  public static final String MOD_NAME = "BedCraft And Beyond";
+    public static final String MOD_ID = "bedcraftbeyond";
+    public static final String MOD_NAME = "BedCraft And Beyond";
 
-  // The instance of your mod that Forge uses.
-  @Instance(BedCraftBeyond.MOD_ID)
-  public static BedCraftBeyond INSTANCE;
+    // The instance of your mod that Forge uses.
+    @Instance(BedCraftBeyond.MOD_ID)
+    public static BedCraftBeyond INSTANCE;
 
-  // Says where the client and server 'proxy' code is loaded.
-  @SidedProxy(clientSide = "zornco.bedcraftbeyond.client.ClientProxy", serverSide = "zornco.bedcraftbeyond.server.ServerProxy")
-  public static CommonProxy proxy;
+    // Says where the client and server 'proxy' code is loaded.
+    @SidedProxy(clientSide = "zornco.bedcraftbeyond.client.ClientProxy", serverSide = "zornco.bedcraftbeyond.server.ServerProxy")
+    public static CommonProxy PROXY;
 
-  public static CreativeTabs bedCraftBeyondTab;
-  public static TabBeds bedsTab;
+    public static CreativeTabs MAIN_TAB;
+    public static CreativeTabs BEDS_TAB;
 
-  public static Logger logger = LogManager.getLogger(BedCraftBeyond.MOD_ID);
+    public static Logger LOGGER = LogManager.getLogger(BedCraftBeyond.MOD_NAME);
 
-  public static SimpleNetworkWrapper network;
+    public static SimpleNetworkWrapper NETWORK;
 
-  public static Configuration config;
+    public static Configuration CONFIG;
 
-  @EventHandler
-  public void preInit(FMLPreInitializationEvent event) {
+    @EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
 
-    // Do not set up config here, it's setup in ConfigHelper
-    ConfigHelper.allModConfigsDir = event.getModConfigurationDirectory();
-    ConfigHelper.setup();
+        // Do not set up config here, it's setup in ConfigHelper
+        ConfigHelper.allModConfigsDir = event.getModConfigurationDirectory();
+        ConfigHelper.setup();
 
-    bedCraftBeyondTab = new TabBedCraftBeyond("bedcraftbeyond");
-    bedsTab = new TabBeds();
+        MAIN_TAB = new TabBedCraftBeyond("bedcraftbeyond");
+        BEDS_TAB = new TabBeds();
 
-    ColorHelper.initColorList();
+        ColorHelper.initColorList();
 
-    proxy.registerModels();
-    network = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
+        PROXY.registerModels();
+        NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
 
-    proxy.registerMessages();
+        PROXY.registerMessages();
 
-    MinecraftForge.EVENT_BUS.register(INSTANCE);
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
 
-    GuiHandler.INSTANCE = new GuiHandler();
-  }
+        GuiHandler.INSTANCE = new GuiHandler();
+    }
 
-  @SuppressWarnings("unchecked")
-  @EventHandler
-  public void init(FMLInitializationEvent event) {
+    @SuppressWarnings("unchecked")
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
 
-    proxy.init();
-    NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, GuiHandler.INSTANCE);
+        PROXY.init();
+        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, GuiHandler.INSTANCE);
 
-    long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-    /** Recipes **/
-    OreDictionary.registerOre("coloredBed", new ItemStack(BcbItems.woodenBed, 1, OreDictionary.WILDCARD_VALUE));
-    Recipes.addRecipes();
+        /** Recipes **/
+        OreDictionary.registerOre("bed", new ItemStack(BcbItems.woodenBed, 1, OreDictionary.WILDCARD_VALUE));
+        Recipes.addRecipes();
 
-    long elapsedTimeMillis = System.currentTimeMillis() - start;
-    BedCraftBeyond.logger.info("Generated wooden frame list and recipes in " + elapsedTimeMillis + " milliseconds.");
-    BedCraftBeyond.logger.info(this.MOD_NAME + " has added " + Recipes.recipesAdded + " recipes! That's a lot!");
-  }
+        long elapsedTimeMillis = System.currentTimeMillis() - start;
+        BedCraftBeyond.LOGGER.info("Generated recipes in " + elapsedTimeMillis + " milliseconds.");
+    }
 
-  @EventHandler
-  public void postInit(FMLPostInitializationEvent event) {
-    // PlankHelper.readyToColor = true;
-    proxy.compileFrames();
-  }
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        // PlankHelper.readyToColor = true;
+        long start = System.currentTimeMillis();
+        PROXY.compileFrames();
+        BedCraftBeyond.LOGGER.info("Compiled frame whitelists in " + (System.currentTimeMillis() - start) + " milliseconds.");
+    }
 
-  @SubscribeEvent
-  public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-    if(eventArgs.getModID().equals(BedCraftBeyond.MOD_ID))
-      ConfigHelper.refreshConfigs();
-  }
+    @SubscribeEvent
+    public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+        if (eventArgs.getModID().equals(BedCraftBeyond.MOD_ID))
+            ConfigHelper.refreshConfigs();
+    }
 
-  @Mod.EventHandler
-  public void serverStarted(FMLServerStartingEvent ev){
-    ev.registerServerCommand(new CommandBedcraft());
-  }
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartingEvent ev) {
+        ev.registerServerCommand(new CommandBedcraft());
+    }
 }

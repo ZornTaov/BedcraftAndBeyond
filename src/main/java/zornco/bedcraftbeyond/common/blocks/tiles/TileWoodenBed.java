@@ -180,7 +180,7 @@ public class TileWoodenBed extends TileEntity {
         markDirty();
 
         BedPartUpdate update = new BedPartUpdate(pos, part, getLinenPart(part, false));
-        BedCraftBeyond.network.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+        BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
     }
 
 }

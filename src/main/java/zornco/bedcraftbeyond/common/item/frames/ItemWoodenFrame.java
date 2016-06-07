@@ -2,7 +2,6 @@ package zornco.bedcraftbeyond.common.item.frames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -23,12 +22,11 @@ import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.frames.FrameRegistry;
-import zornco.bedcraftbeyond.common.item.ItemBedPlacer;
-import zornco.bedcraftbeyond.util.PlankHelper;
+import zornco.bedcraftbeyond.common.frames.FrameWhitelist;
 
 import java.util.List;
 
-public class ItemWoodenFrame extends ItemBedPlacer {
+public class ItemWoodenFrame extends ItemFramePlacer {
 
     public ItemWoodenFrame(Block b) {
         super(b);
@@ -45,12 +43,17 @@ public class ItemWoodenFrame extends ItemBedPlacer {
      * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
      */
     public void getSubItems(Item item, CreativeTabs tab, List subItems) {
-        ItemStack bed = new ItemStack(item, 1);
-        NBTTagCompound tags = new NBTTagCompound();
-        tags.setString("frameType", "minecraft:planks");
-        tags.setInteger("frameMeta", 0);
-        bed.setTagCompound(tags);
-        subItems.add(bed);
+        // TODO: Fix list of wooden beds.
+        if(!(tab instanceof TabBeds)) return;
+        FrameWhitelist wood =  FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
+        for(ResourceLocation rl : wood.getValidRegistryEntries()){
+            ItemStack bed = new ItemStack(item, 1);
+            NBTTagCompound tags = new NBTTagCompound();
+            tags.setString("frameType", rl.toString());
+            tags.setInteger("frameMeta", 0);
+            bed.setTagCompound(tags);
+            subItems.add(bed);
+        }
     }
 
     @SuppressWarnings({"deprecation"})

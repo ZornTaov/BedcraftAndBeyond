@@ -51,7 +51,7 @@ public class BlockRug extends Block {
             .withProperty(FACING, EnumFacing.NORTH)
             .withProperty(SHAPE, BlockRug.EnumShape.STRAIGHT));
 
-        this.setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+        this.setCreativeTab(BedCraftBeyond.MAIN_TAB);
         GameRegistry.register(this);
     }
 

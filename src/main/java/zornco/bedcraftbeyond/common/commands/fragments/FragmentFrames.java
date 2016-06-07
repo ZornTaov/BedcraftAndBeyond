@@ -36,7 +36,7 @@ public class FragmentFrames extends CommandFragment {
 
             case "reload":
                 sender.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".messages.reloadingFrames"));
-                BedCraftBeyond.proxy.compileFrames();
+                BedCraftBeyond.PROXY.compileFrames();
                 break;
         }
     }

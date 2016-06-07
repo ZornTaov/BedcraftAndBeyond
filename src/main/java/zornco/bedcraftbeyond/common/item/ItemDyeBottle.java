@@ -15,7 +15,7 @@ import java.util.List;
 public class ItemDyeBottle extends Item {
 
     public ItemDyeBottle() {
-        setCreativeTab(BedCraftBeyond.bedsTab);
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(16);
         setHasSubtypes(true);
         setRegistryName(BedCraftBeyond.MOD_ID, "dye_bottle");

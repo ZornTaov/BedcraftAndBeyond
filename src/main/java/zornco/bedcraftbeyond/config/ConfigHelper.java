@@ -17,7 +17,7 @@ public class ConfigHelper {
    public static File allModConfigsDir;
 
    private static void setupConfigFile(){
-      BedCraftBeyond.config = new Configuration(Paths.get(modConfigDir.getPath(), BedCraftBeyond.MOD_ID + ".cfg").toFile());
+      BedCraftBeyond.CONFIG = new Configuration(Paths.get(modConfigDir.getPath(), BedCraftBeyond.MOD_ID + ".cfg").toFile());
       refreshConfigs();
    }
 
@@ -38,11 +38,11 @@ public class ConfigHelper {
    }
 
    public static void refreshConfigs(){
-      ConfigSettings.ADD_OREDICT_WOODEN = BedCraftBeyond.config.getBoolean("addWoodenFrames", "frames", true, "Add wooden frames from the ore dictionary.");
-      ConfigSettings.ADD_OREDICT_STONE = BedCraftBeyond.config.getBoolean("addStoneFrames", "frames", true, "Add stone frames from the ore dictionary.");
-      ConfigSettings.DRAWER_ITEM_LIMIT = BedCraftBeyond.config.getInt("drawerLimit", "beds", 12, 3, 15, "Number of slots the drawer gives to a bed frame.");
+      ConfigSettings.ADD_OREDICT_WOODEN = BedCraftBeyond.CONFIG.getBoolean("addWoodenFrames", "frames", true, "Add wooden frames from the ore dictionary.");
+      ConfigSettings.ADD_OREDICT_STONE = BedCraftBeyond.CONFIG.getBoolean("addStoneFrames", "frames", true, "Add stone frames from the ore dictionary.");
+      ConfigSettings.DRAWER_ITEM_LIMIT = BedCraftBeyond.CONFIG.getInt("drawerLimit", "beds", 12, 3, 15, "Number of slots the drawer gives to a bed frame.");
 
-      if(BedCraftBeyond.config.hasChanged())
-         BedCraftBeyond.config.save();
+      if(BedCraftBeyond.CONFIG.hasChanged())
+         BedCraftBeyond.CONFIG.save();
    }
 }

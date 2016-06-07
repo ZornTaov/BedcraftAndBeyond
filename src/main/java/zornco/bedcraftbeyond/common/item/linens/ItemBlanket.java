@@ -17,7 +17,7 @@ import java.util.List;
 public class ItemBlanket extends Item implements ILinenItem {
 
     public ItemBlanket() {
-        setCreativeTab(BedCraftBeyond.bedsTab);
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(16);
         setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.blanket");
         setRegistryName(BedCraftBeyond.MOD_ID, "blanket");

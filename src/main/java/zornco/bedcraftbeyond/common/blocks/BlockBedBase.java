@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
@@ -33,11 +34,13 @@ public abstract class BlockBedBase extends Block {
     public static PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     public static PropertyBool OCCUPIED = PropertyBool.create("occupied");
 
+    protected static AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5625D, 1.0D);
+
     public BlockBedBase() {
         super(Material.CLOTH);
         random = new Random();
         setHardness(1.0f);
-        setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+        setCreativeTab(BedCraftBeyond.MAIN_TAB);
     }
 
     @Override
@@ -50,10 +53,15 @@ public abstract class BlockBedBase extends Block {
         return !world.getBlockState(pos).getValue(HEAD);
     }
 
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return AABB;
+    }
+
     @SuppressWarnings({"deprecation"})
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
-
+        // TODO: Make this more reliable. It's borked.
         EnumFacing enumfacing = state.getValue(FACING);
         if(state.getValue(HEAD)) {
             // Get the foot, set it to air if the block isn't this. ???

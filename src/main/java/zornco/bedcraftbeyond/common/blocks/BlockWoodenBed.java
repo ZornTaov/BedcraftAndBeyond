@@ -151,6 +151,7 @@ public class BlockWoodenBed extends BlockBedBase {
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         if (getTileEntity(worldIn, state, pos) == null) return state;

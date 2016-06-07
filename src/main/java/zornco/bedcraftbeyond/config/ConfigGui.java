@@ -35,6 +35,6 @@ public class ConfigGui extends GuiConfig {
     */
    private static IConfigElement categoryElement(String category, String name, String tooltip_key) {
       return new DummyConfigElement.DummyCategoryElement(name, tooltip_key,
-              new ConfigElement(BedCraftBeyond.config.getCategory(category)).getChildElements());
+              new ConfigElement(BedCraftBeyond.CONFIG.getCategory(category)).getChildElements());
    }
 }

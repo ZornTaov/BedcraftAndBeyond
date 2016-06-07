@@ -17,7 +17,7 @@ import java.util.List;
 public class ItemSheets extends Item implements ILinenItem {
 
     public ItemSheets() {
-        setCreativeTab(BedCraftBeyond.bedsTab);
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(16);
         setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.sheets");
         setRegistryName(BedCraftBeyond.MOD_ID, "sheets");

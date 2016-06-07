@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -60,7 +59,7 @@ public class TextureUtils {
             // colour = colour & 0xffffff; // NOT USED?
             return colour;
         } catch (Exception e) {
-            BedCraftBeyond.logger.error(e);
+            BedCraftBeyond.LOGGER.error(e);
             throw e;
         }
     }

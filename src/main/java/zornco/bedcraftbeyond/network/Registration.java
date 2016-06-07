@@ -8,8 +8,8 @@ public class Registration {
 
     @SideOnly(Side.CLIENT)
     public static void registerMessagesClient() {
-        BedCraftBeyond.network.registerMessage(BedPartUpdate.Handler.class, BedPartUpdate.class, 1, Side.CLIENT);
-        BedCraftBeyond.network.registerMessage(MessageSlotsUpdate.Handler.class, MessageSlotsUpdate.class, 2, Side.CLIENT);
+        BedCraftBeyond.NETWORK.registerMessage(BedPartUpdate.Handler.class, BedPartUpdate.class, 1, Side.CLIENT);
+        BedCraftBeyond.NETWORK.registerMessage(MessageSlotsUpdate.Handler.class, MessageSlotsUpdate.class, 2, Side.CLIENT);
     }
 
     @SideOnly(Side.SERVER)

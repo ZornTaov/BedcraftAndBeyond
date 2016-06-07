@@ -88,7 +88,7 @@ public class FragmentFramesModify extends CommandFragment {
                     break;
             }
         } catch (FrameException fe) {
-            BedCraftBeyond.logger.error(fe);
+            BedCraftBeyond.LOGGER.error(fe);
             throw new CommandException(fe.getLocalizedMessage());
         }
     }
@@ -115,7 +115,7 @@ public class FragmentFramesModify extends CommandFragment {
                     break;
             }
         } catch (FrameException fe) {
-            BedCraftBeyond.logger.error(fe);
+            BedCraftBeyond.LOGGER.error(fe);
             throw new CommandException(fe.getLocalizedMessage());
         }
     }

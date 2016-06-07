@@ -57,10 +57,10 @@ public class FrameLoader {
                     try {
                         FrameRegistry.getFrameWhitelist(type).addEntry(b.getRegistryName());
                     } catch (FrameException e) {
-                        BedCraftBeyond.logger.error("Error adding entry to the frame registry: " + e.getMessage());
+                        BedCraftBeyond.LOGGER.error("Error adding entry to the frame registry: " + e.getMessage());
                     }
 
-                    List<ItemStack> addedList = Collections.emptyList();
+                    List<ItemStack> addedList = new ArrayList<>();
                     b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
                     added += addedList.size();
                 }
@@ -77,7 +77,7 @@ public class FrameLoader {
             if (!(stack.getItem() instanceof ItemBlock)) continue;
             ResourceLocation regName = stack.getItem().getRegistryName();
             if (regName == null) {
-                BedCraftBeyond.logger.error("Found a null registry entry trying to add oreDict frames: " + stack.toString()
+                BedCraftBeyond.LOGGER.error("Found a null registry entry trying to add oreDict frames: " + stack.toString()
                     + ". This is a critical issue, report it to the mod author!");
                 continue;
             }
@@ -89,14 +89,14 @@ public class FrameLoader {
                 else
                     FrameRegistry.getFrameWhitelist(type).addWhitelistEntry(regName, stack.getMetadata());
             } catch (FrameException e) {
-                BedCraftBeyond.logger.error(e);
+                BedCraftBeyond.LOGGER.error(e);
             }
         }
     }
 
     @SideOnly(Side.CLIENT)
     public static void compileFramesClient() {
-        Logger l = BedCraftBeyond.logger;
+        Logger l = BedCraftBeyond.LOGGER;
         IResourceManager man = Minecraft.getMinecraft().getResourceManager();
         try {
             FrameRegistry.dumpFrameList();
@@ -104,24 +104,32 @@ public class FrameLoader {
                 l.info("Loading frame data from the ore dictionary...");
             if (ConfigSettings.ADD_OREDICT_WOODEN)
                 addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
+            if(ConfigSettings.ADD_OREDICT_STONE)
+                addFramesFromOredictEntries(FrameRegistry.EnumFrameType.STONE, "blockStone");
 
             l.info("");
 
             l.info("Loading frames from resource packs..");
-            IResource respack = man.getResource(new ResourceLocation(BedCraftBeyond.MOD_ID, "wooden_frames.json"));
-            l.info("Got wooden frames json from pack " + respack.getResourcePackName());
-            InputStream woodenStream = respack.getInputStream();
-            FrameFile woodFrames = new Gson().fromJson(new InputStreamReader(woodenStream), FrameFile.class);
-
-            int num_add = addToFramesFromStream(woodFrames, FrameRegistry.EnumFrameType.WOOD);
-            int num_rem = removeFramesFromStream(woodFrames, FrameRegistry.EnumFrameType.WOOD);
-
-            BedCraftBeyond.logger.info("wooden_frames.json results: +" + num_add + " -" + num_rem);
+            processFramesFromResourcePack(FrameRegistry.EnumFrameType.WOOD, man, new ResourceLocation(BedCraftBeyond.MOD_ID, "wooden_frames.json"));
+            processFramesFromResourcePack(FrameRegistry.EnumFrameType.STONE, man, new ResourceLocation(BedCraftBeyond.MOD_ID, "stone_frames.json"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // TODO: Reimplement total available frame count?
+    }
+
+    private static void processFramesFromResourcePack(FrameRegistry.EnumFrameType type, IResourceManager manager, ResourceLocation file) throws IOException {
+        IResource respack = manager.getResource(file);
+        BedCraftBeyond.LOGGER.debug("Got frames file from pack " + respack.getResourcePackName());
+
+        InputStream fileStream = respack.getInputStream();
+        FrameFile frames = new Gson().fromJson(new InputStreamReader(fileStream), FrameFile.class);
+
+        int num_add = addToFramesFromStream(frames, type);
+        int num_rem = removeFramesFromStream(frames, type);
+
+        BedCraftBeyond.LOGGER.info(String.format("Results for resource '%s': Added %d frames, removed %d.", file.toString(), num_add, num_rem));
     }
 
     @SideOnly(Side.SERVER)

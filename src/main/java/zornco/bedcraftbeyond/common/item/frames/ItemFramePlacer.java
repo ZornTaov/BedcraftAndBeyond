@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.common.item;
+package zornco.bedcraftbeyond.common.item.frames;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -11,13 +11,13 @@ import net.minecraft.world.World;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 
-public class ItemBedPlacer extends ItemBlock {
+public class ItemFramePlacer extends ItemBlock {
 
 
-    public ItemBedPlacer(Block block) {
+    public ItemFramePlacer(Block block) {
         super(block);
         setRegistryName(block.getRegistryName());
-        setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
+        setCreativeTab(BedCraftBeyond.MAIN_TAB);
         setMaxStackSize(1);
     }
 
