@@ -20,6 +20,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
@@ -46,8 +47,6 @@ public class BlockWoodenBed extends BlockBedBase {
     public static PropertyEnum<EnumBedFabricType> BLANKETS = PropertyEnum.create("color_blankets", EnumBedFabricType.class);
     public static PropertyEnum<EnumBedFabricType> SHEETS = PropertyEnum.create("color_sheets", EnumBedFabricType.class);
 
-    public static PropertyEnum<EnumBedPartStatus> STATUS = PropertyEnum.create("status", EnumBedPartStatus.class);
-
     public enum EnumColoredPart {BLANKETS, SHEETS, PLANKS}
 
     public BlockWoodenBed() {
@@ -58,7 +57,6 @@ public class BlockWoodenBed extends BlockBedBase {
             .withProperty(OCCUPIED, false)
             .withProperty(HEAD, false)
             .withProperty(HAS_STORAGE, false)
-            .withProperty(STATUS, EnumBedPartStatus.FOOT_INVALID)
             .withProperty(BLANKETS, EnumBedFabricType.NONE)
             .withProperty(SHEETS, EnumBedFabricType.NONE));
 
@@ -67,7 +65,7 @@ public class BlockWoodenBed extends BlockBedBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, HEAD, OCCUPIED, FACING, HAS_STORAGE, STATUS, BLANKETS, SHEETS);
+        return new BlockStateContainer(this, HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS);
     }
 
     private boolean hasBlanketsAndSheets(IBlockState state, IBlockAccess world, BlockPos pos) {
@@ -82,12 +80,7 @@ public class BlockWoodenBed extends BlockBedBase {
 
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
-        return state.getValue(HEAD) ? new TileWoodenBed() : null;
-    }
-
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+        return state.getValue(HEAD) ? new TileWoodenBed(world) : null;
     }
 
     @Override
@@ -95,13 +88,11 @@ public class BlockWoodenBed extends BlockBedBase {
         return state.getValue(HEAD);
     }
 
-    public static TileWoodenBed getTileEntity(IBlockAccess world, BlockPos bedPos) {
-        TileEntity te = world.getTileEntity(bedPos);
-        if (te instanceof TileWoodenBed) return (TileWoodenBed) te;
+    public static TileWoodenBed getTileEntity(IBlockAccess world, IBlockState state, BlockPos bedPos) {
+        if(state.getValue(HEAD)) return (TileWoodenBed) world.getTileEntity(bedPos);
 
-        IBlockState state = world.getBlockState(bedPos);
         if (!(state.getBlock() instanceof BlockWoodenBed)) return null;
-        BlockPos actualTileHolder = bedPos.offset(state.getValue(BlockHorizontal.FACING));
+        BlockPos actualTileHolder = bedPos.offset(state.getValue(FACING));
 
         TileEntity realHolder = world.getTileEntity(actualTileHolder);
         if (realHolder == null || !(realHolder instanceof TileWoodenBed)) return null;
@@ -110,7 +101,7 @@ public class BlockWoodenBed extends BlockBedBase {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        TileWoodenBed tile = getTileEntity(world, pos);
+        TileWoodenBed tile = getTileEntity(world, state, pos);
 
         if (tile == null) return true;
         if (world.isRemote) return true;
@@ -150,6 +141,9 @@ public class BlockWoodenBed extends BlockBedBase {
                     message = new TextComponentString(TextFormatting.GOLD + "Sheets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.SHEETS));
                     player.addChatMessage(message);
                 }
+
+                message = new TextComponentString(TextFormatting.RED + "Frame: " + TextFormatting.WHITE + tile.plankType);
+                player.addChatMessage(message);
             } else
                 onBedActivated(world, pos, state, player);
         }
@@ -159,17 +153,11 @@ public class BlockWoodenBed extends BlockBedBase {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        if (getTileEntity(worldIn, pos) == null) return state;
+        if (getTileEntity(worldIn, state, pos) == null) return state;
 
-        TileWoodenBed bed = getTileEntity(worldIn, pos);
+        TileWoodenBed bed = getTileEntity(worldIn, state, pos);
         state = state.withProperty(BLANKETS, bed.getPartType(EnumColoredPart.BLANKETS));
         state = state.withProperty(SHEETS, bed.getPartType(EnumColoredPart.SHEETS));
-
-        boolean bas = hasBlanketsAndSheets(state, worldIn, pos);
-        if (state.getValue(HEAD))
-            state = state.withProperty(STATUS, bas ? EnumBedPartStatus.HEAD_VALID : EnumBedPartStatus.HEAD_INVALID);
-        else
-            state = state.withProperty(STATUS, bas ? EnumBedPartStatus.FOOT_VALID : EnumBedPartStatus.FOOT_INVALID);
 
         return state;
         // TODO: Add inventory and plank types
@@ -180,7 +168,7 @@ public class BlockWoodenBed extends BlockBedBase {
         // TODO: Check accuracy
         ItemStack stack = new ItemStack(BcbBlocks.woodenBed, 1, state.getBlock().getMetaFromState(state));
 
-        TileWoodenBed tile = getTileEntity(world, pos);
+        TileWoodenBed tile = getTileEntity(world, state, pos);
         stack.setTagCompound(new NBTTagCompound());
         NBTTagCompound stackTags = stack.getTagCompound();
 
@@ -197,7 +185,10 @@ public class BlockWoodenBed extends BlockBedBase {
         ItemStack bedItem = new ItemStack(BcbItems.woodenBed);
         NBTTagCompound tags = new NBTTagCompound();
         state = getActualState(state, world, pos);
+        TileWoodenBed twb = getTileEntity(world, state, pos);
 
+        tags.setString("frameType", twb.getPlankData().getString("frameType"));
+        tags.setInteger("frameMeta", twb.getPlankData().getInteger("frameMeta"));
         bedItem.setTagCompound(tags);
         drops.add(bedItem);
         return drops;

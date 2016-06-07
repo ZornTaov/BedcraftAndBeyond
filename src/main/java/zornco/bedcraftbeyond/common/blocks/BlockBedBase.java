@@ -27,147 +27,166 @@ import java.util.Random;
 
 public abstract class BlockBedBase extends Block {
 
-  protected Random random;
+    protected Random random;
 
-  public static PropertyBool HEAD = PropertyBool.create("head");
-  public static PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-  public static PropertyBool OCCUPIED = PropertyBool.create("occupied");
+    public static PropertyBool HEAD = PropertyBool.create("head");
+    public static PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static PropertyBool OCCUPIED = PropertyBool.create("occupied");
 
-  public BlockBedBase() {
-    super(Material.CLOTH);
-    random = new Random();
-    setHardness(1.0f);
-    setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
-  }
-
-  @Override
-  public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) { return true; }
-
-  @Override
-  public boolean isBedFoot(IBlockAccess world, BlockPos pos) { return !world.getBlockState(pos).getValue(HEAD); }
-
-  @Override
-  public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
-    state = state.getActualState(worldIn, pos);
-
-    EnumFacing facing = state.getValue(FACING);
-    if (state.getValue(HEAD) && blockIn != this) {
-      if (!worldIn.isRemote) this.dropBlockAsItem(worldIn, pos, state, 0);
-    }
-  }
-
-  @Override
-  public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-    return this.onBedActivated(world, pos, state, player);
-  }
-
-  protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
-    if (worldIn.isRemote) return true;
-
-    if (!state.getValue(HEAD)) {
-      pos = pos.offset(state.getValue(FACING));
-      state = worldIn.getBlockState(pos);
-
-      if (state.getBlock() != this) return true;
+    public BlockBedBase() {
+        super(Material.CLOTH);
+        random = new Random();
+        setHardness(1.0f);
+        setCreativeTab(BedCraftBeyond.bedCraftBeyondTab);
     }
 
-    if (worldIn.provider.canRespawnHere() && !(worldIn.getBiomeGenForCoords(pos) instanceof BiomeHell)) {
-      if (state.getValue(OCCUPIED)) {
-        EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
+    @Override
+    public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
+        return true;
+    }
 
-        if (entityplayer != null) {
-          playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.occupied"));
-          return true;
+    @Override
+    public boolean isBedFoot(IBlockAccess world, BlockPos pos) {
+        return !world.getBlockState(pos).getValue(HEAD);
+    }
+
+    @SuppressWarnings({"deprecation"})
+    @Override
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+
+        EnumFacing enumfacing = state.getValue(FACING);
+        if(state.getValue(HEAD)) {
+            // Get the foot, set it to air if the block isn't this. ???
+            if(worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock() != this) {
+                worldIn.setBlockToAir(pos);
+                if(!worldIn.isRemote) {
+                    this.dropBlockAsItem(worldIn, pos, state, 0);
+                }
+            }
+        } else if(worldIn.getBlockState(pos.offset(enumfacing)).getBlock() != this) {
+            worldIn.setBlockToAir(pos);
+
+        }
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return this.onBedActivated(world, pos, state, player);
+    }
+
+    protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
+        if (worldIn.isRemote) return true;
+
+        if (!state.getValue(HEAD)) {
+            pos = pos.offset(state.getValue(FACING));
+            state = worldIn.getBlockState(pos);
+
+            if (state.getBlock() != this) return true;
         }
 
-        state = state.withProperty(OCCUPIED, false);
-        worldIn.setBlockState(pos, state, 2);
-      }
+        if (worldIn.provider.canRespawnHere() && !(worldIn.getBiomeGenForCoords(pos) instanceof BiomeHell)) {
+            if (state.getValue(OCCUPIED)) {
+                EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
 
-      EntityPlayer.SleepResult status = playerIn.trySleep(pos);
-      switch(status){
-        case OK:
-          state = state.withProperty(OCCUPIED, true);
-          worldIn.setBlockState(pos, state, 2);
-          break;
+                if (entityplayer != null) {
+                    playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.occupied"));
+                    return true;
+                }
 
-        case NOT_POSSIBLE_NOW:
-          playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.noSleep"));
-          break;
+                state = state.withProperty(OCCUPIED, false);
+                worldIn.setBlockState(pos, state, 2);
+            }
 
-        case NOT_SAFE:
-          playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
-          break;
-      }
+            EntityPlayer.SleepResult status = playerIn.trySleep(pos);
+            switch (status) {
+                case OK:
+                    worldIn.setBlockState(pos, state.withProperty(OCCUPIED, true), 2);
+                    break;
 
-      return true;
-    } else {
-      worldIn.setBlockToAir(pos);
-      BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
+                case NOT_POSSIBLE_NOW:
+                    playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.noSleep"));
+                    break;
 
-      if (worldIn.getBlockState(blockpos).getBlock() == this) {
-        worldIn.setBlockToAir(blockpos);
-      }
+                case NOT_SAFE:
+                    playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
+                    break;
+            }
 
-      worldIn.newExplosion(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, true);
-      return true;
+            return true;
+        } else {
+            // Sleeping not allowed (Hell or End) - explode!
+            worldIn.setBlockToAir(pos);
+            BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
+
+            if (worldIn.getBlockState(blockpos).getBlock() == this) {
+                worldIn.setBlockToAir(blockpos);
+            }
+
+            worldIn.newExplosion(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, true);
+            return true;
+        }
     }
-  }
 
-  private EntityPlayer getPlayerInBed(World worldIn, BlockPos pos) {
-    for (EntityPlayer entityplayer : worldIn.playerEntities) {
-      if (entityplayer.isPlayerSleeping() && entityplayer.playerLocation.equals(pos)) {
-        return entityplayer;
-      }
+    private EntityPlayer getPlayerInBed(World worldIn, BlockPos pos) {
+        for (EntityPlayer entityplayer : worldIn.playerEntities) {
+            if (entityplayer.isPlayerSleeping() && entityplayer.playerLocation.equals(pos)) {
+                return entityplayer;
+            }
+        }
+
+        return null;
     }
 
-    return null;
-  }
+    @Override
+    public boolean rotateBlock(World worldObj, BlockPos pos, EnumFacing axis) {
+        return false;
+    }
 
-  @Override
-  public boolean rotateBlock(World worldObj, BlockPos pos, EnumFacing axis) {
-    return false;
-  }
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
+        BlockPos head = pos.offset(state.getValue(FACING));
+        if (worldIn.getBlockState(head).getBlock() == this)
+            worldIn.destroyBlock(head, !player.capabilities.isCreativeMode);
+    }
 
-  @Override
-  public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-    BlockPos head = pos.offset(state.getValue(FACING));
-    if (worldIn.getBlockState(head).getBlock() == this) worldIn.destroyBlock(head, !player.capabilities.isCreativeMode);
-  }
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int par3) {
+        return state.getValue(HEAD) ? Item.getItemFromBlock(this) : null;
+    }
 
-  /**
-   * Returns the ID of the items to drop on destruction.
-   */
-  @Override
-  public Item getItemDropped(IBlockState state, Random rand, int par3) {
-    return state.getValue(HEAD) ? Item.getItemFromBlock(this) : null;
-  }
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new ExtendedBlockState(this, new IProperty[]{HEAD, FACING, OCCUPIED}, new IUnlistedProperty[0]);
+    }
 
-  @Override
-  protected BlockStateContainer createBlockState() {
-    return new ExtendedBlockState(this, new IProperty[]{ HEAD, FACING, OCCUPIED }, new IUnlistedProperty[0] );
-  }
+    // States - rightmost is occupied, next is part (true = head)
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        IBlockState state = getDefaultState();
+        state = state.withProperty(FACING, EnumFacing.getHorizontal(meta));
+        state = state.withProperty(BlockBed.OCCUPIED, (meta & 4) > 0);
+        state = state.withProperty(HEAD, (meta & 8) > 0);
+        return state;
+    }
 
-  // States - rightmost is occupied, next is part (true = head)
-  @Override
-  public IBlockState getStateFromMeta(int meta) {
-    IBlockState state = getDefaultState();
-    state = state.withProperty(FACING, EnumFacing.getHorizontal(meta));
-    state = state.withProperty(BlockBed.OCCUPIED, (meta & 4) > 0);
-    state = state.withProperty(HEAD, (meta & 8) > 0);
-    return state;
-  }
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        int meta = state.getValue(FACING).getHorizontalIndex();
+        if (state.getValue(OCCUPIED)) meta |= 4;
+        if (state.getValue(HEAD)) meta |= 8;
+        return meta;
+    }
 
-  @Override
-  public int getMetaFromState(IBlockState state) {
-    int meta = state.getValue(FACING).getHorizontalIndex();
-    if(state.getValue(OCCUPIED)) meta |= 4;
-    if(state.getValue(HEAD)) meta |= 8;
-    return meta;
-  }
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-  @Override
-  public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
-    return false;
-  }
+    @Override
+    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return false;
+    }
 }

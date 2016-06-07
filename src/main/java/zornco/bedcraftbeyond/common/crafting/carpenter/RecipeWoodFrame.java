@@ -1,14 +1,11 @@
 package zornco.bedcraftbeyond.common.crafting.carpenter;
 
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileCarpenter;
-import zornco.bedcraftbeyond.common.frames.FrameException;
 import zornco.bedcraftbeyond.common.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 
@@ -17,12 +14,17 @@ public class RecipeWoodFrame implements CarpenterRecipe {
     private int woodSlabID = OreDictionary.getOreID("slabWood");
 
     @Override
-    public int getNumberOfSlots() {
-        return 2;
+    public ItemStack getRecipeOutput() {
+        ItemStack bed = new ItemStack(BcbItems.woodenBed, 1);
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setString("frameType", Blocks.PLANKS.getRegistryName().toString());
+        compound.setInteger("frameMeta", 0);
+        bed.setTagCompound(compound);
+        return bed;
     }
 
     @Override
-    public boolean matches(TileCarpenter.CarpenterCraftingItemHandler inv) {
+    public boolean matches(TileCarpenter.CraftingHandler inv) {
         // Wood should be in first slot, slabs in second
         ItemStack wood = inv.extractItem(0, 3, true);
         ItemStack slabs = inv.extractItem(1, 3, true);
@@ -41,11 +43,11 @@ public class RecipeWoodFrame implements CarpenterRecipe {
     }
 
     @Override
-    public CarpenterRecipeOutput doCraft(TileCarpenter.CarpenterCraftingItemHandler crafting, boolean simulate) {
-        if(!matches(crafting)) return null;
+    public ItemStack doCraft(TileCarpenter.CraftingHandler inv, boolean simulate) {
+        if(!matches(inv)) return null;
 
-        ItemStack wood = crafting.extractItem(0, 3, simulate);
-        crafting.extractItem(1, 3, simulate);
+        ItemStack wood = inv.extractItem(0, 3, simulate);
+        inv.extractItem(1, 3, simulate);
 
         if(wood == null) return null;
 
@@ -55,6 +57,6 @@ public class RecipeWoodFrame implements CarpenterRecipe {
         tags.setInteger("frameMeta", wood.getMetadata());
         bedFrame.setTagCompound(tags);
 
-        return new CarpenterRecipeOutput(bedFrame);
+        return bedFrame;
     }
 }

@@ -1,13 +1,11 @@
 package zornco.bedcraftbeyond.common.crafting;
 
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.common.item.ItemDyeBottle;
 import zornco.bedcraftbeyond.common.item.linens.ILinenItem;
 import zornco.bedcraftbeyond.util.ColorHelper;

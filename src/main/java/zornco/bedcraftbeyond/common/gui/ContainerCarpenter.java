@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.SlotItemHandler;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileCarpenter;
 import zornco.bedcraftbeyond.common.gui.slots.SlotTemplate;
 import zornco.bedcraftbeyond.common.item.ItemTemplate;
@@ -24,7 +25,7 @@ public class ContainerCarpenter extends Container {
                 GuiUtils.createSlotGrid(tile.craftingInv, 0, new Vector2f(3, 2), new Vector2f(24, 16)).forEach(this::addSlotToContainer);
             CRAFTING_START = player.inventory.mainInventory.length;
 
-            GuiUtils.createSlotGrid(tile.outputs, 0, new Vector2f(1, 3), new Vector2f(132, 16)).forEach(this::addSlotToContainer);
+            addSlotToContainer(new SlotItemHandler(tile.outputs, 0, 133, 35));
             addSlotToContainer(new SlotTemplate(tile.template, 0, 97, 62));
         }
 

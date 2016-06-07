@@ -1,29 +1,21 @@
 package zornco.bedcraftbeyond.common.blocks.tiles;
 
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemBed;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.ItemStackHandler;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipe;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipes;
-import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipeOutput;
-import zornco.bedcraftbeyond.common.item.ItemTemplate;
-import zornco.bedcraftbeyond.network.MessageSlotsUpdate;
 
 public class TileCarpenter extends TileEntity {
 
-    public CarpenterCraftingItemHandler craftingInv = new CarpenterCraftingItemHandler(this, 6);
+    public CraftingHandler craftingInv = new CraftingHandler(this, 6);
     public CarpenterTemplateHandler template = new CarpenterTemplateHandler(this);
-    public CarpenterOutputItemHandler outputs = new CarpenterOutputItemHandler(this, CarpenterRecipeOutput.MAX_OUTPUTS);
+    public CarpenterOutputItemHandler outputs = new CarpenterOutputItemHandler(this, 1);
 
     private CarpenterRecipe currentRecipe;
 
@@ -31,16 +23,6 @@ public class TileCarpenter extends TileEntity {
 
     public TileCarpenter(World w){
         setWorldObj(w);
-    }
-
-    protected void checkRecipe(){
-
-    }
-
-    protected void clearGrid(){
-        for(int i = 0; i < craftingInv.getSlots(); ++i){
-            craftingInv.setStackInSlot(i, null);
-        }
     }
 
     @Override
@@ -62,9 +44,9 @@ public class TileCarpenter extends TileEntity {
      * First slot is the template, the other slots are added as the template is
      * manipulated.
      */
-    public static class CarpenterCraftingItemHandler extends ItemStackHandler {
+    public static class CraftingHandler extends ItemStackHandler {
         private TileCarpenter master;
-        public CarpenterCraftingItemHandler(TileCarpenter master, int slots){
+        public CraftingHandler(TileCarpenter master, int slots){
             super(slots);
             this.master = master;
         }
@@ -82,10 +64,13 @@ public class TileCarpenter extends TileEntity {
             ResourceLocation recipe = new ResourceLocation(templateItem.getTagCompound().getString("recipe"));
             if(!CarpenterRecipes.recipes.containsKey(recipe)) return;
             master.currentRecipe = CarpenterRecipes.recipes.get(recipe);
-            if(!master.currentRecipe.matches(master.craftingInv)) return;
+            if(!master.currentRecipe.matches(master.craftingInv)) {
+                master.outputs.setStackInSlot(0, null);
+                return;
+            }
 
             // Simulate a craft to show the crafter what to expect
-            master.outputs.setOutputs(master.currentRecipe.doCraft(master.craftingInv, true));
+            master.outputs.setStackInSlot(0, master.currentRecipe.doCraft(master.craftingInv, true));
         }
     }
 
@@ -114,19 +99,6 @@ public class TileCarpenter extends TileEntity {
         public CarpenterOutputItemHandler(TileCarpenter master, int slots){
             super(slots);
             this.master = master;
-        }
-
-        public void setOutputs(CarpenterRecipeOutput output){
-            try {
-                for(int i = 0; i < getSlots(); ++i){
-                    setStackInSlot(i, output.items[i]);
-                }
-            }
-
-            catch(Exception e){
-                BedCraftBeyond.logger.error("Error setting the recipe output for the carpenter. The error is below.");
-                BedCraftBeyond.logger.error(e);
-            }
         }
 
         // Don't allow anyone to put items in, only take them out

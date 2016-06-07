@@ -62,6 +62,7 @@ public class ItemWoodenFrame extends ItemBedPlacer {
         if (!nbt.hasKey("frameType")) return;
         String frameType = nbt.getString("frameType");
         Block b = Block.getBlockFromName(frameType);
+        if(b == null) return;
 
         // TODO: Stop depending on meta here in next version (because no meta?)
         IBlockState state = b.getStateFromMeta(nbt.hasKey("frameMeta") ? nbt.getInteger("frameMeta") : 0);
@@ -84,11 +85,11 @@ public class ItemWoodenFrame extends ItemBedPlacer {
             return EnumActionResult.FAIL;
         }
 
-        TileWoodenBed tileTopHalf = BlockWoodenBed.getTileEntity(worldIn, pos);
+        TileWoodenBed tileTopHalf = BlockWoodenBed.getTileEntity(worldIn, worldIn.getBlockState(pos), pos);
         if (tileTopHalf != null) {
             // tileTopHalf.setBlanketsColor(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.BLANKETS));
             // tileTopHalf.setLinenPart(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.SHEETS));
-            tileTopHalf.setPlankType(PlankHelper.validatePlank(stack));
+            tileTopHalf.plankType = new ResourceLocation(stack.getTagCompound().getString("frameType"));
         }
 
         // If not creative mode, remove placer item
