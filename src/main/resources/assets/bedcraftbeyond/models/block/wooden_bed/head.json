@@ -1,0 +1,193 @@
+{
+  "textures": {
+    "end": "bedcraftbeyond:blocks/wooden_bed/head",
+    "side": "bedcraftbeyond:blocks/wooden_bed/side_head",
+    "top": "bedcraftbeyond:blocks/wooden_bed/top_head",
+    "frame": "bedcraftbeyond:gray"
+  },
+  "elements": [
+    {
+      "name": "Frame",
+      "from": [ 0.0, 3.0, 0.0 ],
+      "to": [ 16.0, 4.0, 16.0 ],
+      "faces": {
+        "north": {
+          "texture": "#frame",
+          "uv": [ 0.0, 9.5, 16.0, 13.0 ]
+        },
+        "east": {
+          "texture": "#frame",
+          "uv": [ 0.0, 9.5, 16.0, 13.0 ]
+        },
+        "south": {
+          "texture": "#frame",
+          "uv": [ 0.0, 9.5, 16.0, 13.0 ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#frame",
+          "uv": [ 0.0, 9.5, 16.0, 13.0 ]
+        },
+        "up": {
+          "texture": "#frame",
+          "uv": [ 0.0, 0.0, 16.0, 16.0 ],
+          "rotation": 180
+        },
+        "down": {
+          "texture": "#frame",
+          "uv": [ 16.0, 16.0, 0.0, 0.0 ],
+          "rotation": 180
+        }
+      }
+    },
+    {
+      "name": "Foot 1",
+      "from": [ 14.0, 0.0, 0.0 ],
+      "to": [ 16.0, 3.0, 2.0 ],
+      "faces": {
+        "north": {
+          "texture": "#frame",
+          "uv": [ 0.0, 13.0, 2.0, 16.0 ]
+        },
+        "east": {
+          "texture": "#frame",
+          "uv": [ 14.0, 13.0, 16.0, 16.0 ]
+        },
+        "south": {
+          "texture": "#frame",
+          "uv": [ 14.0, 13.0, 16.0, 16.0 ]
+        },
+        "west": {
+          "texture": "#frame",
+          "uv": [ 0.0, 13.0, 2.0, 16.0 ]
+        },
+        "up": {
+          "texture": "#frame",
+          "uv": [ 0.0, 14.0, 2.0, 16.0 ],
+          "rotation": 180,
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#frame",
+          "uv": [ 16.0, 16.0, 14.0, 14.0 ],
+          "rotation": 180
+        }
+      }
+    },
+    {
+      "name": "Foot 2",
+      "from": [ 0.0, 0.0, 0.0 ],
+      "to": [ 2.0, 3.0, 2.0 ],
+      "faces": {
+        "north": {
+          "texture": "#frame",
+          "uv": [ 14.0, 13.0, 16.0, 16.0 ]
+        },
+        "east": {
+          "texture": "#frame",
+          "uv": [ 14.0, 13.0, 16.0, 16.0 ]
+        },
+        "west": {
+          "texture": "#frame",
+          "uv": [ 0.0, 13.0, 2.0, 16.0 ]
+        },
+        "up": {
+          "texture": "#frame",
+          "uv": [ 14.0, 14.0, 16.0, 16.0 ],
+          "rotation": 180,
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#frame",
+          "uv": [ 2.0, 16.0, 0.0, 14.0 ],
+          "rotation": 180
+        }
+      }
+    },
+    {
+      "name": "Sheets",
+      "from": [ 0.0, 4.0, 0.0 ],
+      "to": [ 16.0, 9.0, 8.0 ],
+      "faces": {
+        "north": {
+          "texture": "#end",
+          "uv": [ 0.0, 0.0, 16.0, 4.0 ],
+          "rotation": 180,
+          "tintindex": 1
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [ 8.0, 0.0, 16.0, 4.0 ],
+          "tintindex": 1,
+          "rotation": 180
+        },
+        "south": {
+          "texture": "#frame",
+          "uv": [ 10.0, 7.5, 26.0, 12.5 ],
+          "cullface": "south",
+          "tintindex": 1
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [ 8.0, 0.0, 16.0, 4.0 ],
+          "tintindex": 1,
+          "flip-y": true
+        },
+        "up": {
+          "texture": "#top",
+          "uv": [ 8.0, 0.0, 16.0, 16.0 ],
+          "rotation": 90,
+          "tintindex": 1
+        },
+        "down": {
+          "texture": "#frame",
+          "uv": [ 16.0, 11.0, 14.0, 10.0 ],
+          "rotation": 270,
+          "tintindex": 1
+        }
+      }
+    },
+    {
+      "name": "Blankets",
+      "from": [ 0.0, 4.0, 8.0 ],
+      "to": [ 16.0, 9.0, 16.0 ],
+      "faces": {
+        "north": {
+          "texture": "#frame",
+          "uv": [ 0.0, 0.0, 16.0, 4.0 ],
+          "tintindex": 2
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [ 0.0, 0.0, 8.0, 4.0 ],
+          "rotation": 180,
+          "tintindex": 2
+        },
+        "south": {
+          "texture": "#frame",
+          "uv": [ 0.0, 0.0, 16.0, 4.0 ],
+          "rotation": 180,
+          "cullface": "south",
+          "tintindex": 2
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [ 0.0, 0.0, 8.0, 4.0 ],
+          "rotation": 180,
+          "tintindex": 2
+        },
+        "up": {
+          "texture": "#top",
+          "uv": [ 0.0, 0.0, 8.0, 16.0 ],
+          "rotation": 270,
+          "tintindex": 2
+        },
+        "down": {
+          "texture": "#frame",
+          "uv": [ 16.0, 11.0, 14.0, 10.0 ],
+          "tintindex": 2
+        }
+      }
+    }
+  ]
+}

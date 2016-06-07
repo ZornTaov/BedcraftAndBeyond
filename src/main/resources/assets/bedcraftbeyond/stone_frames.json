@@ -1,4 +1,4 @@
 {
-  "whitelist": [ ],
+  "whitelist": [ "minecraft:stone" ],
   "blacklist": [ ]
 }
