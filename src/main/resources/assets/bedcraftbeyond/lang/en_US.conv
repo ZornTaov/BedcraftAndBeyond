@@ -24,6 +24,8 @@ tile.bedcraftbeyond {
 		Orange.name: "Orange Rug"
 		White.name: "White Rug"
 	}
+
+	carpenter.name: "Carpenter"
 }
 
 // Items
@@ -37,8 +39,10 @@ item.bedcraftbeyond {
 	scissors.name: "Scissors"
 	drawerKey.name: "Drawer Key"
 	dyeBottle.name: "Bottle of Dye"
+	eyedropper.name: "Eyedropper"
+	template.name: "Carpenter Template"
 	linens {
-		blankets.name: "Blankets"
+		blanket.name: "Blanket"
 		sheets.name: "Sheets"
 	}
 }

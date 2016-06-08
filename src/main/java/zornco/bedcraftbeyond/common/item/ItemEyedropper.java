@@ -5,8 +5,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -31,14 +33,23 @@ public class ItemEyedropper extends Item implements IClientGui {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        playerIn.openGui(BedCraftBeyond.INSTANCE,
-            GuiHandler.ITEM_ID,
-            worldIn,
-            hand == EnumHand.MAIN_HAND ? 1 : 0,
-            0, 0);
+    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        if(playerIn.isSneaking()){
+            playerIn.openGui(BedCraftBeyond.INSTANCE,
+                GuiHandler.ITEM_ID,
+                worldIn,
+                hand == EnumHand.MAIN_HAND ? 1 : 0,
+                0, 0);
 
-        return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+            return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+        }
+
+        // TODO: Actual use code!!
+        if(!worldIn.isRemote) {
+            playerIn.addChatMessage(new TextComponentString("Using eyedropper!"));
+
+        }
+        return ActionResult.newResult(EnumActionResult.PASS, stack);
     }
 
     @Override

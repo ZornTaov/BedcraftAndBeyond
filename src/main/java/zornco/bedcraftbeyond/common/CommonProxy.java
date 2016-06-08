@@ -17,6 +17,4 @@ public abstract class CommonProxy {
     }
 
     public abstract void compileFrames();
-
-    public abstract void registerMessages();
 }

@@ -10,8 +10,4 @@ public class ServerProxy extends CommonProxy {
       FrameLoader.compileFramesServer();
    }
 
-   @Override
-   public void registerMessages() {
-      zornco.bedcraftbeyond.network.Registration.registerMessagesServer();
-   }
 }

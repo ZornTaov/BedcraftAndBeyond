@@ -61,9 +61,4 @@ public class ClientProxy extends CommonProxy {
    public void compileFrames() {
       FrameLoader.compileFramesClient();
    }
-
-   @Override
-   public void registerMessages() {
-      Registration.registerMessagesClient();
-   }
 }

@@ -20,6 +20,7 @@ tile.bedcraftbeyond.rug.Magenta.name=Magenta Rug
 tile.bedcraftbeyond.rug.Orange.name=Orange Rug
 tile.bedcraftbeyond.rug.White.name=White Rug
 
+tile.bedcraftbeyond.carpenter.name=Carpenter
 
 # Items
 item.bedcraftbeyond.beds.wooden.name=Wooden Bed
@@ -29,7 +30,9 @@ item.bedcraftbeyond.beds.stone.name=Stone Bed
 item.bedcraftbeyond.scissors.name=Scissors
 item.bedcraftbeyond.drawerKey.name=Drawer Key
 item.bedcraftbeyond.dyeBottle.name=Bottle of Dye
-item.bedcraftbeyond.linens.blankets.name=Blankets
+item.bedcraftbeyond.eyedropper.name=Eyedropper
+item.bedcraftbeyond.template.name=Carpenter Template
+item.bedcraftbeyond.linens.blanket.name=Blanket
 item.bedcraftbeyond.linens.sheets.name=Sheets
 
 
@@ -62,3 +65,5 @@ bedcraftbeyond.frames.whitelisted=Successfully whitelisted %s (and its variants)
 bedcraftbeyond.frames.whitelisted.fail=Failed to whitelist %s (and its variants) to frame type %s.
 bedcraftbeyond.frames.whitelisted.by_meta=Successfully whitelisted %s (meta %s) to frame type %s.
 bedcraftbeyond.frames.whitelisted.by_meta.fail=Failed to whitelist %s (meta %s) to frame type %s.
+
+

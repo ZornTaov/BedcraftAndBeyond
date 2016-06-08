@@ -6,14 +6,11 @@ import zornco.bedcraftbeyond.BedCraftBeyond;
 
 public class Registration {
 
-    @SideOnly(Side.CLIENT)
-    public static void registerMessagesClient() {
+    public static void registerMessages() {
+        // Client
         BedCraftBeyond.NETWORK.registerMessage(BedPartUpdate.Handler.class, BedPartUpdate.class, 1, Side.CLIENT);
-    }
 
-    @SideOnly(Side.SERVER)
-    public static void registerMessagesServer() {
+        // Server
         BedCraftBeyond.NETWORK.registerMessage(MessageEyedropperUpdate.Handler.class, MessageEyedropperUpdate.class, 3, Side.SERVER);
     }
-
 }
