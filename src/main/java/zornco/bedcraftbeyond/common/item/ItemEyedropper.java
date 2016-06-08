@@ -3,13 +3,23 @@ package zornco.bedcraftbeyond.common.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.client.gui.GuiEyedropper;
+import zornco.bedcraftbeyond.client.gui.IClientGui;
+import zornco.bedcraftbeyond.common.gui.GuiHandler;
+import zornco.bedcraftbeyond.util.ColorHelper;
 
-public class ItemEyedropper extends Item {
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+public class ItemEyedropper extends Item implements IClientGui {
 
     public ItemEyedropper(){
         setCreativeTab(BedCraftBeyond.MAIN_TAB);
@@ -22,6 +32,30 @@ public class ItemEyedropper extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+        playerIn.openGui(BedCraftBeyond.INSTANCE,
+            GuiHandler.ITEM_ID,
+            worldIn,
+            hand == EnumHand.MAIN_HAND ? 1 : 0,
+            0, 0);
+
         return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
+        if(!stack.getTagCompound().hasKey("color")) return;
+        Color c = ColorHelper.getColorFromStack(stack);
+        tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c));
+    }
+
+    @Override
+    public Object getClientGui(World w, BlockPos pos, EntityPlayer player) {
+        EnumHand hand = pos.getX() == 1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
+        return new GuiEyedropper(player, hand, player.getHeldItem(hand));
+    }
+
+    public static Color getCurrentColor(ItemStack stack){
+        return ColorHelper.getColorFromStack(stack);
     }
 }

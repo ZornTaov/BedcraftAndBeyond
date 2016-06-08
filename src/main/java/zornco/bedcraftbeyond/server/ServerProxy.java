@@ -1,8 +1,7 @@
 package zornco.bedcraftbeyond.server;
 
-import net.minecraft.world.World;
-import zornco.bedcraftbeyond.common.frames.FrameLoader;
 import zornco.bedcraftbeyond.common.CommonProxy;
+import zornco.bedcraftbeyond.common.frames.FrameLoader;
 
 public class ServerProxy extends CommonProxy {
 
