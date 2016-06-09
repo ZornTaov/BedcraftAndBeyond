@@ -19,7 +19,7 @@ import java.awt.*;
 
 public class Colors {
 
-    public static class DyeBottleColorer implements IItemColor {
+    public static class DyeItemColorer implements IItemColor {
 
         @Override
         public int getColorFromItemstack(ItemStack stack, int tintIndex) {

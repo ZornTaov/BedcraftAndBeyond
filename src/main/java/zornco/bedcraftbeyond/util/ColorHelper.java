@@ -123,6 +123,10 @@ public class ColorHelper {
             TextFormatting.BLUE + c.getBlue() + TextFormatting.RESET;
     }
 
+    public static String getHexFromColor(Color c){
+        return String.format("%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
+    }
+
     public static NBTTagCompound getTagForColor(Color c) {
         NBTTagCompound color = new NBTTagCompound();
         color.setInteger("r", c.getRed());

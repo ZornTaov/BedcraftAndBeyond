@@ -1,62 +1,59 @@
 package zornco.bedcraftbeyond.client.gui;
 
+import com.google.common.base.Predicate;
+import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.client.config.GuiSlider;
+import org.lwjgl.util.Dimension;
+import org.lwjgl.util.Point;
 import org.lwjgl.util.vector.Vector2f;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.common.gui.ContainerEyedropper;
+import zornco.bedcraftbeyond.client.gui.input.GuiColorNumberEntry;
+import zornco.bedcraftbeyond.client.gui.input.GuiColorSlider;
 import zornco.bedcraftbeyond.common.item.ItemEyedropper;
 import zornco.bedcraftbeyond.network.MessageEyedropperUpdate;
 import zornco.bedcraftbeyond.util.ColorHelper;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 
-public class GuiEyedropper extends GuiContainer {
+public class GuiEyedropper extends GuiSized {
 
     private EntityPlayer player;
     private EnumHand hand;
     private ItemStack eyedropper;
 
+    private GuiColorSlider sliderRed;
+    private GuiColorSlider sliderGreen;
+    private GuiColorSlider sliderBlue;
+
     private ColorResponder red;
     private ColorResponder green;
     private ColorResponder blue;
 
+    private ColorInputResponder colorBoxResponder;
+
     private GuiTextField hexBox;
+    private GuiTextField redBox;
+    private GuiTextField greenBox;
+    private GuiTextField blueBox;
 
     public GuiEyedropper(EntityPlayer player, EnumHand hand, ItemStack eyedropper){
-        super(new ContainerEyedropper(player, eyedropper));
         this.player = player;
         this.eyedropper = eyedropper;
         this.hand = hand;
 
-        this.width = 400;
-        this.height = 300;
-
         this.red = new ColorResponder(this, "r");
         this.green = new ColorResponder(this, "g");
         this.blue = new ColorResponder(this, "b");
-    }
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-        this.drawDefaultBackground();
+        this.guiSize = new Dimension(360, 150);
 
-        Vector2f lineStart = new Vector2f(guiLeft + 60 + 10, guiTop + 10);
-
-        Color c = ItemEyedropper.getCurrentColor(this.eyedropper);
-        int previewSize = 45;
-        drawRect(guiLeft + 10, guiTop + 10, guiLeft + 10 + previewSize, guiTop + 10 + previewSize, c.getRGB());
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+        this.colorBoxResponder = new ColorInputResponder(this);
     }
 
     @Override
@@ -69,16 +66,95 @@ public class GuiEyedropper extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        Color c = ItemEyedropper.getCurrentColor(this.eyedropper);
-        Vector2f startPos = new Vector2f(this.guiLeft + 65, this.guiTop + 10);
 
-        buttonList.add(new GuiColorSlider(1, startPos, "Red: ", c.getRed(), red));
-        startPos.y += 12;
-        buttonList.add(new GuiColorSlider(2, startPos, "Green: ", c.getGreen(), green));
-        startPos.y += 12;
-        buttonList.add(new GuiColorSlider(3, startPos, "Blue: ", c.getBlue(), blue));
+        Color c = getCurrentColor();
+        Vector2f sliderPos = new Vector2f(this.topLeft.getX(), this.topLeft.getY() + 35);
+        Vector2f sliderSize = new Vector2f(280, 20);
+        Dimension textSize = new Dimension(this.guiSize.getWidth() - 5 - (int) sliderSize.getX(), 18);
 
-        this.hexBox = new GuiTextField(4, fontRendererObj, guiLeft + 10, guiTop + 70, 45, 20);
+        this.sliderRed = new GuiColorSlider(1, sliderPos, sliderSize, "Red: ", c.getRed(), red);
+        buttonList.add(sliderRed);
+        this.redBox = new GuiColorNumberEntry(this, 5, GuiColorNumberEntry.ColorType.RED, fontRendererObj,
+            new Point(topLeft.getX() + (int) sliderSize.getX() + 5, (int) sliderPos.getY() + 1), textSize);
+        this.redBox.setTextColor(Color.RED.getRGB());
+        sliderPos.y += 22;
+
+        this.sliderGreen = new GuiColorSlider(2, sliderPos, sliderSize, "Green: ", c.getGreen(), green);
+        buttonList.add(sliderGreen);
+        this.greenBox = new GuiColorNumberEntry(this, 6, GuiColorNumberEntry.ColorType.GREEN, fontRendererObj,
+            new Point(topLeft.getX() + (int) sliderSize.getX() + 5, (int) sliderPos.getY() + 1), textSize);
+        this.greenBox.setTextColor(Color.GREEN.getRGB());
+        sliderPos.y += 22;
+
+        this.sliderBlue = new GuiColorSlider(3, sliderPos, sliderSize, "Blue: ", c.getBlue(), blue);
+        this.blueBox = new GuiColorNumberEntry(this, 7, GuiColorNumberEntry.ColorType.BLUE, fontRendererObj,
+            new Point(topLeft.getX() + (int) sliderSize.getX() + 5, (int) sliderPos.getY() + 1), textSize);
+        this.blueBox.setTextColor(Color.BLUE.getRGB());
+        buttonList.add(sliderBlue);
+
+        this.hexBox = new GuiTextField(4, fontRendererObj, topLeft.getX() + 10, topLeft.getY() + 5, 60, 20);
+        this.hexBox.setText(ColorHelper.getHexFromColor(c));
+        this.hexBox.setMaxStringLength(6);
+        this.hexBox.setGuiResponder(colorBoxResponder);
+
+        this.setCurrentColor(getCurrentColor());
+    }
+
+    @Override
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        if(keyCode == 1) this.mc.displayGuiScreen(null);
+        hexBox.textboxKeyTyped(typedChar, keyCode);
+        redBox.textboxKeyTyped(typedChar, keyCode);
+        greenBox.textboxKeyTyped(typedChar, keyCode);
+        blueBox.textboxKeyTyped(typedChar, keyCode);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        hexBox.mouseClicked(mouseX, mouseY, mouseButton);
+        redBox.mouseClicked(mouseX, mouseY, mouseButton);
+        greenBox.mouseClicked(mouseX, mouseY, mouseButton);
+        blueBox.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    public void drawSizedBackground() {
+        Color c = getCurrentColor();
+        drawRect(this.topLeft.getX(),
+            this.topLeft.getY(),
+            this.topLeft.getX() + this.guiSize.getWidth(),
+            this.topLeft.getY() + 30, c.getRGB());
+    }
+
+    @Override
+    public void drawSizedForeground() {
+        hexBox.drawTextBox();
+        redBox.drawTextBox();
+        greenBox.drawTextBox();
+        blueBox.drawTextBox();
+    }
+
+    public Color getCurrentColor(){
+        ItemStack ed = eyedropper;
+        return ColorHelper.getColorFromStack(ed);
+    }
+
+    public void setCurrentColor(Color c){
+        NBTTagCompound newColorTag = ColorHelper.getTagForColor(c);
+        if(!eyedropper.hasTagCompound()) eyedropper.setTagCompound(new NBTTagCompound());
+        eyedropper.getTagCompound().setTag("color", newColorTag);
+
+        if(hexBox.getText().length() == 6)
+            hexBox.setText(ColorHelper.getHexFromColor(c));
+
+        sliderRed.setValue(c.getRed());
+        sliderGreen.setValue(c.getGreen());
+        sliderBlue.setValue(c.getBlue());
+
+        redBox.setText("" + c.getRed());
+        greenBox.setText("" + c.getGreen());
+        blueBox.setText("" + c.getBlue());
     }
 
     private class ColorResponder implements GuiSlider.ISlider {
@@ -92,9 +168,9 @@ public class GuiEyedropper extends GuiContainer {
 
         @Override
         public void onChangeSliderValue(GuiSlider slider) {
-            ItemStack ed = master.eyedropper;
-            Color original = ColorHelper.getColorFromStack(ed);
-            Color newColor = new Color(0,0,0);
+            Color original = master.getCurrentColor();
+            Color newColor = Color.WHITE;
+
             switch (key){
                 case "r":
                     newColor = new Color(slider.getValueInt(), original.getGreen(), original.getBlue());
@@ -107,9 +183,47 @@ public class GuiEyedropper extends GuiContainer {
                     break;
             }
 
-            NBTTagCompound newColorTag = ColorHelper.getTagForColor(newColor);
-            if(!ed.hasTagCompound()) ed.setTagCompound(new NBTTagCompound());
-            ed.getTagCompound().setTag("color", newColorTag);
+            master.setCurrentColor(newColor);
+        }
+    }
+
+    /**
+     * Used by the hex entry box to set the color manually.
+     */
+    private class ColorInputResponder implements GuiPageButtonList.GuiResponder {
+
+        private GuiEyedropper master;
+        public ColorInputResponder(GuiEyedropper master){
+            this.master = master;
+        }
+
+        @Override
+        public void setEntryValue(int id, boolean value) { }
+
+        @Override
+        public void setEntryValue(int id, float value) { }
+
+        @Override
+        public void setEntryValue(int id, String value) {
+            // If the hex box
+            boolean valid = value.length() == 6 || value.length() == 3;
+            if(valid){
+                master.hexBox.setTextColor(Color.WHITE.getRGB());
+                try {
+                    if(value.length() == 3)
+                        value = String.format("%1$s%1$s%2$s%2$s%3$s%3$s",
+                            value.substring(0,1), value.substring(1,2), value.substring(2,3));
+
+                    Color c = Color.decode("#" + value);
+                    master.setCurrentColor(c);
+                }
+
+                catch (Exception nfe){
+                    BedCraftBeyond.LOGGER.error(nfe);
+                }
+            } else {
+                master.hexBox.setTextColor(Color.RED.getRGB());
+            }
         }
     }
 }

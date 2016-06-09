@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.client.gui;
+package zornco.bedcraftbeyond.client.gui.input;
 
 
 import net.minecraft.client.Minecraft;
@@ -11,8 +11,16 @@ import java.awt.*;
 
 public class GuiColorSlider extends GuiSlider {
 
+    public GuiColorSlider(int id, Vector2f startPos, Vector2f size, String prefix, ISlider responder){
+        this(id, startPos, size, prefix, 0, responder);
+    }
+
     public GuiColorSlider(int id, Vector2f startPos, String prefix, double startVal, ISlider responder){
-        super(id, (int) startPos.x, (int) startPos.y, 100, 10, prefix, "", 0, 255, startVal, false, false, responder);
+        this(id, startPos, new Vector2f(100, 20), prefix, startVal, responder);
+    }
+
+    public GuiColorSlider(int id, Vector2f startPos, Vector2f size, String prefix, double startVal, ISlider responder){
+        super(id, (int) startPos.x, (int) startPos.y, (int) size.getX(), (int) size.getY(), prefix, "", 0, 255, startVal, false, false, responder);
     }
 
     /**
