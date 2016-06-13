@@ -22,7 +22,7 @@ public class ContainerCarpenter extends Container {
         try {
             GuiUtils.createStandardInventory(player, new Vector2f(6, 92)).forEach(this::addSlotToContainer);
             if(tile.craftingInv.getSlots() != 0)
-                GuiUtils.createSlotGrid(tile.craftingInv, 0, new Vector2f(3, 2), new Vector2f(24, 16)).forEach(this::addSlotToContainer);
+                GuiUtils.createSlotGrid(tile.craftingInv, 0, new Vector2f(3, 3), new Vector2f(24, 16)).forEach(this::addSlotToContainer);
             CRAFTING_START = player.inventory.mainInventory.length;
 
             addSlotToContainer(new SlotItemHandler(tile.outputs, 0, 133, 35));

@@ -7,6 +7,7 @@ import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipes;
+import zornco.bedcraftbeyond.common.crafting.recipes.RecipeLinenItems;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 
 public class Recipes {

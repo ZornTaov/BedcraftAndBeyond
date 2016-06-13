@@ -66,6 +66,7 @@ public class FrameRegistry {
      */
     // TODO: Check if this has issues with mods
     public static boolean isValidFrameMaterial(EnumFrameType type, ItemStack stack) {
+        if(stack == null) return false;
         FrameWhitelist set = getFrameWhitelist(type);
         Block b = Block.getBlockFromItem(stack.getItem());
         ResourceLocation rl = b.getRegistryName();

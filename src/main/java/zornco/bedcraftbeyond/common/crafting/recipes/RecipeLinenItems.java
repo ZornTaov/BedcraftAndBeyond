@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.common.crafting;
+package zornco.bedcraftbeyond.common.crafting.recipes;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
