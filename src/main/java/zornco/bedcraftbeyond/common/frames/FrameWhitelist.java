@@ -4,6 +4,7 @@ import com.google.common.collect.Range;
 import com.google.common.collect.RangeSet;
 import com.google.common.collect.TreeRangeSet;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.oredict.OreDictionary;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
@@ -36,7 +37,7 @@ public class FrameWhitelist {
     }
 
     public Set<Range<Integer>> getValidMetaForEntry(ResourceLocation registryName) throws FrameException {
-        if(!hasEntryFor(registryName)) throw new FrameException(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry", registryName);
+        if(!hasEntryFor(registryName)) throw new FrameException(I18n.translateToLocalFormatted(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry", registryName));
         return whitelist.get(registryName).asRanges();
     }
 
@@ -97,7 +98,7 @@ public class FrameWhitelist {
      */
     public boolean addEntry(ResourceLocation registryName) throws FrameException {
         if (whitelist.containsKey(registryName))
-            throw new FrameException(BedCraftBeyond.MOD_ID + ".frames.errors.already_added", type.name().toLowerCase());
+            throw new FrameException(I18n.translateToLocalFormatted(BedCraftBeyond.MOD_ID + ".frames.errors.already_added", type.name().toLowerCase()));
 
         resetWhitelistForEntry(registryName);
         return true;
@@ -128,10 +129,18 @@ public class FrameWhitelist {
         }
 
         if (metaIsWhitelisted(registryName, meta))
-            throw new FrameException(BedCraftBeyond.MOD_ID + ".frames.errors.already_added_meta", registryName, meta, type.name().toLowerCase());
+            throw new FrameException(I18n.translateToLocalFormatted(BedCraftBeyond.MOD_ID + ".frames.errors.already_added_meta", registryName, meta, type.name().toLowerCase()));
 
-        whitelist.get(registryName).add(Range.closed(meta, meta));
+        addWhitelistRange(registryName, Range.closed(meta, meta));
         return whitelist.get(registryName).contains(meta);
+    }
+
+    public boolean addWhitelistRange(ResourceLocation registryName, Range<Integer> range) throws FrameException {
+        if(!whitelist.containsKey(registryName))
+            whitelist.put(registryName, TreeRangeSet.create());
+
+        whitelist.get(registryName).add(range);
+        return whitelist.get(registryName).encloses(range);
     }
 
     /**
@@ -168,7 +177,7 @@ public class FrameWhitelist {
             return removeWhitelistEntries(regName, Range.closed(meta, meta));
         }
 
-        throw new FrameException(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry", regName);
+        throw new FrameException(I18n.translateToLocalFormatted(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry", regName));
     }
 
     /**
@@ -180,7 +189,7 @@ public class FrameWhitelist {
      */
     public boolean removeWhitelistEntries(ResourceLocation regName, Range<Integer> range) throws FrameException {
         if (!whitelist.containsKey(regName))
-            throw new FrameException(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry");
+            throw new FrameException(I18n.translateToLocalFormatted(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry", regName));
         whitelist.get(regName).remove(range);
         return !whitelist.get(regName).encloses(range);
     }

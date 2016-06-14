@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class ItemHandlerGridHelper {
 
     public static int getPositionFromPoint(Point p, Dimension size){
-        return p.x + p.y * size.width;
+        return p.x + (p.y * size.width);
     }
 
     private static void doChecks(IItemHandlerSized handler, Rectangle gridArea){
@@ -35,7 +35,7 @@ public abstract class ItemHandlerGridHelper {
         Point startPosition = area.getLocation();
         Point currePosition = new Point(startPosition);
         while(points.size() < area.width * area.height){
-            points.add(getPositionFromPoint(currePosition, area.getSize()));
+            points.add(getPositionFromPoint(currePosition, handler.getSize()));
 
             currePosition.translate(1,0);
             if(currePosition.x == area.width + startPosition.x) {

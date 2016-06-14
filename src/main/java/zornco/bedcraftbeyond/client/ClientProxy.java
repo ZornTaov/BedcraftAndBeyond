@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import zornco.bedcraftbeyond.BedCraftBeyond;
@@ -56,10 +55,5 @@ public class ClientProxy extends CommonProxy {
 
         IBlockColor coloredBed = new Colors.BedColorer();
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(coloredBed, BcbBlocks.woodenBed);
-    }
-
-    @Override
-    public void compileFrames() {
-        FrameLoader.compileFramesClient();
     }
 }

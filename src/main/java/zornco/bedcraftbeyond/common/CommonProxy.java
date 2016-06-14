@@ -15,6 +15,4 @@ public abstract class CommonProxy {
     public void init() {
         BcbBlocks.registerTiles();
     }
-
-    public abstract void compileFrames();
 }

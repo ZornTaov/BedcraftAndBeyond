@@ -1,14 +1,19 @@
-package zornco.bedcraftbeyond.common.crafting;
+package zornco.bedcraftbeyond.common.crafting.recipes;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipes;
+import zornco.bedcraftbeyond.common.crafting.carpenter.Templates;
 import zornco.bedcraftbeyond.common.crafting.recipes.RecipeLinenItems;
 import zornco.bedcraftbeyond.common.item.BcbItems;
+import zornco.bedcraftbeyond.common.item.ItemTemplate;
 
 public class Recipes {
 
@@ -28,11 +33,19 @@ public class Recipes {
         // Removed: Beds are now frames, we need this.
         // GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.bed), "coloredBed"));  ++recipesAdded;
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.blanket),
-            "CCC", "CCC", 'C', Blocks.CARPET));
+            "CC", "CC", 'C', Blocks.CARPET));
         ++recipesAdded;
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.sheets),
-            "CCC", 'C', Blocks.CARPET));
+            "CC", 'C', Blocks.CARPET));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.eyedropper),
+            "S", "G", "G", 'S', "slabWood", 'G', "blockGlass"));
+        ++recipesAdded;
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.template, 4),
+            " P ", "PCP", " P ", 'P', "paper", 'C', Blocks.CRAFTING_TABLE));
+        ++recipesAdded;
 
         RecipeLinenItems rli = new RecipeLinenItems();
         GameRegistry.addRecipe(rli);

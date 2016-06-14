@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemStackHandler;
+import zornco.bedcraftbeyond.common.crafting.carpenter.Templates;
 import zornco.bedcraftbeyond.items.IItemHandlerSized;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipe;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipes;
@@ -51,8 +52,8 @@ public class TileCarpenter extends TileEntity {
 
         if(!templateItem.hasTagCompound() || !templateItem.getTagCompound().hasKey("recipe")) return;
         ResourceLocation recipe = new ResourceLocation(templateItem.getTagCompound().getString("recipe"));
-        if(!CarpenterRecipes.recipes.containsKey(recipe)) return;
-        currentRecipe = CarpenterRecipes.recipes.get(recipe);
+        if(!Templates.hasTemplate(recipe)) return;
+        currentRecipe = CarpenterRecipes.getRecipe(recipe);
         if(!currentRecipe.matches(craftingInv)) {
             outputs.setStackInSlot(0, null);
             return;

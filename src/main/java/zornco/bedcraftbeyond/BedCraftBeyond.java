@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond;
 
-import akka.dispatch.sysmsg.Suspend;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,12 +19,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.helpers.SystemClock;
 import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
 import zornco.bedcraftbeyond.common.commands.CommandBedcraft;
-import zornco.bedcraftbeyond.common.crafting.Recipes;
+import zornco.bedcraftbeyond.common.crafting.recipes.Recipes;
+import zornco.bedcraftbeyond.common.frames.FrameLoader;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.config.ConfigHelper;
 import zornco.bedcraftbeyond.common.gui.GuiHandler;
@@ -102,7 +101,7 @@ public class BedCraftBeyond {
     public void postInit(FMLPostInitializationEvent event) {
         // PlankHelper.readyToColor = true;
         long start = System.currentTimeMillis();
-        PROXY.compileFrames();
+        FrameLoader.compileFrames();
         BedCraftBeyond.LOGGER.info("Compiled frame whitelists in " + (System.currentTimeMillis() - start) + " milliseconds.");
     }
 

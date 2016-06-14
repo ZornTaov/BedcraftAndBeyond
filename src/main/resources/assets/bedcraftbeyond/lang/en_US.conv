@@ -40,7 +40,11 @@ item.bedcraftbeyond {
 	drawerKey.name: "Drawer Key"
 	dyeBottle.name: "Bottle of Dye"
 	eyedropper.name: "Eyedropper"
-	template.name: "Carpenter Template"
+	template {
+	    name: "Template"
+	    blank: "Blank Template"
+	}
+
 	linens {
 		blanket.name: "Blanket"
 		sheets.name: "Sheets"

@@ -11,6 +11,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.commands.CommandFragment;
 import zornco.bedcraftbeyond.common.commands.FramesCommandsUtils;
+import zornco.bedcraftbeyond.common.frames.FrameLoader;
 import zornco.bedcraftbeyond.common.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.frames.FrameWhitelist;
 
@@ -34,9 +35,14 @@ public class FragmentFrames extends CommandFragment {
                 FragmentFramesCheck.execute(server, sender, args);
                 break;
 
+            case "save":
+            case "dump":
+                FragmentFramesDump.execute(server, sender, args);
+                break;
+
             case "reload":
                 sender.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".messages.reloadingFrames"));
-                BedCraftBeyond.PROXY.compileFrames();
+                FrameLoader.compileFrames();
                 break;
         }
     }
@@ -44,7 +50,7 @@ public class FragmentFrames extends CommandFragment {
     public static List<String> getTabOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         switch (args.length) {
             case 2:
-                return CommandBase.getListOfStringsMatchingLastWord(args, ImmutableList.of("add", "remove", "check", "reload", "list"));
+                return CommandBase.getListOfStringsMatchingLastWord(args, ImmutableList.of("add", "remove", "check", "reload", "list", "save"));
             default:
                 switch (args[1].toLowerCase()) {
                     case "add":
@@ -56,6 +62,9 @@ public class FragmentFrames extends CommandFragment {
 
                     case "check":
                         return FragmentFramesCheck.getTabOptions(server, sender, args, pos);
+
+                    case "save":
+                        return FragmentFramesDump.getTabOptions(server, sender, args, pos);
 
                     case "list":
                         return CommandBase.getListOfStringsMatchingLastWord(args, FrameRegistry.EnumFrameType.getPossible());

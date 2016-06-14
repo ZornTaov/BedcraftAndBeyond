@@ -31,7 +31,8 @@ item.bedcraftbeyond.scissors.name=Scissors
 item.bedcraftbeyond.drawerKey.name=Drawer Key
 item.bedcraftbeyond.dyeBottle.name=Bottle of Dye
 item.bedcraftbeyond.eyedropper.name=Eyedropper
-item.bedcraftbeyond.template.name=Carpenter Template
+item.bedcraftbeyond.template.name=Template
+item.bedcraftbeyond.template.blank=Blank Template
 item.bedcraftbeyond.linens.blanket.name=Blanket
 item.bedcraftbeyond.linens.sheets.name=Sheets
 

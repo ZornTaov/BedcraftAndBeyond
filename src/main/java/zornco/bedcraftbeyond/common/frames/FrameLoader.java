@@ -1,42 +1,67 @@
 package zornco.bedcraftbeyond.common.frames;
 
+import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.Logger;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.config.ConfigHelper;
 import zornco.bedcraftbeyond.config.ConfigSettings;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FrameLoader {
 
     private static int removeFramesFromStream(FrameFile frames, FrameRegistry.EnumFrameType type) {
         int removed = 0;
-        for (String entry : frames.blacklist) {
-            ResourceLocation entryRes = new ResourceLocation(entry);
+        for (FrameFile.FrameEntry frameEntry : frames.entries) {
+            if(!frameEntry.hasBlacklist()) continue;
+
+            ResourceLocation entryRes = new ResourceLocation(frameEntry.key);
             Block b = Block.REGISTRY.getObject(entryRes);
-            if (b != null) {
-                if (entry.contains("@")) {
-                    // TODO: Implement metadata only list
+            if(b == null) continue;
+            for(Object entryItem : frameEntry.blacklist) {
+                if(entryItem instanceof String) {
+                    String entryString = String.valueOf(entryItem);
+                    switch(entryString.toLowerCase()) {
+                        case "all":
+                            FrameRegistry.getFrameWhitelist(type).removeEntry(b.getRegistryName());
+                            List<ItemStack> addedList = new ArrayList<>();
+                            b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
+                            removed += addedList.size();
+                            break;
+
+                        default:
+                            // TODO: Meta range?
+                            Pattern p = Pattern.compile("(?<lower>\\d+)\\-(?<upper>\\d+)");
+                            Matcher m = p.matcher(entryString);
+                            if(!m.matches()) continue;
+                            int lower = Integer.parseInt(m.group("lower"));
+                            int upper = Integer.parseInt(m.group("upper"));
+                            Range<Integer> range = Range.open(lower, upper);
+                            break;
+                    }
+                } else if(entryItem instanceof Number) {
+                    try {
+                        FrameRegistry.getFrameWhitelist(type).removeWhitelistEntry(entryRes, ((Number) entryItem).intValue());
+                    } catch (FrameException e) {
+                        BedCraftBeyond.LOGGER.error(e.getMessage());
+                    }
                 } else {
-                    FrameRegistry.getFrameWhitelist(type).resetWhitelistForEntry(b.getRegistryName());
-                    List<ItemStack> addedList = new ArrayList<>();
-                    b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
-                    removed += addedList.size();
+
                 }
             }
         }
@@ -47,26 +72,50 @@ public class FrameLoader {
 
     private static int addToFramesFromStream(FrameFile frames, FrameRegistry.EnumFrameType type) {
         int added = 0;
-        for (String entry : frames.whitelist) {
-            ResourceLocation entryRes = new ResourceLocation(entry);
+        for (FrameFile.FrameEntry frameEntry : frames.entries) {
+            if(!frameEntry.hasWhitelist()) continue;
+
+            ResourceLocation entryRes = new ResourceLocation(frameEntry.key);
             Block b = Block.REGISTRY.getObject(entryRes);
-            if (b != null) {
-                if (entry.contains("@")) {
-                    // TODO: Implement metadata only list
-                } else {
-                    try {
-                        FrameRegistry.getFrameWhitelist(type).addEntry(b.getRegistryName());
-                    } catch (FrameException e) {
-                        BedCraftBeyond.LOGGER.error("Error adding entry to the frame registry: " + e.getMessage());
+            if(b == null) continue;
+            for(Object entryItem : frameEntry.whitelist) {
+                if(entryItem instanceof String) {
+                    String entryString = String.valueOf(entryItem);
+                    if(entryString.trim().equalsIgnoreCase("all")){
+                        FrameRegistry.getFrameWhitelist(type).resetWhitelistForEntry(b.getRegistryName());
+                        List<ItemStack> addedList = new ArrayList<>();
+                        b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
+                        added += addedList.size();
+                        break;
                     }
 
-                    List<ItemStack> addedList = new ArrayList<>();
-                    b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
-                    added += addedList.size();
+                    // TODO: Meta range?
+                    if(!entryString.contains("-")) continue;
+                    Pattern p = Pattern.compile("(?<lower>\\d+)\\-(?<upper>\\d+)");
+                    Matcher m = p.matcher(entryString);
+                    if(!m.matches()) continue;
+                    int lower = Integer.parseInt(m.group("lower"));
+                    int upper = Integer.parseInt(m.group("upper"));
+                    Range<Integer> range = Range.open(lower, upper);
+                    try {
+                        FrameRegistry.getFrameWhitelist(type).addWhitelistRange(entryRes, range);
+                    } catch (FrameException e) {
+                        e.printStackTrace();
+                    }
+                } else if(entryItem instanceof Number) {
+                    try {
+                        FrameRegistry.getFrameWhitelist(type).addWhitelistEntry(entryRes, ((Number) entryItem).intValue());
+                    } catch (FrameException e) {
+                        BedCraftBeyond.LOGGER.error(I18n.translateToLocal(e.getMessage()));
+                    }
+                } else {
+
                 }
             }
-        }
 
+            FrameWhitelist wood = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
+            BedCraftBeyond.LOGGER.info("");
+        }
         // TODO: Add check to see if registry value supported, and check meta list for block type (minecraft:planks -> Spruce Wood, for example)
         return added;
     }
@@ -94,53 +143,38 @@ public class FrameLoader {
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void compileFramesClient() {
+    public static void tryFrameTypeFileLoad(FrameRegistry.EnumFrameType type) throws FileNotFoundException {
+        File frameFile = Paths.get(ConfigHelper.modConfigDir.getPath(), "frames", type.name().toLowerCase() + ".json").toFile();
+        if(!frameFile.exists()) return;
+
+        FileReader fr = new FileReader(frameFile);
+        FrameFile frames = new Gson().fromJson(fr, FrameFile.class);
+        addToFramesFromStream(frames, type);
+        removeFramesFromStream(frames, type);
+    }
+
+    public static void compileFrames() {
         Logger l = BedCraftBeyond.LOGGER;
-        IResourceManager man = Minecraft.getMinecraft().getResourceManager();
+
+        FrameRegistry.dumpFrameList();
+        if (ConfigSettings.ADD_OREDICT_WOODEN || ConfigSettings.ADD_OREDICT_STONE)
+            l.info("Loading frame data from the ore dictionary...");
+        if (ConfigSettings.ADD_OREDICT_WOODEN)
+            addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
+
+
+        l.info("");
+
+        l.info("Loading frames from config files..");
         try {
-            FrameRegistry.dumpFrameList();
-            if (ConfigSettings.ADD_OREDICT_WOODEN || ConfigSettings.ADD_OREDICT_STONE)
-                l.info("Loading frame data from the ore dictionary...");
-            if (ConfigSettings.ADD_OREDICT_WOODEN)
-                addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
-            if(ConfigSettings.ADD_OREDICT_STONE)
-                addFramesFromOredictEntries(FrameRegistry.EnumFrameType.STONE, "blockStone");
+            tryFrameTypeFileLoad(FrameRegistry.EnumFrameType.WOOD);
+            tryFrameTypeFileLoad(FrameRegistry.EnumFrameType.STONE);
+        }
 
-            l.info("");
-
-            l.info("Loading frames from resource packs..");
-            processFramesFromResourcePack(FrameRegistry.EnumFrameType.WOOD, man, new ResourceLocation(BedCraftBeyond.MOD_ID, "wooden_frames.json"));
-            processFramesFromResourcePack(FrameRegistry.EnumFrameType.STONE, man, new ResourceLocation(BedCraftBeyond.MOD_ID, "stone_frames.json"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        catch(FileNotFoundException fne){
+            BedCraftBeyond.LOGGER.error("Could not find frame file to load: " + fne.getMessage());
         }
 
         // TODO: Reimplement total available frame count?
     }
-
-    private static void processFramesFromResourcePack(FrameRegistry.EnumFrameType type, IResourceManager manager, ResourceLocation file) throws IOException {
-        IResource respack = manager.getResource(file);
-        BedCraftBeyond.LOGGER.debug("Got frames file from pack " + respack.getResourcePackName());
-
-        InputStream fileStream = respack.getInputStream();
-        FrameFile frames = new Gson().fromJson(new InputStreamReader(fileStream), FrameFile.class);
-
-        int num_add = addToFramesFromStream(frames, type);
-        int num_rem = removeFramesFromStream(frames, type);
-
-        BedCraftBeyond.LOGGER.info(String.format("Results for resource '%s': Added %d frames, removed %d.", file.toString(), num_add, num_rem));
-    }
-
-    @SideOnly(Side.SERVER)
-    public static void compileFramesServer() {
-        if (ConfigSettings.ADD_OREDICT_WOODEN)
-            addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
-
-        File woodenFramesFile = Paths.get(ConfigHelper.modConfigDir.getPath(), "wooden_frames.json").toFile();
-        if (woodenFramesFile.exists()) {
-            // TODO: wooden_frames.json server integration
-        }
-    }
-
 }

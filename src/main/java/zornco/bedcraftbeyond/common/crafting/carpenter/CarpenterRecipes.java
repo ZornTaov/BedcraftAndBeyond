@@ -1,21 +1,48 @@
 package zornco.bedcraftbeyond.common.crafting.carpenter;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.crafting.recipes.RecipeStoneFrame;
 import zornco.bedcraftbeyond.common.crafting.recipes.RecipeWoodFrame;
+import zornco.bedcraftbeyond.common.item.BcbItems;
+import zornco.bedcraftbeyond.common.item.ItemTemplate;
 
 import java.util.HashMap;
+import java.util.Set;
+
+import static zornco.bedcraftbeyond.common.crafting.recipes.Recipes.recipesAdded;
 
 public class CarpenterRecipes {
 
-    public static HashMap<ResourceLocation, CarpenterRecipe> recipes;
+    private static HashMap<ResourceLocation, CarpenterRecipe> recipes;
+
+    public static Set<ResourceLocation> getRecipeKeys(){
+        return recipes.keySet();
+    }
 
     public static void registerAll(){
         recipes = new HashMap<>();
-        recipes.put(new ResourceLocation(BedCraftBeyond.MOD_ID, "wooden_frame"), new RecipeWoodFrame());
-        recipes.put(new ResourceLocation(BedCraftBeyond.MOD_ID, "stone_frame"), new RecipeStoneFrame());
+
+        // Wooden Frame
+        createRecipe(new ResourceLocation(BedCraftBeyond.MOD_ID, "wooden_frame"), new RecipeWoodFrame(), "plankWood");
+
+        // Stone Frame
+        createRecipe(new ResourceLocation(BedCraftBeyond.MOD_ID, "stone_frame"), new RecipeStoneFrame(), Blocks.STONE);
+    }
+
+    private static void createRecipe(ResourceLocation rl, CarpenterRecipe rec, Object craftPiece){
+        recipes.put(rl, new RecipeStoneFrame());
+        GameRegistry.addRecipe(new ShapelessOreRecipe(ItemTemplate.generateItemWithRecipe(rl, 1), craftPiece, BcbItems.template));
+        ++recipesAdded;
+    }
+
+    public static CarpenterRecipe getRecipe(ResourceLocation key){
+        if(!recipes.containsKey(key)) return null;
+        return recipes.get(key);
     }
 
     public static CarpenterRecipe getFromItem(ItemStack stack){
