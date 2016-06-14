@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,10 +18,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
+import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
+import zornco.bedcraftbeyond.common.frames.FrameException;
 import zornco.bedcraftbeyond.common.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.frames.FrameWhitelist;
 
@@ -74,30 +79,46 @@ public class ItemWoodenFrame extends ItemFramePlacer {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote) return EnumActionResult.SUCCESS;
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (side != EnumFacing.UP) return EnumActionResult.FAIL;
 
-        boolean canPlaceBedHere = testSimpleBedPlacement(worldIn, playerIn, pos, stack);
+        boolean canPlaceBedHere = testSimpleBedPlacement(world, player, pos, stack);
         if (!canPlaceBedHere) return EnumActionResult.FAIL;
 
         pos = pos.up();
         try {
-            placeSimpleBedBlocks(worldIn, playerIn, pos, BcbBlocks.woodenBed, stack);
+            BlockPos btmHalf = pos;
+            BlockPos topHalf = btmHalf.offset(player.getHorizontalFacing());
+
+            if(!world.isRemote) {
+                IBlockState foot = BcbBlocks.woodenBed.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
+                    .withProperty(BlockBedBase.HEAD, false);
+                if (!world.setBlockState(btmHalf, foot, 3))
+                    throw new Exception();
+
+                IBlockState head = BcbBlocks.woodenBed.getDefaultState()
+                    .withProperty(BlockBedBase.HEAD, true)
+                    .withProperty(BlockBedBase.FACING, player.getHorizontalFacing().getOpposite());
+                if (!world.setBlockState(topHalf, head, 2))
+                    throw new Exception("Failed to set blockstate.");
+
+                TileWoodenBed tile = BlockWoodenBed.getTileEntity(world, world.getBlockState(pos), pos);
+                if (tile != null) {
+                    try {
+                        tile.setPlankType(new ResourceLocation(stack.getTagCompound().getString("frameType")), stack.getTagCompound().getInteger("frameMeta"), false);
+                    } catch (FrameException e) {
+                        BedCraftBeyond.LOGGER.error("Could not set frame type from item. Invalid whitelist entry.");
+                        // TODO: FrameWhitelist.getFirstValidType();
+                        return EnumActionResult.FAIL;
+                    }
+                }
+            }
         } catch (Exception e) {
             return EnumActionResult.FAIL;
         }
 
-        TileWoodenBed tileTopHalf = BlockWoodenBed.getTileEntity(worldIn, worldIn.getBlockState(pos), pos);
-        if (tileTopHalf != null) {
-            // tileTopHalf.setBlanketsColor(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.BLANKETS));
-            // tileTopHalf.setLinenPart(BlockWoodenBed.getPartColorFromItem(stack, BlockWoodenBed.EnumColoredPart.SHEETS));
-            tileTopHalf.plankType = new ResourceLocation(stack.getTagCompound().getString("frameType"));
-        }
-
         // If not creative mode, remove placer item
-        if (!playerIn.capabilities.isCreativeMode) --stack.stackSize;
-        if (stack.stackSize < 1) playerIn.setHeldItem(hand, null);
+        if (!player.capabilities.isCreativeMode) new PlayerInvWrapper(player.inventory).extractItem(player.inventory.currentItem, 1, false);
 
         return EnumActionResult.SUCCESS;
     }

@@ -22,17 +22,19 @@ public class ItemFramePlacer extends ItemBlock {
     }
 
     protected void placeSimpleBedBlocks(World world, EntityPlayer player, BlockPos initPos, Block bedBlock, ItemStack placer) throws Exception {
+        if(world.isRemote) return;
+
         BlockPos btmHalf = initPos;
         BlockPos topHalf = btmHalf.offset(player.getHorizontalFacing());
 
-        IBlockState bhead = bedBlock.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
-            .withProperty(BlockBedBase.HEAD, true);
-        if (!world.setBlockState(btmHalf, bhead, 3)) throw new Exception("Failed to set head blockstate.");
+        IBlockState foot = bedBlock.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
+            .withProperty(BlockBedBase.HEAD, false);
+        if (!world.setBlockState(btmHalf, foot, 3)) throw new Exception("Failed to set blockstate.");
 
-        IBlockState bfoot = bedBlock.getDefaultState()
-            .withProperty(BlockBedBase.HEAD, false)
+        IBlockState head = bedBlock.getDefaultState()
+            .withProperty(BlockBedBase.HEAD, true)
             .withProperty(BlockBedBase.FACING, player.getHorizontalFacing().getOpposite());
-        if (!world.setBlockState(topHalf, bfoot, 2)) throw new Exception("Failed to set foot blockstate.");
+        if (!world.setBlockState(topHalf, head, 2)) throw new Exception("Failed to set blockstate.");
     }
 
     public static boolean testSimpleBedPlacement(World world, EntityPlayer player, BlockPos initialPosition, ItemStack placer) {

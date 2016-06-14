@@ -109,12 +109,9 @@ public class FrameLoader {
                         BedCraftBeyond.LOGGER.error(I18n.translateToLocal(e.getMessage()));
                     }
                 } else {
-
+                    BedCraftBeyond.LOGGER.info("Unrecognized entry: " + entryItem.toString());
                 }
             }
-
-            FrameWhitelist wood = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
-            BedCraftBeyond.LOGGER.info("");
         }
         // TODO: Add check to see if registry value supported, and check meta list for block type (minecraft:planks -> Spruce Wood, for example)
         return added;
@@ -138,7 +135,7 @@ public class FrameLoader {
                 else
                     FrameRegistry.getFrameWhitelist(type).addWhitelistEntry(regName, stack.getMetadata());
             } catch (FrameException e) {
-                BedCraftBeyond.LOGGER.error(e);
+                BedCraftBeyond.LOGGER.error(e.getMessage());
             }
         }
     }
@@ -161,9 +158,6 @@ public class FrameLoader {
             l.info("Loading frame data from the ore dictionary...");
         if (ConfigSettings.ADD_OREDICT_WOODEN)
             addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
-
-
-        l.info("");
 
         l.info("Loading frames from config files..");
         try {

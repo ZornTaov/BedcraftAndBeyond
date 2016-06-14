@@ -89,7 +89,8 @@ public class BlockWoodenBed extends BlockBedBase {
     }
 
     public static TileWoodenBed getTileEntity(IBlockAccess world, IBlockState state, BlockPos bedPos) {
-        if(state.getValue(HEAD)) return (TileWoodenBed) world.getTileEntity(bedPos);
+        if(state.getValue(HEAD))
+            return (TileWoodenBed) world.getTileEntity(bedPos);
 
         if (!(state.getBlock() instanceof BlockWoodenBed)) return null;
         BlockPos actualTileHolder = bedPos.offset(state.getValue(FACING));
@@ -142,7 +143,7 @@ public class BlockWoodenBed extends BlockBedBase {
                     player.addChatMessage(message);
                 }
 
-                message = new TextComponentString(TextFormatting.RED + "Frame: " + TextFormatting.WHITE + tile.plankType);
+                message = new TextComponentString(TextFormatting.RED + "Frame: " + TextFormatting.WHITE + tile.getPlankType());
                 player.addChatMessage(message);
             } else
                 onBedActivated(world, pos, state, player);
@@ -179,8 +180,8 @@ public class BlockWoodenBed extends BlockBedBase {
 
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        // TODO: Implement blankets, sheets, and frame separate here
         if (!state.getValue(HEAD)) return Collections.emptyList();
+        BedCraftBeyond.LOGGER.debug("Get DROPS");
 
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
         ItemStack bedItem = new ItemStack(BcbItems.woodenBed);
@@ -188,8 +189,9 @@ public class BlockWoodenBed extends BlockBedBase {
         state = getActualState(state, world, pos);
         TileWoodenBed twb = getTileEntity(world, state, pos);
 
-        tags.setString("frameType", twb.getPlankData().getString("frameType"));
-        tags.setInteger("frameMeta", twb.getPlankData().getInteger("frameMeta"));
+        NBTTagCompound frameData = twb.getPlankData();
+        tags.setString("frameType", frameData.getString("frameType"));
+        tags.setInteger("frameMeta", frameData.getInteger("frameMeta"));
         bedItem.setTagCompound(tags);
         drops.add(bedItem);
         return drops;

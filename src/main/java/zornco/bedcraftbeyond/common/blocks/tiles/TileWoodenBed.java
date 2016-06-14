@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
+import zornco.bedcraftbeyond.common.frames.FrameException;
+import zornco.bedcraftbeyond.common.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.item.linens.ILinenItem;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
@@ -29,6 +31,7 @@ public class TileWoodenBed extends TileEntity {
     private ItemStack sheets;
     private int plankColor;
     public ResourceLocation plankType;
+    protected int plankMeta;
 
     public TileWoodenBed() { }
     public TileWoodenBed(World w){ setWorldObj(w); }
@@ -45,9 +48,8 @@ public class TileWoodenBed extends TileEntity {
         if (sheets != null) tags.setTag("sheets", sheets.writeToNBT(new NBTTagCompound()));
         tags.setInteger("plankColor", plankColor);
 
-        // TODO: Fix plank type
-        PlankHelper.validatePlank(tags, getPlankType());
         if (plankType != null) tags.setString("plankType", plankType.toString());
+        tags.setInteger("plankMeta", plankMeta);
         return tags;
     }
 
@@ -57,30 +59,40 @@ public class TileWoodenBed extends TileEntity {
         if (tags.hasKey("blankets")) this.blankets = ItemStack.loadItemStackFromNBT(tags.getCompoundTag("blankets"));
         if (tags.hasKey("sheets")) this.sheets = ItemStack.loadItemStackFromNBT(tags.getCompoundTag("sheets"));
         this.plankColor = tags.getInteger("plankColor");
-        // this.plankType = PlankHelper.validatePlank(tags.getTag("plankType"));
-        // TODO: Fix plank type here
-        this.plankType = new ResourceLocation("minecraft", "planks@0");
+        this.plankType = new ResourceLocation(tags.getString("plankType"));
+        this.plankMeta = tags.getInteger("plankMeta");
 
         updateClients(BlockWoodenBed.EnumColoredPart.BLANKETS);
         updateClients(BlockWoodenBed.EnumColoredPart.SHEETS);
     }
 
-    // TODO: Update plank stuff
-    public ItemStack getPlankType() {
-        return new ItemStack(Blocks.PLANKS, 1);
-    }
-
     public NBTTagCompound getPlankData() {
         NBTTagCompound plankData = new NBTTagCompound();
         plankData.setInteger("color", plankColor);
-        plankData.setString("type", plankType.toString());
+        plankData.setString("frameType", plankType.toString());
+        plankData.setInteger("frameMeta", plankMeta);
         return plankData;
     }
 
-    public void setPlankType(ItemStack plankType) {
-        this.plankType = plankType.getItem().getRegistryName();
-        // TODO: Set up the color hook here
-        updateClients(BlockWoodenBed.EnumColoredPart.PLANKS);
+    public ResourceLocation getPlankType(){
+        return this.plankType;
+    }
+
+    public int getPlankMeta(){
+        return this.plankMeta;
+    }
+
+    public void setPlankType(ResourceLocation plankType, int plankMeta, boolean updateClients) throws FrameException {
+        boolean valid = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD).metaIsWhitelisted(plankType, plankMeta);
+        if(!valid) throw new FrameException("Not a valid frame type");
+        this.plankType = plankType;
+        this.plankMeta = plankMeta;
+
+        if(updateClients) updateClients(BlockWoodenBed.EnumColoredPart.PLANKS);
+    }
+
+    public void setPlankType(ResourceLocation plankType, int plankMeta) throws FrameException {
+        setPlankType(plankType, plankMeta, true);
     }
 
     public ItemStack getLinenPart(BlockWoodenBed.EnumColoredPart part, boolean extract) {
@@ -178,7 +190,6 @@ public class TileWoodenBed extends TileEntity {
     public final void updateClients(BlockWoodenBed.EnumColoredPart part) {
         if (worldObj == null || worldObj.isRemote) return;
         markDirty();
-
         BedPartUpdate update = new BedPartUpdate(pos, part, getLinenPart(part, false));
         BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
     }

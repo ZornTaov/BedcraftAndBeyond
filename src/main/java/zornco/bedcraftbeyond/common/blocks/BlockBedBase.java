@@ -17,6 +17,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeHell;
@@ -58,23 +59,31 @@ public abstract class BlockBedBase extends Block {
         return AABB;
     }
 
-    @SuppressWarnings({"deprecation"})
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
-        // TODO: Make this more reliable. It's borked.
-        EnumFacing enumfacing = state.getValue(FACING);
-        if(state.getValue(HEAD)) {
-            // Get the foot, set it to air if the block isn't this. ???
-            if(worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock() != this) {
-                worldIn.setBlockToAir(pos);
-                if(!worldIn.isRemote) {
-                    this.dropBlockAsItem(worldIn, pos, state, 0);
-                }
-            }
-        } else if(worldIn.getBlockState(pos.offset(enumfacing)).getBlock() != this) {
-            worldIn.setBlockToAir(pos);
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        BedCraftBeyond.LOGGER.debug("break block");
+        super.breakBlock(worldIn, pos, state);
+    }
 
-        }
+    protected void onBlockDestroyed(World world, BlockPos pos, IBlockState state){
+        BlockPos other = pos.offset(state.getValue(FACING));
+        IBlockState stateOther = world.getBlockState(other);
+        if(stateOther.getBlock() instanceof BlockBedBase)
+            world.destroyBlock(other, false);
+    }
+
+    @Override
+    public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
+        IBlockState state = worldIn.getBlockState(pos);
+        state = state.getActualState(worldIn, pos);
+        onBlockDestroyed(worldIn, pos, state);
+    }
+
+    @Override
+    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
+        BedCraftBeyond.LOGGER.debug("player destroyed");
+        state = state.getActualState(worldIn, pos);
+        onBlockDestroyed(worldIn, pos, state);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class CarpenterRecipes {
     }
 
     private static void createRecipe(ResourceLocation rl, CarpenterRecipe rec, Object craftPiece){
-        recipes.put(rl, new RecipeStoneFrame());
+        recipes.put(rl, rec);
         GameRegistry.addRecipe(new ShapelessOreRecipe(ItemTemplate.generateItemWithRecipe(rl, 1), craftPiece, BcbItems.template));
         ++recipesAdded;
     }

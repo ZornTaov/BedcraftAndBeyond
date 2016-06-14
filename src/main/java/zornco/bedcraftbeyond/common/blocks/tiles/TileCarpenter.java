@@ -53,8 +53,8 @@ public class TileCarpenter extends TileEntity {
         if(!templateItem.hasTagCompound() || !templateItem.getTagCompound().hasKey("recipe")) return;
         ResourceLocation recipe = new ResourceLocation(templateItem.getTagCompound().getString("recipe"));
         if(!Templates.hasTemplate(recipe)) return;
-        currentRecipe = CarpenterRecipes.getRecipe(recipe);
-        if(!currentRecipe.matches(craftingInv)) {
+        this.currentRecipe = CarpenterRecipes.getRecipe(recipe);
+        if(!this.currentRecipe.matches(craftingInv)) {
             outputs.setStackInSlot(0, null);
             return;
         }
