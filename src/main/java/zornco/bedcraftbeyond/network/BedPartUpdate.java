@@ -108,12 +108,15 @@ public class BedPartUpdate implements IMessage {
             switch (message.partType) {
                 case SOLID_COLOR:
                     twb.setLinenPart(message.part, message.partItem);
+
                     break;
 
                 default:
                     twb.setLinenPart(message.part, null);
             }
 
+            IBlockState newState = w.getBlockState(message.pos).getActualState(w, message.pos);
+            w.notifyBlockUpdate(message.pos, curState, newState, 2);
             return null;
         }
     }

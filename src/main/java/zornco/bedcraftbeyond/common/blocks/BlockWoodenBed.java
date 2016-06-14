@@ -194,6 +194,11 @@ public class BlockWoodenBed extends BlockBedBase {
         tags.setInteger("frameMeta", frameData.getInteger("frameMeta"));
         bedItem.setTagCompound(tags);
         drops.add(bedItem);
+
+        if(twb.getLinenPart(EnumColoredPart.BLANKETS, false) != null)
+            drops.add(twb.getLinenPart(EnumColoredPart.BLANKETS, true));
+        if(twb.getLinenPart(EnumColoredPart.SHEETS, false) != null)
+            drops.add(twb.getLinenPart(EnumColoredPart.SHEETS, true));
         return drops;
     }
 }

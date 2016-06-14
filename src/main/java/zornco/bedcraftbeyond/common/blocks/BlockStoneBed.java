@@ -27,7 +27,8 @@ public class BlockStoneBed extends BlockBedBase {
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-        drops.add(new ItemStack(BcbItems.stoneBed));
+        if(state.getValue(HEAD))
+            drops.add(new ItemStack(BcbItems.stoneBed));
         return drops;
     }
 }
