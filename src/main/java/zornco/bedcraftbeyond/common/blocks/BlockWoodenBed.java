@@ -6,6 +6,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,18 +35,21 @@ import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /***
  * A colored bed has sheets and blankets that are separately dyeable.
  * It works the same as a regular bed otherwise.
  */
-public class BlockWoodenBed extends BlockBedBase {
+public class BlockWoodenBed extends BlockBedBase implements IBedTileHolder {
 
     public static PropertyBool HAS_STORAGE = PropertyBool.create("storage");
-    public static PropertyString FRAME_TYPE = new PropertyString("frame");
+    public static PropertyEnum<EnumBedPartStatus> STATUS = PropertyEnum.create("status", EnumBedPartStatus.class);
 
     public static PropertyEnum<EnumBedFabricType> BLANKETS = PropertyEnum.create("color_blankets", EnumBedFabricType.class);
     public static PropertyEnum<EnumBedFabricType> SHEETS = PropertyEnum.create("color_sheets", EnumBedFabricType.class);
+
+
 
     public enum EnumColoredPart {BLANKETS, SHEETS, PLANKS}
 
@@ -57,6 +61,7 @@ public class BlockWoodenBed extends BlockBedBase {
             .withProperty(OCCUPIED, false)
             .withProperty(HEAD, false)
             .withProperty(HAS_STORAGE, false)
+            .withProperty(STATUS, EnumBedPartStatus.FOOT)
             .withProperty(BLANKETS, EnumBedFabricType.NONE)
             .withProperty(SHEETS, EnumBedFabricType.NONE));
 
@@ -65,12 +70,13 @@ public class BlockWoodenBed extends BlockBedBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, HEAD, OCCUPIED, FACING, HAS_STORAGE, BLANKETS, SHEETS);
+        return new BlockStateContainer(this, HEAD, OCCUPIED, FACING, HAS_STORAGE, STATUS, BLANKETS, SHEETS);
     }
 
     private boolean hasBlanketsAndSheets(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return state.getValue(BLANKETS) != EnumBedFabricType.NONE &&
-            state.getValue(SHEETS) != EnumBedFabricType.NONE;
+        TileWoodenBed tile = (TileWoodenBed) getTileForBed(world, state, pos);
+        return tile.getLinenPart(EnumColoredPart.SHEETS, false) != null &&
+            tile.getLinenPart(EnumColoredPart.BLANKETS, false) != null;
     }
 
     @Override
@@ -84,25 +90,21 @@ public class BlockWoodenBed extends BlockBedBase {
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return state.getValue(HEAD);
-    }
-
-    public static TileWoodenBed getTileEntity(IBlockAccess world, IBlockState state, BlockPos bedPos) {
+    public TileEntity getTileForBed(IBlockAccess world, IBlockState state, BlockPos pos) {
         if(state.getValue(HEAD))
-            return (TileWoodenBed) world.getTileEntity(bedPos);
+            return world.getTileEntity(pos);
 
         if (!(state.getBlock() instanceof BlockWoodenBed)) return null;
-        BlockPos actualTileHolder = bedPos.offset(state.getValue(FACING));
+        BlockPos actualTileHolder = pos.offset(state.getValue(FACING));
 
         TileEntity realHolder = world.getTileEntity(actualTileHolder);
         if (realHolder == null || !(realHolder instanceof TileWoodenBed)) return null;
-        return (TileWoodenBed) realHolder;
+        return realHolder;
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        TileWoodenBed tile = getTileEntity(world, state, pos);
+        TileWoodenBed tile = (TileWoodenBed) getTileForBed(world, state, pos);
 
         if (tile == null) return true;
         if (world.isRemote) return true;
@@ -152,17 +154,23 @@ public class BlockWoodenBed extends BlockBedBase {
         return true;
     }
 
+
     @SuppressWarnings("deprecation")
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        if (getTileEntity(worldIn, state, pos) == null) return state;
+        if (getTileForBed(worldIn, state, pos) == null) return state;
 
-        TileWoodenBed bed = getTileEntity(worldIn, state, pos);
+        TileWoodenBed bed = (TileWoodenBed) getTileForBed(worldIn, state, pos);
+        boolean hl = hasBlanketsAndSheets(state, worldIn, pos);
         state = state.withProperty(BLANKETS, bed.getPartType(EnumColoredPart.BLANKETS));
         state = state.withProperty(SHEETS, bed.getPartType(EnumColoredPart.SHEETS));
+        state = state.withProperty(STATUS,
+            state.getValue(HEAD) ?
+                (hl ? EnumBedPartStatus.HEAD_LINENS : EnumBedPartStatus.HEAD) :
+                (hl ? EnumBedPartStatus.FOOT_LINENS : EnumBedPartStatus.FOOT));
 
+        // TODO: Storage
         return state;
-        // TODO: Add inventory and plank types
     }
 
     @Override
@@ -170,7 +178,7 @@ public class BlockWoodenBed extends BlockBedBase {
         // TODO: Check accuracy
         ItemStack stack = new ItemStack(BcbBlocks.woodenBed, 1, state.getBlock().getMetaFromState(state));
 
-        TileWoodenBed tile = getTileEntity(world, state, pos);
+        TileWoodenBed tile = (TileWoodenBed) getTileForBed(world, state, pos);
         stack.setTagCompound(new NBTTagCompound());
         NBTTagCompound stackTags = stack.getTagCompound();
 
@@ -181,13 +189,12 @@ public class BlockWoodenBed extends BlockBedBase {
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         if (!state.getValue(HEAD)) return Collections.emptyList();
-        BedCraftBeyond.LOGGER.debug("Get DROPS");
 
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
         ItemStack bedItem = new ItemStack(BcbItems.woodenBed);
         NBTTagCompound tags = new NBTTagCompound();
         state = getActualState(state, world, pos);
-        TileWoodenBed twb = getTileEntity(world, state, pos);
+        TileWoodenBed twb = (TileWoodenBed) getTileForBed(world, state, pos);
 
         NBTTagCompound frameData = twb.getPlankData();
         tags.setString("frameType", frameData.getString("frameType"));

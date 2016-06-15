@@ -19,7 +19,9 @@ public class BlockStoneBed extends BlockBedBase {
         setHardness(1.0f);
         setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.stone");
         setRegistryName(BedCraftBeyond.MOD_ID, "stone_bed");
-        setDefaultState(getDefaultState().withProperty(HEAD, false).withProperty(FACING, EnumFacing.NORTH));
+        setDefaultState(getDefaultState().withProperty(HEAD, false)
+            .withProperty(FACING, EnumFacing.NORTH)
+            .withProperty(OCCUPIED, false));
 
         GameRegistry.register(this);
     }

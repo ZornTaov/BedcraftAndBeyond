@@ -1,6 +1,7 @@
 package zornco.bedcraftbeyond.common.blocks.tiles;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -9,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.items.ItemHandlerHelper;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.frames.FrameException;
@@ -22,10 +24,11 @@ import zornco.bedcraftbeyond.util.PlankHelper;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.UUID;
 
 // This tile is only to be used ONCE on beds!
 // Place it on the head of the bed. Use BlockWoodenBed.getTileEntity anywhere on a bed to fetch this instance.
-public class TileWoodenBed extends TileEntity {
+public class TileWoodenBed extends TileGenericBed {
 
     private ItemStack blankets;
     private ItemStack sheets;
@@ -34,7 +37,7 @@ public class TileWoodenBed extends TileEntity {
     protected int plankMeta;
 
     public TileWoodenBed() { }
-    public TileWoodenBed(World w){ setWorldObj(w); }
+    public TileWoodenBed(World w){ super(w); }
 
     @Override
     public NBTTagCompound getUpdateTag() {
@@ -58,6 +61,7 @@ public class TileWoodenBed extends TileEntity {
         super.readFromNBT(tags);
         if (tags.hasKey("blankets")) this.blankets = ItemStack.loadItemStackFromNBT(tags.getCompoundTag("blankets"));
         if (tags.hasKey("sheets")) this.sheets = ItemStack.loadItemStackFromNBT(tags.getCompoundTag("sheets"));
+
         this.plankColor = tags.getInteger("plankColor");
         this.plankType = new ResourceLocation(tags.getString("plankType"));
         this.plankMeta = tags.getInteger("plankMeta");
@@ -100,7 +104,7 @@ public class TileWoodenBed extends TileEntity {
         switch (part) {
             case SHEETS:
                 if (extract && sheets != null) {
-                    partCopy = sheets.copy();
+                    partCopy = ItemHandlerHelper.copyStackWithSize(sheets, 1);
                     sheets = null;
                     return partCopy;
                 }
@@ -108,7 +112,7 @@ public class TileWoodenBed extends TileEntity {
 
             case BLANKETS:
                 if (extract && blankets != null) {
-                    partCopy = blankets.copy();
+                    partCopy = ItemHandlerHelper.copyStackWithSize(blankets, 1);
                     blankets = null;
                     return partCopy;
                 }
@@ -120,6 +124,7 @@ public class TileWoodenBed extends TileEntity {
     }
 
     public boolean setLinenPart(BlockWoodenBed.EnumColoredPart part, ItemStack linen) {
+        if(linen == null) return false;
         switch (part) {
             case SHEETS:
                 if (sheets == null && linen.getItem() instanceof ItemSheets) {
@@ -170,21 +175,10 @@ public class TileWoodenBed extends TileEntity {
         }
     }
 
-    @Nullable
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        return new SPacketUpdateTileEntity(this.pos, -5, nbt);
-    }
-
-    @Override
-    public final void onDataPacket(NetworkManager net,
-                                   SPacketUpdateTileEntity packet) {
-        NBTTagCompound nbt = packet.getNbtCompound();
-        if (nbt != null) {
-            this.readFromNBT(nbt);
-        }
+        SPacketUpdateTileEntity pack = super.getUpdatePacket();
+        return pack;
     }
 
     public final void updateClients(BlockWoodenBed.EnumColoredPart part) {
@@ -193,5 +187,4 @@ public class TileWoodenBed extends TileEntity {
         BedPartUpdate update = new BedPartUpdate(pos, part, getLinenPart(part, false));
         BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
     }
-
 }

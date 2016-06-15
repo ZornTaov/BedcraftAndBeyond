@@ -1,12 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "textures": {
-      "frame": "bedcraftbeyond:blocks/wooden_bed/frame",
-      "foot": "bedcraftbeyond:blocks/wooden_bed/feet",
-      "blankets": "bedcraftbeyond:blocks/wooden_bed/blankets",
-      "sheets": "bedcraftbeyond:blocks/wooden_bed/sheets"
-    }
+    "model": "bedcraftbeyond:wooden_bed/frame"
   },
   "variants": {
     "normal": [ { } ],
@@ -17,9 +12,11 @@
       "west": { "y": 90 }
     },
 
-    "head": {
-      "true": { "model": "bedcraftbeyond:wooden_bed/head" },
-      "false": { "model": "bedcraftbeyond:wooden_bed/foot"}
+    "status": {
+      "head_linens": { "submodel": "bedcraftbeyond:wooden_bed/head_linens" },
+      "head": {  },
+      "foot_linens": { "submodel": "bedcraftbeyond:wooden_bed/foot_linens" },
+      "foot": { }
     },
 
     "storage": {

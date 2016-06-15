@@ -23,6 +23,7 @@ import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
+import zornco.bedcraftbeyond.common.blocks.IBedTileHolder;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.frames.FrameException;
@@ -102,7 +103,8 @@ public class ItemWoodenFrame extends ItemFramePlacer {
                 if (!world.setBlockState(topHalf, head, 2))
                     throw new Exception("Failed to set blockstate.");
 
-                TileWoodenBed tile = BlockWoodenBed.getTileEntity(world, world.getBlockState(pos), pos);
+                IBlockState state = world.getBlockState(pos);
+                TileWoodenBed tile = (TileWoodenBed) ((IBedTileHolder) state.getBlock()).getTileForBed(world, state, pos);
                 if (tile != null) {
                     try {
                         tile.setPlankType(new ResourceLocation(stack.getTagCompound().getString("frameType")), stack.getTagCompound().getInteger("frameMeta"), false);

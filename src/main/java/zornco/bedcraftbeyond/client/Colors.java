@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
+import zornco.bedcraftbeyond.common.blocks.IBedTileHolder;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.util.ColorHelper;
@@ -51,10 +52,10 @@ public class Colors {
         @Override
         public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
             state = state.getActualState(world, pos);
-            TileWoodenBed bed = BlockWoodenBed.getTileEntity(world, state, pos);
+            TileWoodenBed bed = (TileWoodenBed) ((IBedTileHolder) state.getBlock()).getTileForBed(world, state, pos);
             switch (tintIndex) {
                 case 0:
-                    return PlankHelper.oakColor;
+                    return bed.getPartColor(BlockWoodenBed.EnumColoredPart.PLANKS).getRGB();
 
                 case 1:
                     EnumBedFabricType sheetsType = state.getValue(BlockWoodenBed.SHEETS);

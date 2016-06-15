@@ -1,6 +1,6 @@
 {
   "parent": "bedcraftbeyond:item/item_base",
   "textures": {
-    "layer0": "stone"
+    "layer0": "bedcraftbeyond:items/drawer"
   }
 }

@@ -1,0 +1,38 @@
+{
+  "textures": {
+    "end": "bedcraftbeyond:blocks/wooden_bed/foot",
+    "side": "bedcraftbeyond:blocks/wooden_bed/side_foot",
+    "top": "bedcraftbeyond:blocks/wooden_bed/top_foot"
+  },
+
+  "elements": [
+    {
+      "name": "Blankets",
+      "from": [ 0.0, 5.0, 0.0 ],
+      "to": [ 16.0, 9.0, 16.0 ],
+      "faces": {
+        "east": {
+          "texture": "#side",
+          "uv": [ 0.0, 0.0, 8.0, 4.0 ],
+          "tintindex": 2
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [ 0.0, 0.0, 8.0, 4.0 ],
+          "tintindex": 2
+        },
+        "up": {
+          "texture": "#top",
+          "uv": [ 0.0, 0.0, 16.0, 16.0 ],
+          "rotation": 90,
+          "tintindex": 2
+        },
+        "north": {
+          "texture": "#end",
+          "uv": [ 0.0, 0.0, 16.0, 4.0 ],
+          "tintindex": 2
+        }
+      }
+    }
+  ]
+}

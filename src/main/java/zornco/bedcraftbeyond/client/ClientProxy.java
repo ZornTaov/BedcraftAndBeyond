@@ -21,7 +21,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerModels() {
 
-        ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
+        ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED, BlockBedBase.HEAD, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
         ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED}).build());
 
         RenderingHelper.registerItemModel(BcbItems.scissors);
@@ -37,6 +37,8 @@ public class ClientProxy extends CommonProxy {
         RenderingHelper.registerItemModel(BcbItems.dyeBottle);
         RenderingHelper.registerItemModel(BcbItems.eyedropper);
         RenderingHelper.registerItemModel(BcbItems.template);
+
+        RenderingHelper.registerItemModel(BcbItems.carpenter);
 
         B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
     }

@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond.common.blocks;
 
+import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -9,13 +10,17 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -23,8 +28,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import org.lwjgl.util.vector.Vector2f;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.common.blocks.tiles.TileGenericBed;
 
+import javax.annotation.Nullable;
+import javax.vecmath.Vector2d;
+import java.util.List;
 import java.util.Random;
 
 public abstract class BlockBedBase extends Block {
@@ -60,6 +70,16 @@ public abstract class BlockBedBase extends Block {
     }
 
     @Override
+    public boolean hasTileEntity(IBlockState state) {
+        return state.getValue(HEAD);
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, IBlockState state) {
+        return state.getValue(HEAD) ? new TileGenericBed(world) : null;
+    }
+
+    @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         BedCraftBeyond.LOGGER.debug("break block");
         super.breakBlock(worldIn, pos, state);
@@ -91,6 +111,18 @@ public abstract class BlockBedBase extends Block {
         return this.onBedActivated(world, pos, state, player);
     }
 
+    public TileEntity getTileForBed(World world, IBlockState state, BlockPos pos){
+        if(state.getValue(HEAD))
+            return world.getTileEntity(pos);
+
+        if (!(state.getBlock() instanceof BlockBedBase)) return null;
+        BlockPos actualTileHolder = pos.offset(state.getValue(FACING));
+
+        TileEntity realHolder = world.getTileEntity(actualTileHolder);
+        if (realHolder == null || !(realHolder instanceof TileGenericBed)) return null;
+        return realHolder;
+    }
+
     protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
         if (worldIn.isRemote) return true;
 
@@ -101,24 +133,30 @@ public abstract class BlockBedBase extends Block {
             if (state.getBlock() != this) return true;
         }
 
+        // If we can sleep
         if (worldIn.provider.canRespawnHere() && !(worldIn.getBiomeGenForCoords(pos) instanceof BiomeHell)) {
-            if (state.getValue(OCCUPIED)) {
-                EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
 
-                if (entityplayer != null) {
+            NBTTagCompound tileBackup = new NBTTagCompound();
+            TileGenericBed bedTile = (TileGenericBed) ((BlockBedBase) state.getBlock()).getTileForBed(worldIn, state, pos);;
+            bedTile.writeToNBT(tileBackup);
+
+            if(state.getValue(OCCUPIED)){
+                if(getPlayerInBed(worldIn, pos) != null) {
                     playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.occupied"));
                     return true;
                 }
 
-                state = state.withProperty(OCCUPIED, false);
-                worldIn.setBlockState(pos, state, 2);
+                worldIn.setBlockState(pos, state.withProperty(OCCUPIED, false), 4);
+                bedTile.readFromNBT(tileBackup);
             }
 
+            // Actually run sleep code
             EntityPlayer.SleepResult status = playerIn.trySleep(pos);
             switch (status) {
                 case OK:
-                    worldIn.setBlockState(pos, state.withProperty(OCCUPIED, true), 2);
-                    break;
+                    worldIn.setBlockState(pos, state.withProperty(OCCUPIED, true), 4);
+                    bedTile.readFromNBT(tileBackup);
+                    return true;
 
                 case NOT_POSSIBLE_NOW:
                     playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.noSleep"));
@@ -132,26 +170,36 @@ public abstract class BlockBedBase extends Block {
             return true;
         } else {
             // Sleeping not allowed (Hell or End) - explode!
-            worldIn.setBlockToAir(pos);
-            BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
-
-            if (worldIn.getBlockState(blockpos).getBlock() == this) {
-                worldIn.setBlockToAir(blockpos);
-            }
-
-            worldIn.newExplosion(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, true);
+            doBedExplosion(worldIn, state, pos);
             return true;
         }
     }
 
-    private EntityPlayer getPlayerInBed(World worldIn, BlockPos pos) {
-        for (EntityPlayer entityplayer : worldIn.playerEntities) {
-            if (entityplayer.isPlayerSleeping() && entityplayer.playerLocation.equals(pos)) {
-                return entityplayer;
-            }
+    public EntityPlayer getPlayerInBed(World w, BlockPos pos){
+        Vec3i range = new Vec3i(1.0, 0.8, 1.0);
+        List<EntityPlayer> playersInRange = w.getPlayers(EntityPlayer.class, player -> player.isPlayerSleeping());
+
+        if(playersInRange.size() == 0) return null;
+        return playersInRange.get(0);
+    }
+
+    /**
+     * Boom, baby!
+     *
+     * @param world
+     * @param state
+     * @param pos
+     */
+    protected void doBedExplosion(World world, IBlockState state, BlockPos pos){
+        world.setBlockToAir(pos);
+        if(state.getBlock() instanceof IBedTileHolder) world.removeTileEntity(pos);
+        BlockPos otherHalf = pos.offset(state.getValue(FACING).getOpposite());
+
+        if (world.getBlockState(otherHalf).getBlock() == this) {
+            world.setBlockToAir(otherHalf);
         }
 
-        return null;
+        world.newExplosion(null, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 5.0F, true, true);
     }
 
     @Override
