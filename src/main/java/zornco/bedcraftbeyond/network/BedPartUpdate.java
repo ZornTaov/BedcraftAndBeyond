@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
@@ -102,9 +103,11 @@ public class BedPartUpdate implements IMessage {
          */
         @Override
         public IMessage onMessage(BedPartUpdate message, MessageContext ctx) {
-            World w = Minecraft.getMinecraft().theWorld;
+            World w = BedCraftBeyond.PROXY.getClientWorld();
             IBlockState curState = w.getBlockState(message.pos);
             TileWoodenBed twb = (TileWoodenBed) w.getTileEntity(message.pos);
+            if(twb == null) return null;
+
             switch (message.partType) {
                 case SOLID_COLOR:
                     twb.setLinenPart(message.part, message.partItem);

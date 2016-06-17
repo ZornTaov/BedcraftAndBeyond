@@ -20,22 +20,8 @@ public class TextureUtils {
     /*
      * Thanks to BluSunrize/TTFTCUTS
      */
-    static HashMap<String, ResourceLocation> textureMap = new HashMap<String, ResourceLocation>();
-
-    public static ResourceLocation getResource(String path) {
-        ResourceLocation rl = textureMap.containsKey(path) ? textureMap.get(path) : new ResourceLocation(path);
-        if (!textureMap.containsKey(path))
-            textureMap.put(path, rl);
-        return rl;
-    }
-
-    public static BufferedImage getImageForResource(ResourceLocation resource) throws IOException {
-        InputStream layer = Minecraft.getMinecraft().getResourceManager().getResource(resource).getInputStream();
-        return ImageIO.read(layer);
-    }
-
     @SuppressWarnings("deprecation")
-    public static int getItemTextureColor(ItemStack item) throws Exception {
+    public static Color getItemTextureColor(ItemStack item) throws Exception {
         //= item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
         try {
 
@@ -51,13 +37,15 @@ public class TextureUtils {
                 throw new Exception("Icon does not have a valid sprite- seems to be missing.");
 
             String iconName = icon.getIconName();
-            iconName = iconName.substring(0, Math.max(0, iconName.indexOf(":") + 1)) + "textures/" + iconName.substring(Math.max(0, iconName.indexOf(":") + 1)) + ".png";
-            ResourceLocation resource = getResource(iconName);
-            BufferedImage buffered = getImageForResource(resource);
+            String textureDomain = iconName.substring(0, Math.max(0, iconName.indexOf(':') + 1));
+            String texturePath = "textures/" + iconName.substring(Math.max(0, iconName.indexOf(":") + 1)) + ".png";
 
-            int colour = getAverageTextureColor(buffered, 0, 0, icon.getIconWidth(), icon.getIconHeight()).getRGB();
-            // colour = colour & 0xffffff; // NOT USED?
-            return colour;
+            ResourceLocation resource = new ResourceLocation(textureDomain + texturePath);
+
+            InputStream layer = Minecraft.getMinecraft().getResourceManager().getResource(resource).getInputStream();
+            BufferedImage buffered = ImageIO.read(layer);
+
+            return getAverageTextureColor(buffered, 0, 0, icon.getIconWidth(), icon.getIconHeight());
         } catch (Exception e) {
             BedCraftBeyond.LOGGER.error(e);
             throw e;

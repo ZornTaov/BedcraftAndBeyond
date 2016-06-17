@@ -60,7 +60,7 @@ public class TileCarpenter extends TileEntity {
         }
 
         // Simulate a craft to show the crafter what to expect
-        outputs.setStackInSlot(0, currentRecipe.doCraft(craftingInv, true));
+        outputs.setStackInSlot(0, currentRecipe.getRecipeOutput(craftingInv));
     }
 
     /**
@@ -125,7 +125,7 @@ public class TileCarpenter extends TileEntity {
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             ItemStack extracted = super.extractItem(slot, amount, simulate);
             if(extracted != null && extracted.stackSize > 0 && allClear())
-                master.currentRecipe.doCraft(master.craftingInv, false);
+                master.currentRecipe.doCraft(master.craftingInv);
             return extracted;
         }
     }

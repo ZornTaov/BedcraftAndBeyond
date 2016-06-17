@@ -1,6 +1,8 @@
 package zornco.bedcraftbeyond.common.item;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,10 +13,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
+import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.client.gui.GuiEyedropper;
 import zornco.bedcraftbeyond.client.gui.IClientGui;
 import zornco.bedcraftbeyond.common.gui.GuiHandler;
+import zornco.bedcraftbeyond.items.ItemHelper;
 import zornco.bedcraftbeyond.util.ColorHelper;
 
 import java.awt.*;
@@ -44,11 +52,6 @@ public class ItemEyedropper extends Item implements IClientGui {
             return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
         }
 
-        // TODO: Actual use code!!
-        if(!worldIn.isRemote) {
-            playerIn.addChatMessage(new TextComponentString("Using eyedropper!"));
-
-        }
         return ActionResult.newResult(EnumActionResult.PASS, stack);
     }
 

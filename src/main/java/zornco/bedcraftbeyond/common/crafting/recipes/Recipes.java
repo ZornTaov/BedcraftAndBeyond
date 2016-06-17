@@ -1,10 +1,12 @@
 package zornco.bedcraftbeyond.common.crafting.recipes;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -22,6 +24,8 @@ public class Recipes {
     public static void addRecipes() {
         recipesAdded = 0;
 
+        OreDictionary.registerOre("bottleWater", new ItemStack(Items.POTIONITEM, 1, 0));
+
         // Drawer key
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.drawerKey, 1), "xy", 'x', "ingotIron", 'y', "ingotGold"));
         ++recipesAdded;
@@ -30,21 +34,19 @@ public class Recipes {
         GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4), "xxx", 'x', new ItemStack(Blocks.WOOL, 1));
         ++recipesAdded;
 
-        // Removed: Beds are now frames, we need this.
-        // GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(Items.bed), "coloredBed"));  ++recipesAdded;
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.blanket),
-            "CC", "CC", 'C', Blocks.CARPET));
-        ++recipesAdded;
-
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.sheets),
-            "CC", 'C', Blocks.CARPET));
+        GameRegistry.addShapedRecipe(new ItemStack(BcbItems.blanket), "CCC", "CCC", 'C', Blocks.CARPET);
+        GameRegistry.addShapedRecipe(new ItemStack(BcbItems.sheets), "CCC", 'C', Blocks.CARPET);
+        recipesAdded += 2;
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.eyedropper),
-            "S", "G", "G", 'S', "slabWood", 'G', "blockGlass"));
+            "S", "G", "B", 'S', "slabWood", 'G', "blockGlass", 'B', new ItemStack(Items.POTIONITEM, 1, 0)));
         ++recipesAdded;
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.template, 4),
             " P ", "PCP", " P ", 'P', "paper", 'C', Blocks.CRAFTING_TABLE));
+        ++recipesAdded;
+
+        GameRegistry.addShapelessRecipe(new ItemStack(BcbItems.carpenter), Items.BED, Blocks.CRAFTING_TABLE);
         ++recipesAdded;
 
         RecipeLinenItems rli = new RecipeLinenItems();

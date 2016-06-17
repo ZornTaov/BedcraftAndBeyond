@@ -1,8 +1,4 @@
-package zornco.bedcraftbeyond.common.frames;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+package zornco.bedcraftbeyond.frames;
 
 /**
  * Represents a user-defined white and blacklist for frames.

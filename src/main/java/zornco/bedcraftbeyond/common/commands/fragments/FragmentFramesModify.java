@@ -12,8 +12,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.commands.CommandFragment;
 import zornco.bedcraftbeyond.common.commands.FramesCommandsUtils;
-import zornco.bedcraftbeyond.common.frames.FrameException;
-import zornco.bedcraftbeyond.common.frames.FrameRegistry;
+import zornco.bedcraftbeyond.frames.FrameException;
+import zornco.bedcraftbeyond.frames.FrameRegistry;
 
 import java.util.Collections;
 import java.util.List;

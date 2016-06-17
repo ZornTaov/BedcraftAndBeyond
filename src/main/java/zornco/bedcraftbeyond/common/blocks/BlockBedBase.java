@@ -111,7 +111,7 @@ public abstract class BlockBedBase extends Block {
         return this.onBedActivated(world, pos, state, player);
     }
 
-    public TileEntity getTileForBed(World world, IBlockState state, BlockPos pos){
+    public TileEntity getTileForBed(IBlockAccess world, IBlockState state, BlockPos pos){
         if(state.getValue(HEAD))
             return world.getTileEntity(pos);
 
@@ -123,6 +123,7 @@ public abstract class BlockBedBase extends Block {
         return realHolder;
     }
 
+    // TODO: Fix tile data being lost
     protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
         if (worldIn.isRemote) return true;
 
@@ -192,7 +193,7 @@ public abstract class BlockBedBase extends Block {
      */
     protected void doBedExplosion(World world, IBlockState state, BlockPos pos){
         world.setBlockToAir(pos);
-        if(state.getBlock() instanceof IBedTileHolder) world.removeTileEntity(pos);
+        if(state.getBlock().hasTileEntity(state)) world.removeTileEntity(pos);
         BlockPos otherHalf = pos.offset(state.getValue(FACING).getOpposite());
 
         if (world.getBlockState(otherHalf).getBlock() == this) {

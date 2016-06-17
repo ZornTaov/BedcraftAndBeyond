@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.common.frames;
+package zornco.bedcraftbeyond.frames;
 
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeSet;

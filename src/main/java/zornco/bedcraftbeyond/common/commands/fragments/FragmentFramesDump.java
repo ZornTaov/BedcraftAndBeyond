@@ -1,24 +1,17 @@
 package zornco.bedcraftbeyond.common.commands.fragments;
 
-import com.google.common.collect.BoundType;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
-import com.google.common.collect.RangeSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.org.apache.bcel.internal.util.ClassLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.commands.CommandFragment;
 import zornco.bedcraftbeyond.common.commands.FramesCommandsUtils;
-import zornco.bedcraftbeyond.common.frames.*;
+import zornco.bedcraftbeyond.frames.*;
 import zornco.bedcraftbeyond.config.ConfigHelper;
 
 import java.io.*;

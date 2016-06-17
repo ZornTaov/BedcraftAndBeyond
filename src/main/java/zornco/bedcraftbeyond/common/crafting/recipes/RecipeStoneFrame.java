@@ -1,15 +1,12 @@
 package zornco.bedcraftbeyond.common.crafting.recipes;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileCarpenter;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipe;
-import zornco.bedcraftbeyond.common.frames.FrameRegistry;
+import zornco.bedcraftbeyond.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.items.ItemHandlerGridHelper;
 import zornco.bedcraftbeyond.items.ItemHelper;
@@ -18,10 +15,9 @@ import java.awt.*;
 
 public class RecipeStoneFrame implements CarpenterRecipe {
 
-    private static final int stoneSlabID = OreDictionary.getOreID("slabStone");
-
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getRecipeOutput(TileCarpenter.CraftingHandler inv) {
+        if(!matches(inv)) return null;
         return new ItemStack(BcbItems.stoneBed, 1);
     }
 
@@ -41,11 +37,11 @@ public class RecipeStoneFrame implements CarpenterRecipe {
     }
 
     @Override
-    public ItemStack doCraft(TileCarpenter.CraftingHandler inv, boolean simulate) {
+    public ItemStack doCraft(TileCarpenter.CraftingHandler inv) {
         if(!matches(inv)) return null;
         for(int y = 3; y < 9; y++)
-            inv.extractItem(y, 1, simulate);
+            inv.extractItem(y, 1, false);
 
-        return new ItemStack(BcbItems.stoneBed, 1);
+        return getRecipeOutput(inv);
     }
 }

@@ -8,7 +8,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileCarpenter;
 import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipe;
-import zornco.bedcraftbeyond.common.frames.FrameRegistry;
+import zornco.bedcraftbeyond.frames.FrameHelper;
+import zornco.bedcraftbeyond.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.items.ItemHandlerGridHelper;
 import zornco.bedcraftbeyond.items.ItemHelper;
@@ -20,13 +21,16 @@ public class RecipeWoodFrame implements CarpenterRecipe {
     private int woodSlabID = OreDictionary.getOreID("slabWood");
 
     @Override
-    public ItemStack getRecipeOutput() {
-        ItemStack bed = new ItemStack(BcbItems.woodenBed, 1);
-        NBTTagCompound compound = new NBTTagCompound();
-        compound.setString("frameType", Blocks.PLANKS.getRegistryName().toString());
-        compound.setInteger("frameMeta", 0);
-        bed.setTagCompound(compound);
-        return bed;
+    public ItemStack getRecipeOutput(TileCarpenter.CraftingHandler inv) {
+        if(!matches(inv)) return null;
+
+        ItemStack wood = inv.extractItem(6, 1, true);
+        ItemStack bedFrame = new ItemStack(BcbItems.woodenBed, 1);
+        NBTTagCompound tags = new NBTTagCompound();
+        tags.setTag("frame", FrameHelper.getFrameTag(wood));
+        bedFrame.setTagCompound(tags);
+
+        return bedFrame;
     }
 
     @Override
@@ -52,20 +56,13 @@ public class RecipeWoodFrame implements CarpenterRecipe {
     }
 
     @Override
-    public ItemStack doCraft(TileCarpenter.CraftingHandler inv, boolean simulate) {
+    public ItemStack doCraft(TileCarpenter.CraftingHandler inv) {
         if(!matches(inv)) return null;
 
         ItemStack wood = inv.extractItem(6, 1, true);
-        for(int y = 3; y < 9; y++) inv.extractItem(y, 1, simulate);
+        for(int y = 3; y < 9; y++) inv.extractItem(y, 1, false);
 
         if(wood == null) return null;
-
-        ItemStack bedFrame = new ItemStack(BcbItems.woodenBed, 1);
-        NBTTagCompound tags = new NBTTagCompound();
-        tags.setString("frameType", wood.getItem().getRegistryName().toString());
-        tags.setInteger("frameMeta", wood.getMetadata());
-        bedFrame.setTagCompound(tags);
-
-        return bedFrame;
+        return getRecipeOutput(inv);
     }
 }

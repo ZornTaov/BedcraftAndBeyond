@@ -8,13 +8,10 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.common.blocks.IBedTileHolder;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.util.ColorHelper;
-import zornco.bedcraftbeyond.util.PlankHelper;
 
 import java.awt.*;
 
@@ -46,24 +43,22 @@ public class Colors {
         }
     }
 
-    // TODO: Figure out why client sync isn't working here.
     public static class BedColorer implements IBlockColor {
 
         @Override
         public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex) {
             state = state.getActualState(world, pos);
-            TileWoodenBed bed = (TileWoodenBed) ((IBedTileHolder) state.getBlock()).getTileForBed(world, state, pos);
+            TileWoodenBed bed = (TileWoodenBed) ((BlockWoodenBed) state.getBlock()).getTileForBed(world, state, pos);
+            if(bed == null) return 0;
             switch (tintIndex) {
                 case 0:
                     return bed.getPartColor(BlockWoodenBed.EnumColoredPart.PLANKS).getRGB();
 
                 case 1:
-                    EnumBedFabricType sheetsType = state.getValue(BlockWoodenBed.SHEETS);
-                    return sheetsType == EnumBedFabricType.SOLID_COLOR ? bed.getPartColor(BlockWoodenBed.EnumColoredPart.SHEETS).getRGB() : 0;
+                    return bed.getPartColor(BlockWoodenBed.EnumColoredPart.SHEETS).getRGB();
 
                 case 2:
-                    EnumBedFabricType blanketsType = state.getValue(BlockWoodenBed.BLANKETS);
-                    return blanketsType == EnumBedFabricType.SOLID_COLOR ? bed.getPartColor(BlockWoodenBed.EnumColoredPart.BLANKETS).getRGB() : 0;
+                    return bed.getPartColor(BlockWoodenBed.EnumColoredPart.BLANKETS).getRGB();
 
                 default:
                     return 0;

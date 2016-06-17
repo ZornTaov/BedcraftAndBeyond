@@ -23,6 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedPartStatus;
@@ -41,7 +42,7 @@ import java.util.UUID;
  * A colored bed has sheets and blankets that are separately dyeable.
  * It works the same as a regular bed otherwise.
  */
-public class BlockWoodenBed extends BlockBedBase implements IBedTileHolder {
+public class BlockWoodenBed extends BlockBedBase {
 
     public static PropertyBool HAS_STORAGE = PropertyBool.create("storage");
     public static PropertyEnum<EnumBedPartStatus> STATUS = PropertyEnum.create("status", EnumBedPartStatus.class);
@@ -90,19 +91,6 @@ public class BlockWoodenBed extends BlockBedBase implements IBedTileHolder {
     }
 
     @Override
-    public TileEntity getTileForBed(IBlockAccess world, IBlockState state, BlockPos pos) {
-        if(state.getValue(HEAD))
-            return world.getTileEntity(pos);
-
-        if (!(state.getBlock() instanceof BlockWoodenBed)) return null;
-        BlockPos actualTileHolder = pos.offset(state.getValue(FACING));
-
-        TileEntity realHolder = world.getTileEntity(actualTileHolder);
-        if (realHolder == null || !(realHolder instanceof TileWoodenBed)) return null;
-        return realHolder;
-    }
-
-    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileWoodenBed tile = (TileWoodenBed) getTileForBed(world, state, pos);
 
@@ -112,43 +100,29 @@ public class BlockWoodenBed extends BlockBedBase implements IBedTileHolder {
         state = getActualState(state, world, pos);
         // Add/remove blankets and sheets
 
+
+        PlayerInvWrapper wrapper = new PlayerInvWrapper(player.inventory);
         if (heldItem != null) {
             if (heldItem.getItem() instanceof ItemBlanket) {
                 boolean set = tile.setLinenPart(EnumColoredPart.BLANKETS, heldItem);
-                if (set) {
-                    --heldItem.stackSize;
-                    if (heldItem.stackSize < 1) player.setHeldItem(hand, null);
-                }
+                if (set && !player.isCreative())
+                    wrapper.extractItem(player.inventory.currentItem, 1, false);
             }
 
             if (heldItem.getItem() instanceof ItemSheets) {
                 boolean set = tile.setLinenPart(EnumColoredPart.SHEETS, heldItem);
-                if (set) {
-                    --heldItem.stackSize;
-                    if (heldItem.stackSize < 1) player.setHeldItem(hand, null);
-                }
+                if (set && !player.isCreative())
+                    wrapper.extractItem(player.inventory.currentItem, 1, false);
             }
         }
 
         if (heldItem == null) {
             if (player.isSneaking()) {
                 // TODO: Open bed gui here
-                ITextComponent message = new TextComponentString("");
 
-                if (tile.getPartType(EnumColoredPart.BLANKETS) != EnumBedFabricType.NONE) {
-                    message = new TextComponentString(TextFormatting.AQUA + "Blankets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.BLANKETS));
-                    player.addChatMessage(message);
-                }
-
-                if (tile.getPartType(EnumColoredPart.SHEETS) != EnumBedFabricType.NONE) {
-                    message = new TextComponentString(TextFormatting.GOLD + "Sheets: " + TextFormatting.WHITE + tile.getPartColor(EnumColoredPart.SHEETS));
-                    player.addChatMessage(message);
-                }
-
-                message = new TextComponentString(TextFormatting.RED + "Frame: " + TextFormatting.WHITE + tile.getPlankType());
-                player.addChatMessage(message);
             } else
-                onBedActivated(world, pos, state, player);
+                if(isBed(state, world, pos, player))
+                    onBedActivated(world, pos, state, player);
         }
 
         return true;
@@ -197,8 +171,7 @@ public class BlockWoodenBed extends BlockBedBase implements IBedTileHolder {
         TileWoodenBed twb = (TileWoodenBed) getTileForBed(world, state, pos);
 
         NBTTagCompound frameData = twb.getPlankData();
-        tags.setString("frameType", frameData.getString("frameType"));
-        tags.setInteger("frameMeta", frameData.getInteger("frameMeta"));
+        tags.setTag("frame", frameData);
         bedItem.setTagCompound(tags);
         drops.add(bedItem);
 

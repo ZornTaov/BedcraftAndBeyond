@@ -24,7 +24,7 @@ import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
 import zornco.bedcraftbeyond.common.commands.CommandBedcraft;
 import zornco.bedcraftbeyond.common.crafting.recipes.Recipes;
-import zornco.bedcraftbeyond.common.frames.FrameLoader;
+import zornco.bedcraftbeyond.frames.FrameLoader;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.config.ConfigHelper;
 import zornco.bedcraftbeyond.common.gui.GuiHandler;

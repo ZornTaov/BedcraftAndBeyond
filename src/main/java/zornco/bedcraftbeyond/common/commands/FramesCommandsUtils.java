@@ -6,7 +6,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.BlockPos;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.common.frames.FrameRegistry;
+import zornco.bedcraftbeyond.frames.FrameRegistry;
 
 public class FramesCommandsUtils {
 

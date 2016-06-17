@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,12 +22,12 @@ import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
-import zornco.bedcraftbeyond.common.blocks.IBedTileHolder;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
-import zornco.bedcraftbeyond.common.frames.FrameException;
-import zornco.bedcraftbeyond.common.frames.FrameRegistry;
-import zornco.bedcraftbeyond.common.frames.FrameWhitelist;
+import zornco.bedcraftbeyond.frames.FrameException;
+import zornco.bedcraftbeyond.frames.FrameHelper;
+import zornco.bedcraftbeyond.frames.FrameRegistry;
+import zornco.bedcraftbeyond.frames.FrameWhitelist;
 
 import java.util.List;
 
@@ -55,8 +54,10 @@ public class ItemWoodenFrame extends ItemFramePlacer {
         for(ResourceLocation rl : wood.getValidRegistryEntries()){
             ItemStack bed = new ItemStack(item, 1);
             NBTTagCompound tags = new NBTTagCompound();
-            tags.setString("frameType", rl.toString());
-            tags.setInteger("frameMeta", 0);
+            NBTTagCompound frameTag = new NBTTagCompound();
+            frameTag.setString("frameType", rl.toString());
+            frameTag.setInteger("frameMeta", 0);
+            tags.setTag("frame", frameTag);
             bed.setTagCompound(tags);
             subItems.add(bed);
         }
@@ -68,14 +69,10 @@ public class ItemWoodenFrame extends ItemFramePlacer {
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tags, boolean advanced) {
         if (!stack.hasTagCompound()) return;
         NBTTagCompound nbt = stack.getTagCompound();
-        if (!nbt.hasKey("frameType")) return;
-        String frameType = nbt.getString("frameType");
-        Block b = Block.getBlockFromName(frameType);
-        if(b == null) return;
+        if (!nbt.hasKey("frame")) return;
 
-        // TODO: Stop depending on meta here in next version (because no meta?)
-        IBlockState state = b.getStateFromMeta(nbt.hasKey("frameMeta") ? nbt.getInteger("frameMeta") : 0);
-        ItemStack frameStack = b.getPickBlock(state, null, player.getEntityWorld(), null, player);
+        NBTTagCompound frameTag = nbt.getCompoundTag("frame");
+        ItemStack frameStack = FrameHelper.getItemFromFrameTag(frameTag);
         if(frameStack != null) tags.add(TextFormatting.GREEN + "Frame: " + TextFormatting.RESET + frameStack.getDisplayName());
     }
 
@@ -104,10 +101,13 @@ public class ItemWoodenFrame extends ItemFramePlacer {
                     throw new Exception("Failed to set blockstate.");
 
                 IBlockState state = world.getBlockState(pos);
-                TileWoodenBed tile = (TileWoodenBed) ((IBedTileHolder) state.getBlock()).getTileForBed(world, state, pos);
+                TileWoodenBed tile = (TileWoodenBed) ((BlockWoodenBed) state.getBlock()).getTileForBed(world, state, pos);
                 if (tile != null) {
                     try {
-                        tile.setPlankType(new ResourceLocation(stack.getTagCompound().getString("frameType")), stack.getTagCompound().getInteger("frameMeta"), false);
+                        if(!stack.getTagCompound().hasKey("frame"))
+                            return EnumActionResult.FAIL;
+                        NBTTagCompound frame = stack.getTagCompound().getCompoundTag("frame");
+                        tile.setPlankType(frame, false);
                     } catch (FrameException e) {
                         BedCraftBeyond.LOGGER.error("Could not set frame type from item. Invalid whitelist entry.");
                         // TODO: FrameWhitelist.getFirstValidType();

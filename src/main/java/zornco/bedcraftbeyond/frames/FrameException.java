@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.common.frames;
+package zornco.bedcraftbeyond.frames;
 
 import net.minecraft.command.CommandException;
 

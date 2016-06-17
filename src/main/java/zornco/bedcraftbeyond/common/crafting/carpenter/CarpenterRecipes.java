@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.common.crafting.recipes.RecipeDyeBottle;
 import zornco.bedcraftbeyond.common.crafting.recipes.RecipeStoneFrame;
 import zornco.bedcraftbeyond.common.crafting.recipes.RecipeWoodFrame;
 import zornco.bedcraftbeyond.common.item.BcbItems;
@@ -32,6 +33,9 @@ public class CarpenterRecipes {
 
         // Stone Frame
         createRecipe(new ResourceLocation(BedCraftBeyond.MOD_ID, "stone_frame"), new RecipeStoneFrame(), Blocks.STONE);
+
+        // Dye bottle
+        createRecipe(new ResourceLocation(BedCraftBeyond.MOD_ID, "dye_bottle"), new RecipeDyeBottle(), "bottleWater");
     }
 
     private static void createRecipe(ResourceLocation rl, CarpenterRecipe rec, Object craftPiece){
