@@ -53,6 +53,7 @@ bedcraftbeyond.frames.errors.already_added_meta=Entry %s already has meta %s add
 bedcraftbeyond.frames.errors.not_valid_entry=Invalid frame entry: %s is not in the valid frame list.
 bedcraftbeyond.frames.errors.unknown_frame_type=Unknown frame type.
 bedcraftbeyond.frames.errors.no_frame_type=No frame type selected.
+bedcraftbeyond.frames.errors.invalid_frame=Frame is invalid. Please destroy and recraft.
 
 # Frames Messages - Blacklisting
 bedcraftbeyond.frames.blacklisted=Successfully whitelisted %s (and its variants) to frame type %s.

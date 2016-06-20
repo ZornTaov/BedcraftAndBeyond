@@ -17,7 +17,6 @@ public class ItemStoneBed extends ItemFramePlacer {
     public ItemStoneBed(Block b) {
         super(b);
         setUnlocalizedName("beds.stone");
-        setCreativeTab(BedCraftBeyond.BEDS_TAB);
 
         GameRegistry.register(this);
     }

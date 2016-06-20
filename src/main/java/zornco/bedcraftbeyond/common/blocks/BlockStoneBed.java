@@ -15,7 +15,7 @@ import java.util.List;
 public class BlockStoneBed extends BlockBedBase {
 
     public BlockStoneBed() {
-        setCreativeTab(BedCraftBeyond.MAIN_TAB);
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setHardness(1.0f);
         setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.stone");
         setRegistryName(BedCraftBeyond.MOD_ID, "stone_bed");

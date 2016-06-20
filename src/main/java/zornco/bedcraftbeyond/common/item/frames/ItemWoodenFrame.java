@@ -3,6 +3,7 @@ package zornco.bedcraftbeyond.common.item.frames;
 import com.google.common.collect.Range;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,7 +39,6 @@ public class ItemWoodenFrame extends ItemFramePlacer {
     public ItemWoodenFrame(Block b) {
         super(b);
         setUnlocalizedName("frames.wooden");
-        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         this.setHasSubtypes(true);
 
         GameRegistry.register(this);
@@ -99,10 +100,12 @@ public class ItemWoodenFrame extends ItemFramePlacer {
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tags, boolean advanced) {
-        if (!stack.hasTagCompound()) return;
-        NBTTagCompound nbt = stack.getTagCompound();
-        if (!nbt.hasKey("frame")) return;
+        if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey("frame")){
+            tags.add(TextFormatting.RED + I18n.format(BedCraftBeyond.MOD_ID + ".frames.errors.invalid_frame"));
+            return;
+        }
 
+        NBTTagCompound nbt = stack.getTagCompound();
         NBTTagCompound frameTag = nbt.getCompoundTag("frame");
         ItemStack frameStack = FrameHelper.getItemFromFrameTag(frameTag);
         if(frameStack != null) tags.add(TextFormatting.GREEN + "Frame: " + TextFormatting.RESET + frameStack.getDisplayName());
@@ -113,7 +116,7 @@ public class ItemWoodenFrame extends ItemFramePlacer {
         if (side != EnumFacing.UP) return EnumActionResult.FAIL;
 
         // If frame not set, abort early- we need that.
-        if(!stack.getTagCompound().hasKey("frame")) return EnumActionResult.FAIL;
+        if(!stack.hasTagCompound() || !stack.getTagCompound().hasKey("frame")) return EnumActionResult.FAIL;
 
         boolean canPlaceBedHere = testSimpleBedPlacement(world, player, pos, stack);
         if (!canPlaceBedHere) return EnumActionResult.FAIL;

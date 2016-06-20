@@ -27,7 +27,7 @@ public class WrapperStoneFrame extends BlankRecipeWrapper implements IShapedCraf
     @Nonnull
     @Override
     public List getOutputs() {
-        return ImmutableList.of(BcbItems.stoneBed, 1);
+        return ImmutableList.of(new ItemStack(BcbItems.stoneBed));
     }
 
     @Override

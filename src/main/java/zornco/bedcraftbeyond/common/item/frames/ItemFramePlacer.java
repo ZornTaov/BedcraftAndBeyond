@@ -20,7 +20,6 @@ public class ItemFramePlacer extends ItemBlock {
     public ItemFramePlacer(Block block) {
         super(block);
         setRegistryName(block.getRegistryName());
-        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(1);
     }
 

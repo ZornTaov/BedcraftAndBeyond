@@ -3,6 +3,7 @@ package zornco.bedcraftbeyond.common.blocks;
 import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -123,7 +124,6 @@ public abstract class BlockBedBase extends Block {
         return realHolder;
     }
 
-    // TODO: Fix tile data being lost
     protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
         if (worldIn.isRemote) return true;
 
@@ -214,7 +214,7 @@ public abstract class BlockBedBase extends Block {
         if (worldIn.getBlockState(other).getBlock() == this)
             worldIn.destroyBlock(other, !player.capabilities.isCreativeMode);
         if(state.getValue(HEAD))
-            this.dropBlockAsItem(worldIn, pos, state, -1);
+            if(!player.isCreative()) this.dropBlockAsItem(worldIn, pos, state, -1);
     }
 
     /**
@@ -271,5 +271,10 @@ public abstract class BlockBedBase extends Block {
     @Override
     public boolean isFullyOpaque(IBlockState state) {
         return false;
+    }
+
+    @Override
+    public EnumPushReaction getMobilityFlag(IBlockState state) {
+        return EnumPushReaction.BLOCK;
     }
 }
