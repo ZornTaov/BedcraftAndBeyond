@@ -61,7 +61,6 @@ Bedcraft.iws
 build.gradle
 gradlew
 gradlew.bat
-textures/
 saves/
 screenshots/
 logs/2016-05-23-2.log.gz
