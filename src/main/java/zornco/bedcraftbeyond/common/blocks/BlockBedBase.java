@@ -51,7 +51,7 @@ public abstract class BlockBedBase extends Block {
         super(Material.CLOTH);
         random = new Random();
         setHardness(1.0f);
-        setCreativeTab(BedCraftBeyond.MAIN_TAB);
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
     }
 
     @Override

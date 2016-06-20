@@ -1,5 +1,6 @@
 {
   "textures": {
+    "stone": "minecraft:blocks/stone",
     "upper_bottom": "bedcraftbeyond:blocks/stone_bed/bottom",
     "upper_top": "bedcraftbeyond:blocks/stone_bed/top",
     "upper_side": "blocks/stone",
@@ -45,8 +46,9 @@
       "to": [16, 9, 16],
       "faces": {
         "down": {
-          "uv": [16, 16, 0, 0],
-          "texture": "#upper_bottom"
+          "uv": [0, 0, 16, 16],
+          "texture": "#upper_top",
+          "rotation": 180
         },
         "up": {
           "uv": [0, 0, 16, 16],

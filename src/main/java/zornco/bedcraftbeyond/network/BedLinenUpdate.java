@@ -2,7 +2,6 @@ package zornco.bedcraftbeyond.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
@@ -16,23 +15,17 @@ import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 
-public class BedPartUpdate implements IMessage {
+public class BedLinenUpdate implements IMessage {
 
     private BlockPos pos;
     private BlockWoodenBed.EnumColoredPart part;
     private EnumBedFabricType partType;
     private ItemStack partItem;
 
-    public BedPartUpdate() {
-    }
+    @SuppressWarnings("unused")
+    public BedLinenUpdate() {}
 
-    public BedPartUpdate(BlockPos pos, BlockWoodenBed.EnumColoredPart part, EnumBedFabricType partType) {
-        this.pos = pos;
-        this.part = part;
-        this.partType = partType;
-    }
-
-    public BedPartUpdate(BlockPos pos, BlockWoodenBed.EnumColoredPart part, ItemStack partItem) {
+    public BedLinenUpdate(BlockPos pos, BlockWoodenBed.EnumColoredPart part, ItemStack partItem) {
         this.pos = pos;
         this.part = part;
         this.partType = EnumBedFabricType.SOLID_COLOR;
@@ -88,7 +81,7 @@ public class BedPartUpdate implements IMessage {
         }
     }
 
-    public static class Handler implements IMessageHandler<BedPartUpdate, IMessage> {
+    public static class Handler implements IMessageHandler<BedLinenUpdate, IMessage> {
 
         public Handler() {
         }
@@ -102,7 +95,7 @@ public class BedPartUpdate implements IMessage {
          * @return an optional return message
          */
         @Override
-        public IMessage onMessage(BedPartUpdate message, MessageContext ctx) {
+        public IMessage onMessage(BedLinenUpdate message, MessageContext ctx) {
             World w = BedCraftBeyond.PROXY.getClientWorld();
             IBlockState curState = w.getBlockState(message.pos);
             TileWoodenBed twb = (TileWoodenBed) w.getTileEntity(message.pos);

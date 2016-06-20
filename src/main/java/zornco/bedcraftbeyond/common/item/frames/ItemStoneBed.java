@@ -9,6 +9,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 
 public class ItemStoneBed extends ItemFramePlacer {
@@ -16,6 +17,7 @@ public class ItemStoneBed extends ItemFramePlacer {
     public ItemStoneBed(Block b) {
         super(b);
         setUnlocalizedName("beds.stone");
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
 
         GameRegistry.register(this);
     }

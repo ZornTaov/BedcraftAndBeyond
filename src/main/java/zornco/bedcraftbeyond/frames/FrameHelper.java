@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import zornco.bedcraftbeyond.client.TextureUtils;
+import zornco.bedcraftbeyond.client.util.TextureHelper;
 
 import java.awt.*;
 
@@ -23,7 +23,7 @@ public abstract class FrameHelper {
     @SideOnly(Side.CLIENT)
     public static Color getColorFromPlankType(ItemStack stack){
         try {
-            return TextureUtils.getItemTextureColor(stack);
+            return TextureHelper.getItemTextureColor(stack);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond.common.item;
 
-import net.minecraft.item.ItemBlock;
 import zornco.bedcraftbeyond.common.blocks.BcbBlocks;
 import zornco.bedcraftbeyond.common.item.frames.ItemStoneBed;
 import zornco.bedcraftbeyond.common.item.frames.ItemWoodenFrame;
@@ -16,15 +15,10 @@ public class BcbItems {
     public static ItemDrawer drawer = new ItemDrawer();
     public static ItemDrawerKey drawerKey = new ItemDrawerKey();
 
-    // Crafting
-    public static ItemTemplate template = new ItemTemplate();
-
     // Other stuff
     public static ItemStoneBed stoneBed = new ItemStoneBed(BcbBlocks.stoneBed);
     public static ItemRug rug = new ItemRug();
     public static ItemScissors scissors = new ItemScissors();
-
-    public static ItemCarpenter carpenter = new ItemCarpenter();
 
     // Dying
     public static ItemDyeBottle dyeBottle = new ItemDyeBottle();

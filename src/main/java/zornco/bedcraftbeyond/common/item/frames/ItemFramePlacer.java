@@ -20,7 +20,7 @@ public class ItemFramePlacer extends ItemBlock {
     public ItemFramePlacer(Block block) {
         super(block);
         setRegistryName(block.getRegistryName());
-        setCreativeTab(BedCraftBeyond.MAIN_TAB);
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(1);
     }
 
@@ -54,6 +54,19 @@ public class ItemFramePlacer extends ItemBlock {
         BlockPos topPos = initialPosition.offset(playerFacing);
         if (!world.getBlockState(topPos).getBlock().isReplaceable(world, topPos) && !world.isAirBlock(topPos))
             return false;
+
+        return true;
+    }
+
+    protected boolean placeBedBlock(ItemStack stack, World world, EntityPlayer player, BlockPos pos, IBlockState state, boolean blockUpdate){
+        if (!world.setBlockState(pos, state, blockUpdate ? 3 : 2)) return false;
+
+        IBlockState success = world.getBlockState(pos);
+        if (success.getBlock() == this.block)
+        {
+            setTileEntityNBT(world, player, pos, stack);
+            this.block.onBlockPlacedBy(world, pos, state, player, stack);
+        }
 
         return true;
     }

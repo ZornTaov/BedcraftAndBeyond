@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond.common.blocks;
 
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -11,32 +10,26 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedPartStatus;
-import zornco.bedcraftbeyond.common.blocks.properties.PropertyString;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
 import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
+import zornco.bedcraftbeyond.frames.FrameException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 /***
  * A colored bed has sheets and blankets that are separately dyeable.
@@ -150,12 +143,11 @@ public class BlockWoodenBed extends BlockBedBase {
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         // TODO: Check accuracy
-        ItemStack stack = new ItemStack(BcbBlocks.woodenBed, 1, state.getBlock().getMetaFromState(state));
+        ItemStack stack = new ItemStack(BcbBlocks.woodenBed, 1, 0);
 
         TileWoodenBed tile = (TileWoodenBed) getTileForBed(world, state, pos);
         stack.setTagCompound(new NBTTagCompound());
-        NBTTagCompound stackTags = stack.getTagCompound();
-
+        stack.getTagCompound().setTag("frame", tile.getPlankData());
 
         return stack;
     }
@@ -180,5 +172,23 @@ public class BlockWoodenBed extends BlockBedBase {
         if(twb.getLinenPart(EnumColoredPart.SHEETS, false) != null)
             drops.add(twb.getLinenPart(EnumColoredPart.SHEETS, true));
         return drops;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        TileWoodenBed twb = (TileWoodenBed) getTileForBed(worldIn, state, pos);
+        if(twb == null) return;
+
+        try {
+            NBTTagCompound frame = stack.getTagCompound().getCompoundTag("frame");
+            twb.setPlankType(frame, true);
+        } catch (FrameException e) {
+            BedCraftBeyond.LOGGER.error("Could not set frame type from item. Invalid whitelist entry.");
+            // TODO: FrameWhitelist.getFirstValidType();
+            worldIn.destroyBlock(pos, true);
+        }
+
+        if(worldIn.isRemote) twb.recachePlankColor();
     }
 }

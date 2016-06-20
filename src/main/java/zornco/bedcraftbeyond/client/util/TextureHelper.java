@@ -1,6 +1,6 @@
-package zornco.bedcraftbeyond.client;
+package zornco.bedcraftbeyond.client.util;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,16 +13,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.BedCraftBeyond;
+import zornco.bedcraftbeyond.common.util.ColorHelper;
 
-public class TextureUtils {
+public class TextureHelper {
 
     /*
      * Thanks to BluSunrize/TTFTCUTS
      */
     @SuppressWarnings("deprecation")
+    @SideOnly(Side.CLIENT)
     public static Color getItemTextureColor(ItemStack item) throws Exception {
         //= item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
+        if(item == null || item.getItem() == null) return Color.WHITE;
         try {
 
             Block b = Block.getBlockFromItem(item.getItem());
@@ -45,30 +50,12 @@ public class TextureUtils {
             InputStream layer = Minecraft.getMinecraft().getResourceManager().getResource(resource).getInputStream();
             BufferedImage buffered = ImageIO.read(layer);
 
-            return getAverageTextureColor(buffered, 0, 0, icon.getIconWidth(), icon.getIconHeight());
+            return ColorHelper.getAverageColor(buffered, new Point(0,0), new Dimension(icon.getIconWidth(), icon.getIconHeight()));
         } catch (Exception e) {
             BedCraftBeyond.LOGGER.error(e);
             throw e;
         }
     }
 
-    /*
-     * Where bi is your image, (x0,y0) is your upper left coordinate, and (w,h)
-     * are your width and height respectively
-     */
-    public static Color getAverageTextureColor(BufferedImage bi, int x0, int y0, int w, int h) {
-        int x1 = x0 + w;
-        int y1 = y0 + h;
-        long sumr = 0, sumg = 0, sumb = 0;
-        for (int x = x0; x < x1; x++) {
-            for (int y = y0; y < y1; y++) {
-                Color pixel = new Color(bi.getRGB(x, y));
-                sumr += pixel.getRed();
-                sumg += pixel.getGreen();
-                sumb += pixel.getBlue();
-            }
-        }
-        int num = w * h;
-        return new Color((int) (sumr / num), (int) (sumg / num), (int) (sumb / num));
-    }
+
 }

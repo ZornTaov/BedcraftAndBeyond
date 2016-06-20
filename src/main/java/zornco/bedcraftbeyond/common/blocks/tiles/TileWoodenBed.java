@@ -2,6 +2,7 @@ package zornco.bedcraftbeyond.common.blocks.tiles;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -16,7 +17,8 @@ import zornco.bedcraftbeyond.frames.FrameRegistry;
 import zornco.bedcraftbeyond.common.item.linens.ILinenItem;
 import zornco.bedcraftbeyond.common.item.linens.ItemBlanket;
 import zornco.bedcraftbeyond.common.item.linens.ItemSheets;
-import zornco.bedcraftbeyond.network.BedPartUpdate;
+import zornco.bedcraftbeyond.network.BedFrameUpdate;
+import zornco.bedcraftbeyond.network.BedLinenUpdate;
 
 import java.awt.*;
 
@@ -52,12 +54,18 @@ public class TileWoodenBed extends TileGenericBed {
     }
 
     @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        super.onDataPacket(net, packet);
+        if(this.plankColor == null) recachePlankColor();
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound tags) {
         super.readFromNBT(tags);
         if (tags.hasKey("blankets")) this.blankets = ItemStack.loadItemStackFromNBT(tags.getCompoundTag("blankets"));
         if (tags.hasKey("sheets")) this.sheets = ItemStack.loadItemStackFromNBT(tags.getCompoundTag("sheets"));
 
-        this.plankColor = new Color(tags.getInteger("plankColor"));
+        if(tags.hasKey("plankColor")) this.plankColor = new Color(tags.getInteger("plankColor"));
         this.plankType = new ResourceLocation(tags.getString("plankType"));
         this.plankMeta = tags.getInteger("plankMeta");
 
@@ -68,8 +76,11 @@ public class TileWoodenBed extends TileGenericBed {
     public NBTTagCompound getPlankData() {
         NBTTagCompound plankData = new NBTTagCompound();
         if(plankColor != null) plankData.setInteger("color", plankColor.getRGB());
-        plankData.setString("frameType", plankType.toString());
-        plankData.setInteger("frameMeta", plankMeta);
+        if(plankType != null){
+            plankData.setString("frameType", plankType.toString());
+            plankData.setInteger("frameMeta", plankMeta);
+        }
+
         return plankData;
     }
 
@@ -90,18 +101,13 @@ public class TileWoodenBed extends TileGenericBed {
 
     public void setPlankType(NBTTagCompound nbt, boolean updateClients) throws FrameException {
         if(nbt == null) return;
+        if(nbt.hasKey("color")) this.plankColor = new Color(nbt.getInteger("color"));
         if(!nbt.hasKey("frameType")) throw new FrameException("Need to have frame type set.");
         if(!nbt.hasKey("frameMeta")) throw new FrameException("Need to have frame meta set.");
 
         ResourceLocation rl = new ResourceLocation(nbt.getString("frameType"));
         int meta = nbt.getInteger("frameMeta");
-        if(!FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD).metaIsWhitelisted(rl, meta))
-            throw new FrameException("Not a valid frame type.");
-
-        this.plankType = rl;
-        this.plankMeta = meta;
-        if(updateClients) updateClients(BlockWoodenBed.EnumColoredPart.PLANKS);
-        if(worldObj.isRemote) updatePlankColor();
+        setPlankType(rl, meta, updateClients);
     }
 
     @SuppressWarnings("unused")
@@ -115,12 +121,20 @@ public class TileWoodenBed extends TileGenericBed {
         this.plankType = plankType;
         this.plankMeta = plankMeta;
 
-        if(updateClients) updateClients(BlockWoodenBed.EnumColoredPart.PLANKS);
-        if(worldObj.isRemote) updatePlankColor();
+        if(updateClients && (worldObj != null && !worldObj.isRemote)){
+            // Make sure we have the updated plank information on the server
+            BedFrameUpdate update = new BedFrameUpdate(pos, this.plankType, this.plankMeta);
+            BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+        }
+
+        // If we're on the client and the frame color hasn't been set by something else (like an nbt tag from an item)
+        if(worldObj.isRemote && this.plankColor == null)
+            this.plankColor = FrameHelper.getColorFromPlankType(this.plankType, this.plankMeta);
+
+        markDirty();
     }
 
-    private void updatePlankColor(){
-        if(!worldObj.isRemote) return;
+    public void recachePlankColor(){
         this.plankColor = FrameHelper.getColorFromPlankType(this.plankType, this.plankMeta);
     }
 
@@ -201,7 +215,7 @@ public class TileWoodenBed extends TileGenericBed {
 
                 return ((ILinenItem) i.getItem()).getColor(i);
             case PLANKS:
-                if(worldObj.isRemote && plankColor == null) updatePlankColor();
+                if(worldObj.isRemote && plankColor == null) recachePlankColor();
                 return this.plankColor != null ? plankColor : Color.WHITE;
         }
 
@@ -236,7 +250,7 @@ public class TileWoodenBed extends TileGenericBed {
     public final void updateClients(BlockWoodenBed.EnumColoredPart part) {
         if (worldObj == null || worldObj.isRemote) return;
         markDirty();
-        BedPartUpdate update = new BedPartUpdate(pos, part, getLinenPart(part, false));
+        BedLinenUpdate update = new BedLinenUpdate(pos, part, getLinenPart(part, false));
         BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
     }
 }

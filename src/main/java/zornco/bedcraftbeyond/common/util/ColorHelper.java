@@ -1,12 +1,16 @@
-package zornco.bedcraftbeyond.util;
+package zornco.bedcraftbeyond.common.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 
-import java.awt.Color;
+import javax.vecmath.Vector3f;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 /**
@@ -150,5 +154,40 @@ public class ColorHelper {
         double b = weight0 * c0.getBlue() + weight1 * c1.getBlue();
         double a = Math.max(c0.getAlpha(), c1.getAlpha());
         return new Color((int) r, (int) g, (int) b, (int) a);
+    }
+
+    /**
+     * Gets an average color from an image, given an area to look at.
+     *
+     * @param bi The image to average a color from.
+     * @param topLeft The top-left point of the area to average.
+     * @param size The size of the area to average.
+     * @return The average color of the given area.
+     */
+    public static Color getAverageColor(BufferedImage bi, Point topLeft, Dimension size) {
+        Rectangle area = new Rectangle(topLeft, size);
+        return getAverageColor(bi, area);
+    }
+
+    /**
+     * Gets an average color from an image, given an area to look at.
+     *
+     * @param bi The image to average a color from.
+     * @param area The area to average.
+     * @return The average color of the given area.
+     */
+    public static Color getAverageColor(BufferedImage bi, Rectangle area){
+        long sumRed = 0, sumGreen = 0, sumBlue = 0;
+        for (int x = area.x; x < area.x + area.width; x++) {
+            for (int y = area.y; y < area.y + area.height; y++) {
+                Color pixel = new Color(bi.getRGB(x, y));
+                sumRed += pixel.getRed();
+                sumGreen += pixel.getGreen();
+                sumBlue += pixel.getBlue();
+            }
+        }
+
+        int areaArea = area.width * area.height;
+        return new Color((int) (sumRed / areaArea), (int) (sumGreen / areaArea), (int) (sumBlue / areaArea));
     }
 }

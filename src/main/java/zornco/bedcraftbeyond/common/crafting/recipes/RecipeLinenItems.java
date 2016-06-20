@@ -6,9 +6,10 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.common.item.ItemDyeBottle;
 import zornco.bedcraftbeyond.common.item.linens.ILinenItem;
-import zornco.bedcraftbeyond.util.ColorHelper;
+import zornco.bedcraftbeyond.common.util.ColorHelper;
 
 import java.awt.*;
 
@@ -91,7 +92,7 @@ public class RecipeLinenItems implements IRecipe {
 
    @Override
    public ItemStack getRecipeOutput() {
-      return null;
+      return new ItemStack(BcbItems.dyeBottle, 1);
    }
 
    @Override

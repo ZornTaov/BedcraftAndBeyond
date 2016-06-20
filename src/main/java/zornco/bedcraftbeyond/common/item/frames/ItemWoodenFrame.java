@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond.common.item.frames;
 
+import com.google.common.collect.Range;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -36,6 +37,7 @@ public class ItemWoodenFrame extends ItemFramePlacer {
     public ItemWoodenFrame(Block b) {
         super(b);
         setUnlocalizedName("frames.wooden");
+        setCreativeTab(BedCraftBeyond.BEDS_TAB);
         this.setHasSubtypes(true);
 
         GameRegistry.register(this);
@@ -49,17 +51,33 @@ public class ItemWoodenFrame extends ItemFramePlacer {
      */
     public void getSubItems(Item item, CreativeTabs tab, List subItems) {
         // TODO: Fix list of wooden beds.
-        if(!(tab instanceof TabBeds)) return;
         FrameWhitelist wood =  FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
         for(ResourceLocation rl : wood.getValidRegistryEntries()){
-            ItemStack bed = new ItemStack(item, 1);
-            NBTTagCompound tags = new NBTTagCompound();
-            NBTTagCompound frameTag = new NBTTagCompound();
-            frameTag.setString("frameType", rl.toString());
-            frameTag.setInteger("frameMeta", 0);
-            tags.setTag("frame", frameTag);
-            bed.setTagCompound(tags);
-            subItems.add(bed);
+
+            try {
+                for(Range<Integer> r : wood.getValidMetaForEntry(rl)){
+                    if(r.hasLowerBound() && r.hasUpperBound()){
+                        for(int curEntry = r.lowerEndpoint(); curEntry < r.upperEndpoint(); ++curEntry){
+
+                            ItemStack stack = new ItemStack(this, 1, 0);
+                            stack.setTagCompound(new NBTTagCompound());
+
+                            // Set up frame
+                            NBTTagCompound frameTag = new NBTTagCompound();
+                            frameTag.setString("frameType", rl.toString());
+                            frameTag.setInteger("frameMeta", curEntry);
+                            stack.getTagCompound().setTag("frame", frameTag);
+
+                            subItems.add(stack);
+                        }
+
+                    }
+                }
+
+
+            } catch (FrameException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -80,6 +98,9 @@ public class ItemWoodenFrame extends ItemFramePlacer {
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (side != EnumFacing.UP) return EnumActionResult.FAIL;
 
+        // If frame not set, abort early- we need that.
+        if(!stack.getTagCompound().hasKey("frame")) return EnumActionResult.FAIL;
+
         boolean canPlaceBedHere = testSimpleBedPlacement(world, player, pos, stack);
         if (!canPlaceBedHere) return EnumActionResult.FAIL;
 
@@ -88,33 +109,16 @@ public class ItemWoodenFrame extends ItemFramePlacer {
             BlockPos btmHalf = pos;
             BlockPos topHalf = btmHalf.offset(player.getHorizontalFacing());
 
-            if(!world.isRemote) {
-                IBlockState foot = BcbBlocks.woodenBed.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
-                    .withProperty(BlockBedBase.HEAD, false);
-                if (!world.setBlockState(btmHalf, foot, 3))
-                    throw new Exception();
+            IBlockState foot = BcbBlocks.woodenBed.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
+                .withProperty(BlockBedBase.HEAD, false);
+            if (!placeBedBlock(stack, world, player, btmHalf, foot, true))
+                throw new Exception();
 
-                IBlockState head = BcbBlocks.woodenBed.getDefaultState()
-                    .withProperty(BlockBedBase.HEAD, true)
-                    .withProperty(BlockBedBase.FACING, player.getHorizontalFacing().getOpposite());
-                if (!world.setBlockState(topHalf, head, 2))
-                    throw new Exception("Failed to set blockstate.");
-
-                IBlockState state = world.getBlockState(pos);
-                TileWoodenBed tile = (TileWoodenBed) ((BlockWoodenBed) state.getBlock()).getTileForBed(world, state, pos);
-                if (tile != null) {
-                    try {
-                        if(!stack.getTagCompound().hasKey("frame"))
-                            return EnumActionResult.FAIL;
-                        NBTTagCompound frame = stack.getTagCompound().getCompoundTag("frame");
-                        tile.setPlankType(frame, false);
-                    } catch (FrameException e) {
-                        BedCraftBeyond.LOGGER.error("Could not set frame type from item. Invalid whitelist entry.");
-                        // TODO: FrameWhitelist.getFirstValidType();
-                        return EnumActionResult.FAIL;
-                    }
-                }
-            }
+            IBlockState head = BcbBlocks.woodenBed.getDefaultState()
+                .withProperty(BlockBedBase.HEAD, true)
+                .withProperty(BlockBedBase.FACING, player.getHorizontalFacing().getOpposite());
+            if (!placeBedBlock(stack, world, player, topHalf, head, true))
+                throw new Exception("Failed to set blockstate.");
         } catch (Exception e) {
             return EnumActionResult.FAIL;
         }

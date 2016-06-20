@@ -1,6 +1,6 @@
-package zornco.bedcraftbeyond.common.crafting.carpenter;
+package zornco.bedcraftbeyond.common.crafting;
 
-public abstract class CarpenterLayout {
+public abstract class CraftingTableLayout {
 
     public static final int TOP_LEFT        = 0;
     public static final int TOP_MIDDLE      = 1;

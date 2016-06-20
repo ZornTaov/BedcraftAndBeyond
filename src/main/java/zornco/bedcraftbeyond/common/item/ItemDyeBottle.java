@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.util.ColorHelper;
+import zornco.bedcraftbeyond.common.util.ColorHelper;
 
 import java.awt.*;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ItemDyeBottle extends Item {
 
     public ItemDyeBottle() {
-        setCreativeTab(BedCraftBeyond.BEDS_TAB);
+        setCreativeTab(BedCraftBeyond.MAIN_TAB);
         setMaxStackSize(16);
         setHasSubtypes(true);
         setRegistryName(BedCraftBeyond.MOD_ID, "dye_bottle");

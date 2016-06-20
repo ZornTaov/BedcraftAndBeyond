@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.common.blocks.properties.EnumBedFabricType;
-import zornco.bedcraftbeyond.util.ColorHelper;
+import zornco.bedcraftbeyond.common.util.ColorHelper;
 
 import java.awt.*;
 import java.util.List;

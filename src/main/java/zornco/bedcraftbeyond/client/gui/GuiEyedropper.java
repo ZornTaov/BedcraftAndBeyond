@@ -1,6 +1,5 @@
 package zornco.bedcraftbeyond.client.gui;
 
-import com.google.common.base.Predicate;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +15,7 @@ import zornco.bedcraftbeyond.client.gui.input.GuiColorNumberEntry;
 import zornco.bedcraftbeyond.client.gui.input.GuiColorSlider;
 import zornco.bedcraftbeyond.common.item.ItemEyedropper;
 import zornco.bedcraftbeyond.network.MessageEyedropperUpdate;
-import zornco.bedcraftbeyond.util.ColorHelper;
+import zornco.bedcraftbeyond.common.util.ColorHelper;
 
 import java.awt.Color;
 import java.io.IOException;

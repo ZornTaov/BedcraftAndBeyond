@@ -1,8 +1,6 @@
 package zornco.bedcraftbeyond.common.item;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,23 +8,15 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.client.gui.GuiEyedropper;
 import zornco.bedcraftbeyond.client.gui.IClientGui;
 import zornco.bedcraftbeyond.common.gui.GuiHandler;
-import zornco.bedcraftbeyond.items.ItemHelper;
-import zornco.bedcraftbeyond.util.ColorHelper;
+import zornco.bedcraftbeyond.common.util.ColorHelper;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
 
 public class ItemEyedropper extends Item implements IClientGui {

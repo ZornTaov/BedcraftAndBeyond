@@ -2,9 +2,11 @@ package zornco.bedcraftbeyond;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -23,12 +25,13 @@ import zornco.bedcraftbeyond.client.tabs.TabBedCraftBeyond;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
 import zornco.bedcraftbeyond.common.CommonProxy;
 import zornco.bedcraftbeyond.common.commands.CommandBedcraft;
-import zornco.bedcraftbeyond.common.crafting.recipes.Recipes;
+import zornco.bedcraftbeyond.common.crafting.Recipes;
+import zornco.bedcraftbeyond.compat.CompatLoader;
 import zornco.bedcraftbeyond.frames.FrameLoader;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 import zornco.bedcraftbeyond.config.ConfigHelper;
 import zornco.bedcraftbeyond.common.gui.GuiHandler;
-import zornco.bedcraftbeyond.util.ColorHelper;
+import zornco.bedcraftbeyond.common.util.ColorHelper;
 
 @Mod(
     modid = BedCraftBeyond.MOD_ID,
@@ -74,6 +77,8 @@ public class BedCraftBeyond {
         NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MOD_ID);
 
         zornco.bedcraftbeyond.network.Registration.registerMessages();
+
+        CompatLoader.loadCompat();
 
         MinecraftForge.EVENT_BUS.register(INSTANCE);
 

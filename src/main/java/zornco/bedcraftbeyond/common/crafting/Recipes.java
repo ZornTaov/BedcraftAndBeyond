@@ -1,21 +1,18 @@
-package zornco.bedcraftbeyond.common.crafting.recipes;
+package zornco.bedcraftbeyond.common.crafting;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.common.crafting.carpenter.CarpenterRecipes;
-import zornco.bedcraftbeyond.common.crafting.carpenter.Templates;
+import zornco.bedcraftbeyond.common.crafting.recipes.RecipeBedFrameWood;
+import zornco.bedcraftbeyond.common.crafting.recipes.RecipeBedFrameStone;
+import zornco.bedcraftbeyond.common.crafting.recipes.RecipeDyeBottle;
 import zornco.bedcraftbeyond.common.crafting.recipes.RecipeLinenItems;
 import zornco.bedcraftbeyond.common.item.BcbItems;
-import zornco.bedcraftbeyond.common.item.ItemTemplate;
 
 public class Recipes {
 
@@ -42,18 +39,19 @@ public class Recipes {
             "S", "G", "B", 'S', "slabWood", 'G', "blockGlass", 'B', new ItemStack(Items.POTIONITEM, 1, 0)));
         ++recipesAdded;
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.template, 4),
-            " P ", "PCP", " P ", 'P', "paper", 'C', Blocks.CRAFTING_TABLE));
-        ++recipesAdded;
-
-        GameRegistry.addShapelessRecipe(new ItemStack(BcbItems.carpenter), Items.BED, Blocks.CRAFTING_TABLE);
-        ++recipesAdded;
-
         RecipeLinenItems rli = new RecipeLinenItems();
         GameRegistry.addRecipe(rli);
         RecipeSorter.register(BedCraftBeyond.MOD_ID + ":linen_dyes", RecipeLinenItems.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
-        CarpenterRecipes.registerAll();
+        RecipeDyeBottle dyeBottle = new RecipeDyeBottle();
+        GameRegistry.addRecipe(dyeBottle);
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":dye_bottles", RecipeDyeBottle.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+
+        GameRegistry.addRecipe(new RecipeBedFrameStone());
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_wood", RecipeBedFrameStone.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+
+        GameRegistry.addRecipe(new RecipeBedFrameWood());
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_stone", RecipeBedFrameWood.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
     }
 
 }
