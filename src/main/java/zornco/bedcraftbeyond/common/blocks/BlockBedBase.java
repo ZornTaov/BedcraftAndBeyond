@@ -210,9 +210,11 @@ public abstract class BlockBedBase extends Block {
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-        BlockPos head = pos.offset(state.getValue(FACING));
-        if (worldIn.getBlockState(head).getBlock() == this)
-            worldIn.destroyBlock(head, !player.capabilities.isCreativeMode);
+        BlockPos other = pos.offset(state.getValue(FACING));
+        if (worldIn.getBlockState(other).getBlock() == this)
+            worldIn.destroyBlock(other, !player.capabilities.isCreativeMode);
+        if(state.getValue(HEAD))
+            this.dropBlockAsItem(worldIn, pos, state, -1);
     }
 
     /**
@@ -253,6 +255,21 @@ public abstract class BlockBedBase extends Block {
 
     @Override
     public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
+
+    @Override
+    public boolean isFullyOpaque(IBlockState state) {
         return false;
     }
 }

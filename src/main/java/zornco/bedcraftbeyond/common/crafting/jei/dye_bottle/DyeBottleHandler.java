@@ -1,8 +1,8 @@
-package zornco.bedcraftbeyond.compat.jei.dye_bottle;
+package zornco.bedcraftbeyond.common.crafting.jei.dye_bottle;
 
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import zornco.bedcraftbeyond.BedCraftBeyond;
+import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import zornco.bedcraftbeyond.common.crafting.recipes.RecipeDyeBottle;
 
 import javax.annotation.Nonnull;
@@ -18,13 +18,19 @@ public class DyeBottleHandler implements IRecipeHandler<RecipeDyeBottle> {
     @Nonnull
     @Override
     public String getRecipeCategoryUid() {
-        return BedCraftBeyond.MOD_ID + ":dye_bottle";
+        return VanillaRecipeCategoryUid.CRAFTING;
+    }
+
+    @Nonnull
+    @Override
+    public String getRecipeCategoryUid(@Nonnull RecipeDyeBottle recipeDyeBottle) {
+        return VanillaRecipeCategoryUid.CRAFTING;
     }
 
     @Nonnull
     @Override
     public IRecipeWrapper getRecipeWrapper(@Nonnull RecipeDyeBottle recipeDyeBottle) {
-        return new WrapperDyeBottle(recipeDyeBottle);
+        return new WrapperDyeBottle();
     }
 
     @Override

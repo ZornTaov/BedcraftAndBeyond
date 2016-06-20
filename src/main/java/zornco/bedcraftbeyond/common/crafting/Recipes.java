@@ -8,10 +8,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import zornco.bedcraftbeyond.BedCraftBeyond;
-import zornco.bedcraftbeyond.common.crafting.recipes.RecipeBedFrameWood;
-import zornco.bedcraftbeyond.common.crafting.recipes.RecipeBedFrameStone;
-import zornco.bedcraftbeyond.common.crafting.recipes.RecipeDyeBottle;
-import zornco.bedcraftbeyond.common.crafting.recipes.RecipeLinenItems;
+import zornco.bedcraftbeyond.common.crafting.recipes.*;
 import zornco.bedcraftbeyond.common.item.BcbItems;
 
 public class Recipes {
@@ -39,13 +36,14 @@ public class Recipes {
             "S", "G", "B", 'S', "slabWood", 'G', "blockGlass", 'B', new ItemStack(Items.POTIONITEM, 1, 0)));
         ++recipesAdded;
 
-        RecipeLinenItems rli = new RecipeLinenItems();
-        GameRegistry.addRecipe(rli);
-        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":linen_dyes", RecipeLinenItems.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+        GameRegistry.addRecipe(new RecipeDyedLinens());
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":linen_dyes", RecipeDyedLinens.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
-        RecipeDyeBottle dyeBottle = new RecipeDyeBottle();
-        GameRegistry.addRecipe(dyeBottle);
-        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":dye_bottles", RecipeDyeBottle.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+        GameRegistry.addRecipe(new RecipeDyeBottle());
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":dye_bottles", RecipeDyeBottle.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+
+        GameRegistry.addRecipe(new RecipeDyedRug());
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":rug)dyes", RecipeDyedRug.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         GameRegistry.addRecipe(new RecipeBedFrameStone());
         RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_wood", RecipeBedFrameStone.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");

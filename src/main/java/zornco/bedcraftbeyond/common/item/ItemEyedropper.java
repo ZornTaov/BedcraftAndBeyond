@@ -62,4 +62,14 @@ public class ItemEyedropper extends Item implements IClientGui {
     public static Color getCurrentColor(ItemStack stack){
         return ColorHelper.getColorFromStack(stack);
     }
+
+    @Override
+    public boolean hasContainerItem(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getContainerItem(ItemStack itemStack) {
+        return itemStack.copy();
+    }
 }

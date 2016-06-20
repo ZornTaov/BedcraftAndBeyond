@@ -87,7 +87,10 @@ public class FrameWhitelist {
         if (whitelist.containsKey(registryName)) whitelist.get(registryName).clear();
         else whitelist.put(registryName, TreeRangeSet.create());
 
-        whitelist.get(registryName).add(Range.closedOpen(0, 15));
+        if(registryName.equals(new ResourceLocation("minecraft:planks")))
+            whitelist.get(registryName).add(Range.closedOpen(0,5));
+        else
+            whitelist.get(registryName).add(Range.closedOpen(0, 15));
     }
 
     /**

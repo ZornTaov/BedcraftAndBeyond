@@ -57,6 +57,20 @@ public class ItemWoodenFrame extends ItemFramePlacer {
             try {
                 for(Range<Integer> r : wood.getValidMetaForEntry(rl)){
                     if(r.hasLowerBound() && r.hasUpperBound()){
+                        if(r.lowerEndpoint() == r.upperEndpoint()){
+                            ItemStack stack = new ItemStack(this, 1, 0);
+                            stack.setTagCompound(new NBTTagCompound());
+
+                            // Set up frame
+                            NBTTagCompound frameTag = new NBTTagCompound();
+                            frameTag.setString("frameType", rl.toString());
+                            frameTag.setInteger("frameMeta", r.lowerEndpoint());
+                            stack.getTagCompound().setTag("frame", frameTag);
+
+                            subItems.add(stack);
+                            continue;
+                        }
+
                         for(int curEntry = r.lowerEndpoint(); curEntry < r.upperEndpoint(); ++curEntry){
 
                             ItemStack stack = new ItemStack(this, 1, 0);

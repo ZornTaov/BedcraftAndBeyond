@@ -158,6 +158,8 @@ public class FrameLoader {
             l.info("Loading frame data from the ore dictionary...");
         if (ConfigSettings.ADD_OREDICT_WOODEN)
             addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
+        if(ConfigSettings.ADD_OREDICT_STONE)
+            addFramesFromOredictEntries(FrameRegistry.EnumFrameType.STONE, "blockStone");
 
         l.info("Loading frames from config files..");
         try {

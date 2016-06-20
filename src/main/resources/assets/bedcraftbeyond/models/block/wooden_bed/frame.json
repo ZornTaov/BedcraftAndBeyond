@@ -86,6 +86,11 @@
           "uv": [ 14.0, 13.0, 16.0, 16.0 ],
           "tintindex": 0
         },
+        "south": {
+          "texture": "#frame",
+          "uv": [ 14.0, 13.0, 16.0, 16.0 ],
+          "tintindex": 0
+        },
         "east": {
           "texture": "#frame",
           "uv": [ 14.0, 13.0, 16.0, 16.0 ],
