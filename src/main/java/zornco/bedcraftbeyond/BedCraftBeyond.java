@@ -30,15 +30,17 @@ import zornco.bedcraftbeyond.common.util.ColorHelper;
 import zornco.bedcraftbeyond.config.ConfigHelper;
 import zornco.bedcraftbeyond.frames.FrameLoader;
 
+
 @Mod(
     modid = BedCraftBeyond.MOD_ID,
     name = BedCraftBeyond.MOD_NAME,
-    version = "${version}",
+    version = BedCraftBeyond.MOD_VERSION,
     acceptedMinecraftVersions = "[1.9.4,)",
     guiFactory = "zornco.bedcraftbeyond.config.ConfigGuiFactory")
 public class BedCraftBeyond {
 
     public static final String MOD_ID = "bedcraftbeyond";
+    public static final String MOD_VERSION = "@VERSION@";
     public static final String MOD_NAME = "BedCraft And Beyond";
 
     // The instance of your mod that Forge uses.
@@ -59,6 +61,7 @@ public class BedCraftBeyond {
     public static Configuration CONFIG;
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event) {
 
         // Do not set up config here, it's setup in ConfigHelper
@@ -80,7 +83,7 @@ public class BedCraftBeyond {
         GuiHandler.INSTANCE = new GuiHandler();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "unused"})
     @EventHandler
     public void init(FMLInitializationEvent event) {
 
@@ -98,6 +101,7 @@ public class BedCraftBeyond {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void postInit(FMLPostInitializationEvent event) {
         // PlankHelper.readyToColor = true;
         long start = System.currentTimeMillis();
@@ -106,12 +110,14 @@ public class BedCraftBeyond {
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
         if (eventArgs.getModID().equals(BedCraftBeyond.MOD_ID))
             ConfigHelper.refreshConfigs();
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void serverStarted(FMLServerStartingEvent ev) {
         ev.registerServerCommand(new CommandBedcraft());
     }
