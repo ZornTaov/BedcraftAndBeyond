@@ -18,13 +18,18 @@ version = "2.3.3"
 group= "zornco.bedcraftbeyond" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "BedCraftAndBeyond-1.9.4"
 
+username="BCBdev"
+
 minecraft {
     version = "1.9.4-12.17.0.1965"
     runDir = "run"
 
     mappings = "snapshot_20160519"
 
-    replace '@VERSION@', project.version
+    replace "@VERSION@", project.version
+    replaceIn "BedCraftBeyond.java"
+
+    clientRunArgs+="--username=${username}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
@@ -40,7 +45,7 @@ processResources {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
