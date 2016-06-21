@@ -14,7 +14,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "2.3.1"
+version = "2.3.3"
 group= "zornco.bedcraftbeyond" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "BedCraftAndBeyond-1.9.4"
 
@@ -54,9 +54,4 @@ compileJava {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     options.encoding = 'UTF-8'
-}
-
-task compileLang(dependsOn: 'classes', type: JavaExec) {
-    main = 'io.tedsenft.precompile.JsonCompiler'
-    args 'lang'
 }

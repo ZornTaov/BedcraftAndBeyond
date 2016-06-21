@@ -7,8 +7,8 @@
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": [ "zorn_taov", "floybin" ],
-  "credits": "By zorn_taov and floybin",
+  "authorList": [ "zorn_taov", "floybin", "delenas" ],
+  "credits": "By zorn_taov, delenas, and floybin",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
