@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import zornco.bedcraftbeyond.BedCraftBeyond;
 import zornco.bedcraftbeyond.client.util.TextureHelper;
 
 import java.awt.*;
@@ -42,11 +43,19 @@ public abstract class FrameHelper {
     public static ItemStack getItemFromFrameTag(NBTTagCompound compound){
         if(compound.hasKey("frame")) compound = compound.getCompoundTag("frame");
 
-        Block b = Block.getBlockFromName(compound.getString("frameType"));
-        if(b == null) return null;
+        try {
+            Block b = Block.getBlockFromName(compound.getString("frameType"));
+            if (b == null) return null;
 
-        IBlockState state = b.getStateFromMeta(compound.hasKey("frameMeta") ? compound.getInteger("frameMeta") : 0);
-        ItemStack frameStack = b.getPickBlock(state, null, null, null, null);
-        return frameStack;
+            IBlockState state = b.getStateFromMeta(compound.hasKey("frameMeta") ? compound.getInteger("frameMeta") : 0);
+            ItemStack frameStack = b.getPickBlock(state, null, null, null, null);
+            return frameStack;
+        }
+
+        catch(Exception e){
+            BedCraftBeyond.LOGGER.error("There was an error trying to get a frame type from NBT.");
+            BedCraftBeyond.LOGGER.error(e);
+            return null;
+        }
     }
 }

@@ -3,7 +3,9 @@ package zornco.bedcraftbeyond.common.item.frames;
 import com.google.common.collect.Range;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.MinecraftDummyContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -27,6 +30,7 @@ import zornco.bedcraftbeyond.common.blocks.BlockBedBase;
 import zornco.bedcraftbeyond.common.blocks.BlockWoodenBed;
 import zornco.bedcraftbeyond.common.blocks.tiles.TileWoodenBed;
 import zornco.bedcraftbeyond.client.tabs.TabBeds;
+import zornco.bedcraftbeyond.common.util.SettingsHelper;
 import zornco.bedcraftbeyond.frames.FrameException;
 import zornco.bedcraftbeyond.frames.FrameHelper;
 import zornco.bedcraftbeyond.frames.FrameRegistry;
@@ -105,10 +109,16 @@ public class ItemWoodenFrame extends ItemFramePlacer {
             return;
         }
 
+
         NBTTagCompound nbt = stack.getTagCompound();
         NBTTagCompound frameTag = nbt.getCompoundTag("frame");
         ItemStack frameStack = FrameHelper.getItemFromFrameTag(frameTag);
         if(frameStack != null) tags.add(TextFormatting.GREEN + "Frame: " + TextFormatting.RESET + frameStack.getDisplayName());
+
+        if(SettingsHelper.showingAdvancedTooltips()) {
+            tags.add(TextFormatting.AQUA + frameTag.getString("frameType") + ":" + frameTag.getInteger("frameMeta"));
+            tags.add("");
+        }
     }
 
     @Override
