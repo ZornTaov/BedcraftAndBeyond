@@ -3,22 +3,26 @@
 buildscript {
     repositories {
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        maven { url "http://files.minecraftforge.net/maven" }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
+
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+plugins {
+    id 'net.minecraftforge.gradle.forge' version '2.0.2'
+    id 'com.matthewprenger.cursegradle' version '1.0.7'
+}
 
 version = "2.3.3"
 group= "zornco.bedcraftbeyond" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "BedCraftAndBeyond-1.9.4"
 
 def username="BCBdev"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 minecraft {
     version = "1.9.4-12.17.0.1965"
@@ -58,13 +62,11 @@ processResources {
     from(sourceSets.main.resources.srcDirs) { exclude 'mcmod.info' }
 }
 
-compileTestJava {
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
-}
-
-compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-    options.encoding = 'UTF-8'
+curseforge {
+    apiKey = project.curseforge_key // This should really be in a gradle.properties file
+    project {
+        id = project.project_id
+        changelog = '' // A file can also be set using: changelog = file('changelog.txt')
+        releaseType = 'beta'
+    }
 }

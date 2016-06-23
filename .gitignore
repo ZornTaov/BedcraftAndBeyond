@@ -75,3 +75,4 @@ usercache.json
 usernamecache.json
 raw/
 src/main/unused/
+gradle.properties
