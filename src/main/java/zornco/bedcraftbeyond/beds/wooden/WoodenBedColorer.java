@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import zornco.bedcraftbeyond.beds.parts.linens.LinenType;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
 public class WoodenBedColorer implements IItemColor, IBlockColor {
@@ -19,13 +20,13 @@ public class WoodenBedColorer implements IItemColor, IBlockColor {
         if(bed == null) return 0;
         switch (tintIndex) {
             case 0:
-                return bed.getPartColor(BlockWoodenBed.EnumColoredPart.PLANKS).getRGB();
+                return bed.getPlankColor().getRGB();
 
             case 1:
-                return bed.getPartColor(BlockWoodenBed.EnumColoredPart.SHEETS).getRGB();
+                return bed.getLinenHandler().getLinenColor(LinenType.SHEETS).getRGB();
 
             case 2:
-                return bed.getPartColor(BlockWoodenBed.EnumColoredPart.BLANKETS).getRGB();
+                return bed.getLinenHandler().getLinenColor(LinenType.BLANKETS).getRGB();
 
             default:
                 return 0;

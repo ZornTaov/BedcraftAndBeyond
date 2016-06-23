@@ -17,14 +17,14 @@ import zornco.bedcraftbeyond.beds.wooden.TileWoodenBed;
 public class BedLinenUpdate implements IMessage {
 
     private BlockPos pos;
-    private BlockWoodenBed.EnumColoredPart part;
+    private LinenType part;
     private PropertyFabricType partType;
     private ItemStack partItem;
 
     @SuppressWarnings("unused")
     public BedLinenUpdate() {}
 
-    public BedLinenUpdate(BlockPos pos, BlockWoodenBed.EnumColoredPart part, ItemStack partItem) {
+    public BedLinenUpdate(BlockPos pos, LinenType part, ItemStack partItem) {
         this.pos = pos;
         this.part = part;
         this.partType = PropertyFabricType.SOLID_COLOR;
@@ -39,7 +39,7 @@ public class BedLinenUpdate implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         pos = NBTUtil.getPosFromTag(ByteBufUtils.readTag(buf));
-        part = BlockWoodenBed.EnumColoredPart.valueOf(ByteBufUtils.readUTF8String(buf));
+        part = LinenType.valueOf(ByteBufUtils.readUTF8String(buf));
         partType = PropertyFabricType.valueOf(ByteBufUtils.readUTF8String(buf));
 
         switch (partType) {

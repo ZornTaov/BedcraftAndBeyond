@@ -9,4 +9,6 @@ public interface ILinenItem {
   // return PropertyFabricType.valueOf(stack.getTagCompound().getString("color"));
   Color getColor(ItemStack stack);
 
+  LinenType getLinenType();
+
 }

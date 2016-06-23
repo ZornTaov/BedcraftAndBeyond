@@ -7,16 +7,16 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import zornco.bedcraftbeyond.beds.parts.drawer.DrawerHandler;
-import zornco.bedcraftbeyond.beds.parts.linens.*;
-import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.beds.base.TileGenericBed;
+import zornco.bedcraftbeyond.beds.frames.BedFrameUpdate;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameHelper;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
-import zornco.bedcraftbeyond.beds.base.TileGenericBed;
-import zornco.bedcraftbeyond.beds.frames.BedFrameUpdate;
+import zornco.bedcraftbeyond.beds.parts.EnumBedPart;
+import zornco.bedcraftbeyond.beds.parts.drawer.DrawerHandler;
+import zornco.bedcraftbeyond.beds.parts.linens.BedLinenUpdate;
+import zornco.bedcraftbeyond.beds.parts.linens.LinenHandler;
+import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
 import java.awt.*;
 
@@ -37,7 +37,7 @@ public class TileWoodenBed extends TileGenericBed {
 
     public TileWoodenBed(World w) {
         super(w);
-        this.drawers = new DrawerHandler();
+        this.drawers = new DrawerHandler(2);
         this.linens = new LinenHandler();
     }
 
@@ -77,8 +77,8 @@ public class TileWoodenBed extends TileGenericBed {
         this.plankType = new ResourceLocation(tags.getString("plankType"));
         this.plankMeta = tags.getInteger("plankMeta");
 
-        updateClients(BlockWoodenBed.EnumColoredPart.BLANKETS);
-        updateClients(BlockWoodenBed.EnumColoredPart.SHEETS);
+        updateClients(EnumBedPart.BLANKETS);
+        updateClients(EnumBedPart.SHEETS);
     }
 
     public DrawerHandler getDrawerHandler() {
@@ -147,6 +147,11 @@ public class TileWoodenBed extends TileGenericBed {
         markDirty();
     }
 
+    public Color getPlankColor(){
+        if (worldObj.isRemote && plankColor == null) recachePlankColor();
+        return this.plankColor != null ? plankColor : Color.WHITE;
+    }
+
     public void recachePlankColor() {
         this.plankColor = FrameHelper.getColorFromPlankType(this.plankType, this.plankMeta);
     }
@@ -154,52 +159,18 @@ public class TileWoodenBed extends TileGenericBed {
 
     public LinenHandler getLinenHandler(){ return linens; }
 
-    public Color getPartColor(BlockWoodenBed.EnumColoredPart part) {
-        switch (part) {
-            case BLANKETS:
-            case SHEETS:
-                ItemStack i = linens.getLinenPart(part, false);
-                if (i == null) Color.WHITE.getRGB();
-                if (getPartType(part) != PropertyFabricType.SOLID_COLOR) return Color.WHITE;
-
-                return ((ILinenItem) i.getItem()).getColor(i);
-            case PLANKS:
-                if (worldObj.isRemote && plankColor == null) recachePlankColor();
-                return this.plankColor != null ? plankColor : Color.WHITE;
-        }
-
-        return Color.WHITE;
-    }
-
-    public PropertyFabricType getPartType(BlockWoodenBed.EnumColoredPart type) {
-        ItemStack part = linens.getLinenPart(type, false);
-        if (part == null) return PropertyFabricType.NONE;
-
-        if (!part.hasTagCompound()) {
-            part.setTagCompound(new NBTTagCompound());
-        }
-        if (!part.getTagCompound().hasKey("type")) {
-            part.getTagCompound().setString("type", PropertyFabricType.NONE.name());
-            return PropertyFabricType.NONE;
-        }
-
-        try {
-            return PropertyFabricType.valueOf(part.getTagCompound().getString("type"));
-        } catch (Exception e) {
-            return PropertyFabricType.NONE;
-        }
-    }
-
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         SPacketUpdateTileEntity pack = super.getUpdatePacket();
         return pack;
     }
 
-    public final void updateClients(BlockWoodenBed.EnumColoredPart part) {
+    public final void updateClients(EnumBedPart part) {
         if (worldObj == null || worldObj.isRemote) return;
         markDirty();
-        BedLinenUpdate update = new BedLinenUpdate(pos, part, linens.getLinenPart(part, false));
-        BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+        if(!part.isLinenPart()) {
+            BedLinenUpdate update = new BedLinenUpdate(pos, part.toLinenPart(), linens.getLinenPart(part.toLinenPart(), false));
+            BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+        }
     }
 }

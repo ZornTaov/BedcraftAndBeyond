@@ -8,8 +8,8 @@ public class DrawerHandler {
     private ItemStackHandler inventory;
     private int filled;
 
-    public DrawerHandler(){
-        this.inventory = new ItemStackHandler(2);
+    public DrawerHandler(int size){
+        this.inventory = new ItemStackHandler(size);
         this.filled = 0;
     }
 

@@ -22,10 +22,9 @@ import zornco.bedcraftbeyond.beds.base.BlockBedBase;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
 import zornco.bedcraftbeyond.beds.parts.drawer.DrawerHandler;
 import zornco.bedcraftbeyond.beds.parts.drawer.IDrawerHolder;
-import zornco.bedcraftbeyond.beds.parts.linens.ItemBlanket;
-import zornco.bedcraftbeyond.beds.parts.linens.ItemSheets;
-import zornco.bedcraftbeyond.beds.parts.linens.LinenHandler;
-import zornco.bedcraftbeyond.beds.parts.linens.PropertyFabricType;
+import zornco.bedcraftbeyond.beds.parts.linens.*;
+import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemBlanket;
+import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemSheets;
 import zornco.bedcraftbeyond.core.BcbBlocks;
 import zornco.bedcraftbeyond.core.BcbItems;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
@@ -45,8 +44,6 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
 
     public static PropertyEnum<PropertyFabricType> BLANKETS = PropertyEnum.create("color_blankets", PropertyFabricType.class);
     public static PropertyEnum<PropertyFabricType> SHEETS = PropertyEnum.create("color_sheets", PropertyFabricType.class);
-
-    public enum EnumColoredPart {BLANKETS, SHEETS, PLANKS}
 
     public BlockWoodenBed() {
         setRegistryName(BedCraftBeyond.MOD_ID, "wooden_bed");
@@ -69,9 +66,8 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
     }
 
     private boolean hasBlanketsAndSheets(IBlockState state, IBlockAccess world, BlockPos pos) {
-        zornco.bedcraftbeyond.beds.wooden.TileWoodenBed tile = (zornco.bedcraftbeyond.beds.wooden.TileWoodenBed) getTileForBed(world, state, pos);
-        return tile.getLinenHandler().getLinenPart(EnumColoredPart.SHEETS, false) != null &&
-            tile.getLinenHandler().getLinenPart(EnumColoredPart.BLANKETS, false) != null;
+        TileWoodenBed tile = (TileWoodenBed) getTileForBed(world, state, pos);
+        return tile.getLinenHandler().hasBothParts();
     }
 
     @Override
@@ -97,16 +93,14 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
 
         PlayerInvWrapper wrapper = new PlayerInvWrapper(player.inventory);
         if (heldItem != null) {
-            if (heldItem.getItem() instanceof ItemBlanket) {
-                boolean set = tile.getLinenHandler().setLinenPart(EnumColoredPart.BLANKETS, heldItem);
-                if (set && !player.isCreative())
-                    wrapper.extractItem(player.inventory.currentItem, 1, false);
-            }
-
-            if (heldItem.getItem() instanceof ItemSheets) {
-                boolean set = tile.getLinenHandler().setLinenPart(EnumColoredPart.SHEETS, heldItem);
-                if (set && !player.isCreative())
-                    wrapper.extractItem(player.inventory.currentItem, 1, false);
+            LinenHandler handler = tile.getLinenHandler();
+            if (heldItem.getItem() instanceof ILinenItem) {
+                LinenType type = ((ILinenItem) heldItem.getItem()).getLinenType();
+                boolean set = handler.setLinenPart(type, heldItem);
+                if(set){
+                    tile.updateClients(type.toBedPart());
+                    if(!player.isCreative())  wrapper.extractItem(player.inventory.currentItem, 1, false);
+                }
             }
         }
 
@@ -130,8 +124,8 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
 
         zornco.bedcraftbeyond.beds.wooden.TileWoodenBed bed = (zornco.bedcraftbeyond.beds.wooden.TileWoodenBed) getTileForBed(worldIn, state, pos);
         boolean hl = hasBlanketsAndSheets(state, worldIn, pos);
-        state = state.withProperty(BLANKETS, bed.getPartType(EnumColoredPart.BLANKETS));
-        state = state.withProperty(SHEETS, bed.getPartType(EnumColoredPart.SHEETS));
+        state = state.withProperty(BLANKETS, bed.getLinenHandler().getLinenType(LinenType.BLANKETS));
+        state = state.withProperty(SHEETS, bed.getLinenHandler().getLinenType(LinenType.SHEETS));
         state = state.withProperty(STATUS,
             state.getValue(HEAD) ?
                 (hl ? EnumWoodenFabricStatus.HEAD_LINENS : EnumWoodenFabricStatus.HEAD) :
@@ -169,10 +163,10 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
         drops.add(bedItem);
 
         LinenHandler linens = twb.getLinenHandler();
-        if(linens.getLinenPart(EnumColoredPart.BLANKETS, false) != null)
-            drops.add(linens.getLinenPart(EnumColoredPart.BLANKETS, true));
-        if(linens.getLinenPart(EnumColoredPart.SHEETS, false) != null)
-            drops.add(linens.getLinenPart(EnumColoredPart.SHEETS, true));
+        if(linens.getLinenPart(LinenType.BLANKETS, false) != null)
+            drops.add(linens.getLinenPart(LinenType.BLANKETS, true));
+        if(linens.getLinenPart(LinenType.SHEETS, false) != null)
+            drops.add(linens.getLinenPart(LinenType.SHEETS, true));
         return drops;
     }
 

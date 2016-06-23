@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.beds.parts.linens;
+package zornco.bedcraftbeyond.beds.parts.linens.impl;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,19 +7,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import zornco.bedcraftbeyond.beds.parts.linens.ILinenItem;
+import zornco.bedcraftbeyond.beds.parts.linens.LinenType;
+import zornco.bedcraftbeyond.beds.parts.linens.PropertyFabricType;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 
 import java.awt.*;
 import java.util.List;
 
-public class ItemSheets extends Item implements ILinenItem {
+public class ItemBlanket extends Item implements ILinenItem {
 
-    public ItemSheets() {
+    public ItemBlanket() {
         setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(16);
-        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.sheets");
-        setRegistryName(BedCraftBeyond.MOD_ID, "sheets");
+        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.blanket");
+        setRegistryName(BedCraftBeyond.MOD_ID, "blanket");
         setHasSubtypes(true);
 
         GameRegistry.register(this);
@@ -37,25 +40,28 @@ public class ItemSheets extends Item implements ILinenItem {
 
     @Override
     public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn) {
-        NBTTagCompound tags = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
-        if (!tags.hasKey("color"))
-            tags.setTag("color", ColorHelper.getTagForColor(Color.WHITE));
-        if (!tags.hasKey("type"))
-            tags.setString("type", PropertyFabricType.SOLID_COLOR.name());
-        stack.setTagCompound(tags);
-    }
 
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        Color c = getColor(stack);
-        if (c != null) {
-            String closest = ColorHelper.getColorNameFromColor(c);
-            tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c) + (closest != null ? " (~" + closest + ")" : ""));
-        }
     }
 
     @Override
     public Color getColor(ItemStack stack) {
         return ColorHelper.getColorFromStack(stack);
+    }
+
+    @Override
+    public LinenType getLinenType() {
+        return LinenType.BLANKETS;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        // TODO: Oh, the woes of Mojang and their privates.
+        // TextFormatting.valueOf(getColor(stack).toDye().getUnlocalizedName().toUpperCase())
+        // getColor(stack).toDye().getTextColor()
+        Color c = getColor(stack);
+        if (c != null) {
+            String closest = ColorHelper.getColorNameFromColor(c);
+            tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c) + (closest != null ? " (~" + closest + ")" : ""));
+        }
     }
 }

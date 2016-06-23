@@ -1,8 +1,8 @@
 package zornco.bedcraftbeyond.core;
 
 import zornco.bedcraftbeyond.beds.parts.drawer.ItemDrawerKey;
-import zornco.bedcraftbeyond.beds.parts.linens.ItemBlanket;
-import zornco.bedcraftbeyond.beds.parts.linens.ItemSheets;
+import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemBlanket;
+import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemSheets;
 import zornco.bedcraftbeyond.beds.stone.ItemStoneBed;
 import zornco.bedcraftbeyond.beds.wooden.ItemWoodenFrame;
 import zornco.bedcraftbeyond.dyes.bottle.ItemDyeBottle;
