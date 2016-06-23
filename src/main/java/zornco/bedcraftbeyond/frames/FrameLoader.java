@@ -140,14 +140,21 @@ public class FrameLoader {
         }
     }
 
-    public static void tryFrameTypeFileLoad(FrameRegistry.EnumFrameType type) throws FileNotFoundException {
+    public static void tryFrameTypeFileLoad(FrameRegistry.EnumFrameType type) {
         File frameFile = Paths.get(ConfigHelper.modConfigDir.getPath(), "frames", type.name().toLowerCase() + ".json").toFile();
         if(!frameFile.exists()) return;
 
-        FileReader fr = new FileReader(frameFile);
-        FrameFile frames = new Gson().fromJson(fr, FrameFile.class);
-        addToFramesFromStream(frames, type);
-        removeFramesFromStream(frames, type);
+        try {
+            FileReader fr = new FileReader(frameFile);
+            FrameFile frames = new Gson().fromJson(fr, FrameFile.class);
+            addToFramesFromStream(frames, type);
+            removeFramesFromStream(frames, type);
+        }
+
+        catch(Exception e){
+            BedCraftBeyond.LOGGER.error("There was an exception trying to load a frame file:");
+            BedCraftBeyond.LOGGER.error(e);
+        }
     }
 
     public static void compileFrames() {
@@ -162,14 +169,8 @@ public class FrameLoader {
             addFramesFromOredictEntries(FrameRegistry.EnumFrameType.STONE, "blockStone");
 
         l.info("Loading frames from config files..");
-        try {
-            tryFrameTypeFileLoad(FrameRegistry.EnumFrameType.WOOD);
-            tryFrameTypeFileLoad(FrameRegistry.EnumFrameType.STONE);
-        }
-
-        catch(FileNotFoundException fne){
-            BedCraftBeyond.LOGGER.error("Could not find frame file to load: " + fne.getMessage());
-        }
+        tryFrameTypeFileLoad(FrameRegistry.EnumFrameType.WOOD);
+        tryFrameTypeFileLoad(FrameRegistry.EnumFrameType.STONE);
 
         // TODO: Reimplement total available frame count?
     }
