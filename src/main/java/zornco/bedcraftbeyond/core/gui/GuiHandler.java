@@ -7,11 +7,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import zornco.bedcraftbeyond.beds.frames.registry.gui.ContainerFrameWhitelistEditor;
+import zornco.bedcraftbeyond.beds.frames.registry.gui.GuiFrameWhitelistEditor;
 
 public class GuiHandler implements IGuiHandler {
 
     public static GuiHandler INSTANCE;
     public static final int BLOCK_ID = 0;
+
+    public static final int ID_FRAMES_EDIT = 2;
 
     /**
      * If this is set and you want to handle main hand, send X = 1.
@@ -32,6 +36,8 @@ public class GuiHandler implements IGuiHandler {
                 if(held == null) return null;
                 if(!(held.getItem() instanceof IServerGui)) return null;
                 return ((IServerGui) held.getItem()).getServerGui(world, new BlockPos(x, y, z), player);
+            case ID_FRAMES_EDIT:
+                return new ContainerFrameWhitelistEditor(player);
         }
 
         return null;
@@ -50,6 +56,9 @@ public class GuiHandler implements IGuiHandler {
                 if(held == null) return null;
                 if(!(held.getItem() instanceof IClientGui)) return null;
                 return ((IClientGui) held.getItem()).getClientGui(world, new BlockPos(x, y, z), player);
+
+            case ID_FRAMES_EDIT:
+                return new GuiFrameWhitelistEditor(player);
         }
 
         return null;

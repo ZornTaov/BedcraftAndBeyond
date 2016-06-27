@@ -24,6 +24,10 @@ public class FragmentFrames extends zornco.bedcraftbeyond.core.commands.CommandF
                 handleList(sender, args);
                 break;
 
+            case "edit":
+                FragmentFramesEdit.execute(server, sender, args);
+                break;
+
             case "add":
             case "remove":
                 FragmentFramesModify.execute(server, sender, args);

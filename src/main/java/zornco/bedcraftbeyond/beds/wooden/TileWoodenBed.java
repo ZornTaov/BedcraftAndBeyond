@@ -33,12 +33,14 @@ public class TileWoodenBed extends TileGenericBed {
 
     @SuppressWarnings("unused")
     public TileWoodenBed() {
+        drawers = new DrawerHandler(2);
+        linens = new LinenHandler();
     }
 
     public TileWoodenBed(World w) {
         super(w);
-        this.drawers = new DrawerHandler(2);
-        this.linens = new LinenHandler();
+        drawers = new DrawerHandler(2);
+        linens = new LinenHandler();
     }
 
     @Override
@@ -66,6 +68,7 @@ public class TileWoodenBed extends TileGenericBed {
     @Override
     public void readFromNBT(NBTTagCompound tags) {
         super.readFromNBT(tags);
+
         if (tags.hasKey("linens"))
             linens.deserializeNBT(tags.getCompoundTag("linens"));
         if (tags.hasKey("blankets"))
@@ -168,7 +171,7 @@ public class TileWoodenBed extends TileGenericBed {
     public final void updateClients(EnumBedPart part) {
         if (worldObj == null || worldObj.isRemote) return;
         markDirty();
-        if(!part.isLinenPart()) {
+        if(part.isLinenPart()) {
             BedLinenUpdate update = new BedLinenUpdate(pos, part.toLinenPart(), linens.getLinenPart(part.toLinenPart(), false));
             BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
         }
