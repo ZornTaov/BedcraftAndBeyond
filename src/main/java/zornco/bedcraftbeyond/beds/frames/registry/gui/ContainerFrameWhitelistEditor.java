@@ -1,16 +1,24 @@
 package zornco.bedcraftbeyond.beds.frames.registry.gui;
 
+import com.google.common.collect.Range;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
+import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelist;
 import zornco.bedcraftbeyond.core.gui.GuiUtils;
 import zornco.bedcraftbeyond.core.gui.container.SlotGhost;
+import zornco.bedcraftbeyond.core.gui.container.SlotItemViewer;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
+import java.util.Set;
 
 public class ContainerFrameWhitelistEditor extends Container {
 
@@ -20,6 +28,11 @@ public class ContainerFrameWhitelistEditor extends Container {
 
         List<Slot> playerInv = GuiUtils.createStandardInventory(player, GuiFrameWhitelistEditor.INV_AREA.getLocation());
         for(Slot s : playerInv) this.addSlotToContainer(s);
+
+        FrameWhitelist wood = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
+        Set<ResourceLocation> whitelisted = wood.getValidRegistryEntries();
+
+
     }
 
     @Nullable

@@ -1,20 +1,25 @@
 package zornco.bedcraftbeyond.beds.frames.registry.gui;
 
 import com.google.common.collect.Range;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.ModContainer;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelist;
 import zornco.bedcraftbeyond.core.gui.GuiUtils;
+import zornco.bedcraftbeyond.core.gui.container.SlotItemViewer;
 import zornco.bedcraftbeyond.core.util.ModUtils;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -23,11 +28,14 @@ public class GuiFrameWhitelistEditor extends GuiContainer {
     private EntityPlayer player;
 
     static final Dimension SIZE = new Dimension(400, 300);
+    static Point OFFSET = new Point(0,0);
 
     static final Rectangle INV_AREA = new Rectangle(206, 204, 198, 80);
     static final Rectangle SLOT_AREA = new Rectangle(206, 0, 198, 60);
 
     static final Rectangle SCROLL_AREA = new Rectangle(0, 0, 200, SIZE.height);
+
+    private GuiListWhitelist whitelist;
 
     public GuiFrameWhitelistEditor(EntityPlayer player) {
         super(new ContainerFrameWhitelistEditor(player));
@@ -39,7 +47,38 @@ public class GuiFrameWhitelistEditor extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
+        OFFSET = new Point(guiLeft, guiTop);
+        whitelist = new GuiListWhitelist(this, mc, FrameRegistry.EnumFrameType.WOOD);
+    }
 
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        whitelist.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        super.handleMouseInput();
+        whitelist.handleMouseInput();
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+        super.actionPerformed(button);
+        whitelist.actionPerformed(button);
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        whitelist.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+        super.mouseReleased(mouseX, mouseY, state);
+        whitelist.mouseReleased(mouseX, mouseY, state);
     }
 
     @Override
@@ -51,50 +90,49 @@ public class GuiFrameWhitelistEditor extends GuiContainer {
             drawItemMetaInformation(editing);
         }
 
-        GlStateManager.pushMatrix();
-        GlStateManager.disableLighting();
-        GlStateManager.translate(0,0,32);
-        this.itemRender.zLevel = 200;
-        this.zLevel = 200;
-        FrameWhitelist wood = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
-        Set<ResourceLocation> whitelisted = wood.getValidRegistryEntries();
-        Point drawArea = new Point(SCROLL_AREA.getLocation());
-        drawArea.translate(6, 6);
-        for (ResourceLocation rl : whitelisted) {
-            fontRendererObj.drawString(rl.toString(), drawArea.x, drawArea.y, Color.WHITE.getRGB());
-            drawArea.translate(0, 10);
-
-            Item i = Item.REGISTRY.getObject(rl);
-            if (i == null) continue;
-
-            try {
-                for (Range<Integer> metas : wood.getValidMetaForEntry(rl)) {
-                    if (metas.lowerEndpoint() == metas.upperEndpoint()) {
-                        this.itemRender.renderItemIntoGUI(new ItemStack(i, 1, metas.lowerEndpoint()), drawArea.x, drawArea.y);
-                        drawArea.translate(16, 0);
-                        if(drawArea.x > SCROLL_AREA.x + SCROLL_AREA.width - 15)
-                            drawArea.move(SCROLL_AREA.x + 6, drawArea.y + 16);
-                    }
-
-                    for (int lower = metas.lowerEndpoint(); lower < metas.upperEndpoint(); lower++) {
-                        this.itemRender.renderItemIntoGUI(new ItemStack(i, 1, lower), drawArea.x, drawArea.y);
-                        drawArea.translate(16, 0);
-                        if(drawArea.x > SCROLL_AREA.x + SCROLL_AREA.width - 15)
-                            drawArea.move(SCROLL_AREA.x + 6, drawArea.y + 16);
-                    }
-                }
-
-                drawArea.move(SCROLL_AREA.x + 6, drawArea.y + 20);
-            } catch (FrameException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-        this.itemRender.zLevel = 0;
-        this.zLevel = 0;
-        GlStateManager.popMatrix();
+//        FrameWhitelist wood = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
+//        Set<ResourceLocation> whitelisted = wood.getValidRegistryEntries();
+//
+//        Point drawArea = new Point(GuiFrameWhitelistEditor.SCROLL_AREA.getLocation());
+//        Rectangle scrollArea = GuiFrameWhitelistEditor.SCROLL_AREA;
+//
+//        drawArea.translate(6, 6);
+//        for (ResourceLocation rl : whitelisted) {
+//            drawArea.translate(0, 10);
+//
+//            Item i = Item.REGISTRY.getObject(rl);
+//            if (i == null) continue;
+//
+//            try {
+//                for (Range<Integer> metas : wood.getValidMetaForEntry(rl)) {
+//                    if (metas.lowerEndpoint() == metas.upperEndpoint()) {
+//                        SlotItemViewer slot = new SlotItemViewer(drawArea.x, drawArea.y);
+//                        slot.setStack(new ItemStack(i, 1, metas.lowerEndpoint()));
+//                        addSlotToContainer(slot);
+//
+//                        drawArea.translate(18, 0);
+//                        if(drawArea.x > scrollArea.x + scrollArea.width - 17)
+//                            drawArea.move(scrollArea.x + 6, drawArea.y + 18);
+//                    }
+//
+//                    for (int meta = metas.lowerEndpoint(); meta < metas.upperEndpoint(); meta++) {
+//                        SlotItemViewer slot = new SlotItemViewer(drawArea.x, drawArea.y);
+//                        slot.setStack(new ItemStack(i, 1, meta));
+//                        addSlotToContainer(slot);
+//
+//                        drawArea.translate(18, 0);
+//                        if(drawArea.x > scrollArea.x + scrollArea.width - 17)
+//                            drawArea.move(scrollArea.x + 6, drawArea.y + 18);
+//                    }
+//                }
+//
+//                drawArea.move(scrollArea.x + 6, drawArea.y + 20);
+//            } catch (FrameException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//        }
     }
 
     /**
