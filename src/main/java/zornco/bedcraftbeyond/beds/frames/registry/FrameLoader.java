@@ -50,12 +50,20 @@ public class FrameLoader {
                             if(!m.matches()) continue;
                             int lower = Integer.parseInt(m.group("lower"));
                             int upper = Integer.parseInt(m.group("upper"));
-                            Range<Integer> range = Range.open(lower, upper);
+                            Range<Integer> range = Range.closed(lower, upper);
+                            try {
+                                FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(type).getEntry(entryRes);
+                                entry.blacklist(range);
+                            } catch (FrameException e) {
+                                e.printStackTrace();
+                            }
+
                             break;
                     }
                 } else if(entryItem instanceof Number) {
                     try {
-                        FrameRegistry.getFrameWhitelist(type).removeWhitelistEntry(entryRes, ((Number) entryItem).intValue());
+                        FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(type).getEntry(entryRes);
+                        entry.blacklist(((Number) entryItem).intValue());
                     } catch (FrameException e) {
                         BedCraftBeyond.LOGGER.error(e.getMessage());
                     }
@@ -81,10 +89,17 @@ public class FrameLoader {
                 if(entryItem instanceof String) {
                     String entryString = String.valueOf(entryItem);
                     if(entryString.trim().equalsIgnoreCase("all")){
-                        FrameRegistry.getFrameWhitelist(type).resetWhitelistForEntry(b.getRegistryName());
-                        List<ItemStack> addedList = new ArrayList<>();
-                        b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
-                        added += addedList.size();
+                        try {
+                            FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(type).getEntry(b.getRegistryName());
+                            entry.reset();
+
+                            List<ItemStack> addedList = new ArrayList<>();
+                            b.getSubBlocks(Item.getItemFromBlock(b), null, addedList);
+                            added += addedList.size();
+                        } catch (FrameException e) {
+                            e.printStackTrace();
+                        }
+
                         break;
                     }
 
@@ -97,13 +112,19 @@ public class FrameLoader {
                     int upper = Integer.parseInt(m.group("upper"));
                     Range<Integer> range = Range.open(lower, upper);
                     try {
-                        FrameRegistry.getFrameWhitelist(type).addWhitelistRange(entryRes, range);
+                        if(!FrameRegistry.getFrameWhitelist(type).hasEntryFor(entryRes))
+                            FrameRegistry.getFrameWhitelist(type).addEntry(entryRes);
+                        FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(type).getEntry(entryRes);
+                        entry.whitelist(range);
                     } catch (FrameException e) {
                         e.printStackTrace();
                     }
                 } else if(entryItem instanceof Number) {
                     try {
-                        FrameRegistry.getFrameWhitelist(type).addWhitelistEntry(entryRes, ((Number) entryItem).intValue());
+                        if(!FrameRegistry.getFrameWhitelist(type).hasEntryFor(entryRes))
+                            FrameRegistry.getFrameWhitelist(type).addEntry(entryRes);
+                        FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(type).getEntry(entryRes);
+                        entry.whitelist(((Number) entryItem).intValue());
                     } catch (FrameException e) {
                         BedCraftBeyond.LOGGER.error(I18n.translateToLocal(e.getMessage()));
                     }
@@ -131,8 +152,10 @@ public class FrameLoader {
                 // If set to use all metadatas from item
                 if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)
                     FrameRegistry.getFrameWhitelist(type).addEntry(stack.getItem().getRegistryName());
-                else
-                    FrameRegistry.getFrameWhitelist(type).addWhitelistEntry(regName, stack.getMetadata());
+                else {
+                    FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(type).getEntry(regName);
+                    entry.whitelist(stack.getMetadata());
+                }
             } catch (FrameException e) {
                 BedCraftBeyond.LOGGER.error(e.getMessage());
             }

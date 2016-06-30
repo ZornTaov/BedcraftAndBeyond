@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.beds.frames.registry.gui;
+package zornco.bedcraftbeyond.beds.frames.registry.gui.editor;
 
 import com.google.common.collect.Range;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,15 +22,15 @@ import java.util.Set;
 
 public class ContainerFrameWhitelistEditor extends Container {
 
-    public ContainerFrameWhitelistEditor(EntityPlayer player){
+    public ContainerFrameWhitelistEditor(FrameRegistry.EnumFrameType type, EntityPlayer player){
         SlotGhost ghostSlot = new SlotGhost(new Point(210, 6));
         this.addSlotToContainer(ghostSlot);
 
-        List<Slot> playerInv = GuiUtils.createStandardInventory(player, GuiFrameWhitelistEditor.INV_AREA.getLocation());
-        for(Slot s : playerInv) this.addSlotToContainer(s);
 
-        FrameWhitelist wood = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
-        Set<ResourceLocation> whitelisted = wood.getValidRegistryEntries();
+
+        FrameWhitelist list = FrameRegistry.getFrameWhitelist(type);
+
+
 
 
     }

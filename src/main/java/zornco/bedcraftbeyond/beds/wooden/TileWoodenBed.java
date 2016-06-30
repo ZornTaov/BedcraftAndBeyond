@@ -12,6 +12,7 @@ import zornco.bedcraftbeyond.beds.frames.BedFrameUpdate;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameHelper;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelistEntry;
 import zornco.bedcraftbeyond.beds.parts.EnumBedPart;
 import zornco.bedcraftbeyond.beds.parts.drawer.DrawerHandler;
 import zornco.bedcraftbeyond.beds.parts.linens.BedLinenUpdate;
@@ -132,7 +133,8 @@ public class TileWoodenBed extends TileGenericBed {
     }
 
     public void setPlankType(ResourceLocation plankType, int plankMeta, boolean updateClients) throws FrameException {
-        boolean valid = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD).metaIsWhitelisted(plankType, plankMeta);
+        FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD).getEntry(plankType);
+        boolean valid = entry.isWhitelisted(plankMeta);
         if (!valid) throw new FrameException("Not a valid frame type");
         this.plankType = plankType;
         this.plankMeta = plankMeta;

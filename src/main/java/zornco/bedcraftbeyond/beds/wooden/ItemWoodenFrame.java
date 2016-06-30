@@ -54,7 +54,7 @@ public class ItemWoodenFrame extends ItemFrame {
         for(ResourceLocation rl : wood.getValidRegistryEntries()){
 
             try {
-                for(Range<Integer> r : wood.getValidMetaForEntry(rl)){
+                for(Range<Integer> r : wood.getEntry(rl).getValidMeta().asRanges()){
                     if(r.hasLowerBound() && r.hasUpperBound()){
                         if(r.lowerEndpoint() == r.upperEndpoint()){
                             ItemStack stack = new ItemStack(this, 1, 0);

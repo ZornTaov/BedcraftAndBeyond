@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelistEntry;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.commands.CommandFragment;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
@@ -54,7 +55,7 @@ public class FragmentFramesModify extends CommandFragment {
                 break;
 
             case "reset":
-                FrameRegistry.getFrameWhitelist(type).resetWhitelistForEntry(b.getBlock().getRegistryName());
+                FrameRegistry.getFrameWhitelist(type).getEntry(b.getBlock().getRegistryName()).reset();
                 sender.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".frames.messages.reset_entry_complete", type));
                 break;
 
@@ -80,7 +81,7 @@ public class FragmentFramesModify extends CommandFragment {
                     break;
 
                 case "meta":
-                    success = FrameRegistry.getFrameWhitelist(type).addWhitelistEntry(state.getBlock().getRegistryName(), state.getBlock().getMetaFromState(state));
+                    success = FrameRegistry.getFrameWhitelist(type).getEntry(state.getBlock().getRegistryName()).whitelist(state.getBlock().getMetaFromState(state));
                     if (!success)
                         throw new CommandException(BedCraftBeyond.MOD_ID + ".frames.whitelisted.by_meta.fail", item.getDisplayName(), state.getBlock().getMetaFromState(state), type.name().toLowerCase());
                     sender.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".frames.whitelisted.by_meta", item.getDisplayName(), state.getBlock().getMetaFromState(state), type.name().toLowerCase()));
@@ -107,7 +108,8 @@ public class FragmentFramesModify extends CommandFragment {
                     break;
 
                 case "meta":
-                    success = FrameRegistry.getFrameWhitelist(type).removeWhitelistEntry(state.getBlock().getRegistryName(), state.getBlock().getMetaFromState(state));
+                    FrameWhitelistEntry entry = FrameRegistry.getFrameWhitelist(type).getEntry(state.getBlock().getRegistryName());
+                    success = entry.blacklist(state.getBlock().getMetaFromState(state));
                     if (!success)
                         throw new CommandException(BedCraftBeyond.MOD_ID + ".frames.blacklisted.by_meta.fail", item.getDisplayName(), state.getBlock().getMetaFromState(state), type.name().toLowerCase());
                     sender.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".frames.blacklisted.by_meta", item.getDisplayName(), state.getBlock().getMetaFromState(state), type.name().toLowerCase()));

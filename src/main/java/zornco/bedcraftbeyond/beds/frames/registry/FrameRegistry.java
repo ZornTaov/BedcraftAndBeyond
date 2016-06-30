@@ -76,7 +76,12 @@ public class FrameRegistry {
 
     public static boolean isValidFrameMaterial(EnumFrameType type, ResourceLocation registryName, int meta) {
         FrameWhitelist set = getFrameWhitelist(type);
-        return set.hasEntryFor(registryName) && set.metaIsWhitelisted(registryName, meta);
+        if(!set.hasEntryFor(registryName)) return false;
+        try {
+            return set.getEntry(registryName).isWhitelisted(meta);
+        } catch (FrameException e) {
+            return false;
+        }
     }
 
     /**

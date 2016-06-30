@@ -1,6 +1,7 @@
 package zornco.bedcraftbeyond.core.commands.fragments;
 
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.command.CommandBase;
@@ -41,11 +42,11 @@ public class FragmentFramesDump extends CommandFragment {
 
         List<FrameFile.FrameEntry> entriesContainer = new ArrayList<>();
         for(ResourceLocation entry : frames.getValidRegistryEntries()){
-            Set<Range<Integer>> entryMetas = frames.getValidMetaForEntry(entry);
+            RangeSet<Integer> entryMetas = frames.getEntry(entry).getValidMeta();
             FrameFile.FrameEntry fEntry = new FrameFile.FrameEntry();
             fEntry.key = entry.toString();
             List<Object> entries = new ArrayList<>();
-            for(Range<Integer> range : entryMetas){
+            for(Range<Integer> range : entryMetas.asRanges()){
                 if(range.lowerEndpoint() == range.upperEndpoint()){
                     entries.add(range.lowerEndpoint());
                     continue;

@@ -52,7 +52,7 @@ public class FragmentFrames extends zornco.bedcraftbeyond.core.commands.CommandF
     public static List<String> getTabOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         switch (args.length) {
             case 2:
-                return CommandBase.getListOfStringsMatchingLastWord(args, ImmutableList.of("add", "remove", "check", "reload", "list", "save"));
+                return CommandBase.getListOfStringsMatchingLastWord(args, ImmutableList.of("add", "remove", "check", "edit", "reload", "list", "save"));
             default:
                 switch (args[1].toLowerCase()) {
                     case "add":
@@ -64,6 +64,9 @@ public class FragmentFrames extends zornco.bedcraftbeyond.core.commands.CommandF
 
                     case "check":
                         return FragmentFramesCheck.getTabOptions(server, sender, args, pos);
+
+                    case "edit":
+                        return FragmentFramesEdit.getTabOptions(server, sender, args, pos);
 
                     case "save":
                         return FragmentFramesDump.getTabOptions(server, sender, args, pos);
