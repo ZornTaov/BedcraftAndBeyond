@@ -1,0 +1,24 @@
+{
+  "entries": [
+    {
+      "key": "minecraft:planks",
+      "type": "wood",
+      "whitelist": ["0-5"]
+    },
+    {
+      "key": "biomesoplenty:planks_0",
+      "type": "wood",
+      "whitelist": ["0-15"]
+    },
+    {
+      "key": "forestry:planks.0",
+      "type": "wood",
+      "whitelist": ["0-15"]
+    },
+    {
+      "key": "forestry:planks.1",
+      "type": "wood",
+      "whitelist": ["0-12"]
+    }
+  ]
+}
