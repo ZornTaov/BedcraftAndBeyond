@@ -26,7 +26,6 @@ public class GuiListWhitelist extends GuiScrollingList {
             editor.SCROLL_AREA.x, 60,
             editor.width, editor.height);
         this.editor = editor;
-
         this.sections = new ArrayList<>();
 
         whitelist = FrameRegistry.getFrameWhitelist(type);

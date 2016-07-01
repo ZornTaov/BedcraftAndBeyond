@@ -14,6 +14,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -121,6 +123,24 @@ public class ItemWoodenFrame extends ItemFrame {
 
         // If frame not set, abort early- we need that.
         if(!stack.hasTagCompound() || !stack.getTagCompound().hasKey("frame")) return EnumActionResult.FAIL;
+
+        NBTTagCompound frame = stack.getTagCompound().getCompoundTag("frame");
+
+        FrameWhitelist wood = FrameRegistry.getFrameWhitelist(FrameRegistry.EnumFrameType.WOOD);
+        if(!wood.hasEntryFor(new ResourceLocation(frame.getString("frameType")))) {
+            if(world.isRemote) player.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry", frame.getString("frameType")));
+            return EnumActionResult.FAIL;
+        }
+
+        try {
+            if(!wood.getEntry(new ResourceLocation(frame.getString("frameType"))).isWhitelisted(frame.getInteger("frameMeta"))) {
+                if (world.isRemote)
+                    player.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".frames.errors.not_valid_entry", frame.getString("frameType")));
+                return EnumActionResult.FAIL;
+            }
+        } catch (FrameException e) {
+            BedCraftBeyond.LOGGER.error("Internal error: " + e.getMessage());
+        }
 
         boolean canPlaceBedHere = testSimpleBedPlacement(world, player, pos, stack);
         if (!canPlaceBedHere) return EnumActionResult.FAIL;

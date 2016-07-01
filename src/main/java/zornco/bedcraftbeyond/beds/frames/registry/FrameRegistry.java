@@ -27,6 +27,12 @@ public class FrameRegistry {
                 if(val != UNKNOWN) possible.add(val.name().toLowerCase());
             return possible;
         }
+
+        public static EnumFrameType parse(String type){
+            for(EnumFrameType frameType : values())
+                if(frameType.name().equalsIgnoreCase(type)) return frameType;
+            return EnumFrameType.UNKNOWN;
+        }
     }
 
     private static FrameRegistry INSTANCE = new FrameRegistry();

@@ -18,14 +18,14 @@ plugins {
 
 version = "2.3.4"
 group= "zornco.bedcraftbeyond" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "BedCraftAndBeyond-1.9.4"
+archivesBaseName = "BedCraftAndBeyond-1.10.2"
 
 def username="BCBdev"
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.9.4-12.17.0.1965"
+    version = "1.10.2-12.18.0.2005-1.10.0"
     runDir = "run"
 
     mappings = "snapshot_20160519"
@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.9.4:3.6.6.215"
+    deobfCompile "mezz.jei:jei_1.10.2:3.7.3.221"
 }
 
 processResources {

@@ -67,6 +67,12 @@ bedcraftbeyond.frames {
 	}
 
 	errors {
+    	parsing {
+	        no_type: "Could not parse frame type for entry %s: it does not exist."
+            invalid_type: "Could not parse frame type for entry %s. Frame type '%s' is invalid."
+	    }
+
+	    invalid_name: "Invalid registry name (%s): Block does not exist or is not registered."
 		invalid_meta: "Invalid metadata for whitelist entry '%s': '%d'."
 		already_added: "Entry %s is already added to the whitelist for type %s."
 		already_added_meta: "Entry %s already has meta %s added to its whitelist for type %s."

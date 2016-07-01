@@ -47,6 +47,10 @@ bedcraftbeyond.frames.messages.reset_entry_complete=Reset whitelist for entry %s
 bedcraftbeyond.frames.messages.frame_valid=Block %s (meta %s) is a valid frame type for %s.
 bedcraftbeyond.frames.messages.frame_invalid=Block %s (meta %s) is NOT a valid frame type for %s.
 
+bedcraftbeyond.frames.errors.parsing.no_type=Could not parse frame type for entry %s: entry 'type' field not found.
+bedcraftbeyond.frames.errors.parsing.invalid_type=Could not parse frame type for entry %s. Frame type '%s' is invalid.
+
+bedcraftbeyond.frames.errors.invalid_name=Invalid registry name (%s): Block does not exist or is not registered.
 bedcraftbeyond.frames.errors.invalid_meta=Invalid metadata for whitelist entry '%s': '%d'.
 bedcraftbeyond.frames.errors.already_added=Entry %s is already added to the whitelist for type %s.
 bedcraftbeyond.frames.errors.already_added_meta=Entry %s already has meta %s added to its whitelist for type %s.
@@ -69,3 +73,8 @@ bedcraftbeyond.frames.whitelisted.by_meta=Successfully whitelisted %s (meta %s) 
 bedcraftbeyond.frames.whitelisted.by_meta.fail=Failed to whitelist %s (meta %s) to frame type %s.
 
 
+bedcraftbeyond.frames.gui.reset_entry=Reset Entry
+bedcraftbeyond.frames.gui.delete_entry=Delete Entry
+bedcraftbeyond.frames.gui.edit_entry=Edit Entry
+bedcraftbeyond.frames.gui.add_entry=Add Entry
+bedcraftbeyond.frames.gui.not_yet_implemented=Not Yet Implemented.

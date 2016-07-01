@@ -45,6 +45,7 @@ public class FragmentFramesDump extends CommandFragment {
             RangeSet<Integer> entryMetas = frames.getEntry(entry).getValidMeta();
             FrameFile.FrameEntry fEntry = new FrameFile.FrameEntry();
             fEntry.key = entry.toString();
+            fEntry.type = type.name().toLowerCase();
             List<Object> entries = new ArrayList<>();
             for(Range<Integer> range : entryMetas.asRanges()){
                 if(range.lowerEndpoint() == range.upperEndpoint()){
@@ -59,7 +60,6 @@ public class FragmentFramesDump extends CommandFragment {
         }
 
         FrameFile f = new FrameFile();
-        f.type = type.name().toLowerCase();
         f.entries = entriesContainer.toArray(new FrameFile.FrameEntry[entriesContainer.size()]);
 
         Gson gb = new GsonBuilder().setPrettyPrinting().create();

@@ -33,8 +33,8 @@ import zornco.bedcraftbeyond.beds.frames.registry.FrameLoader;
     modid = BedCraftBeyond.MOD_ID,
     name = BedCraftBeyond.MOD_NAME,
     version = BedCraftBeyond.MOD_VERSION,
-    acceptedMinecraftVersions = "[1.9.4,)",
-    guiFactory = "zornco.bedcraftbeyond.config.ConfigGuiFactory")
+    acceptedMinecraftVersions = "[1.9.4,],[1.10,)",
+    guiFactory = "zornco.bedcraftbeyond.core.config.ConfigGuiFactory")
 public class BedCraftBeyond {
 
     public static final String MOD_ID = "bedcraftbeyond";
