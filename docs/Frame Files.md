@@ -1,32 +1,26 @@
 # About the Frame Whitelist files
-Frame files are placed in ./config/bedcraftbeyond/frames, and two of these files are loaded by default:
-
-* wood.json
-* stone.json
-
-These two files aren't limited to those frame types, but those are loaded automatically. This will change to ANY file
-in the directory soon enough, but until then, expect those two.
+Frame files are placed in ./config/bedcraftbeyond/frames, and anything in this directory is loaded.
 
 The format is as follows:
 
 ```json
 {
-    "type": "TYPE",
     "entries": [ FRAME_ENTRIES_HERE ]
 }
 ```
-
-Type is a given frame type, the same ones the commands use. (wood and stone)
 
 The frame entry looks like this:
 
 ```json
 {
     "key": "minecraft:planks",
+    "type": "TYPE",
     "whitelist": [ {Entries} ],
     "blacklist": [ {Entries} ]
 }
 ```
+
+TYPE is any of the frame types. These are 'wood' or 'stone', at the moment.
 
 Both the whitelist and blacklists are optional. You can actually leave both out, but that wouldn't do very much, would it?
 
@@ -36,10 +30,11 @@ a mod named 'extraplanks' adding planks under the name 'planks', you could add t
 ```json
 {
     "key": "extraplanks:planks",
+    "type": "wood",
     "blacklist": ["0-15"]
 }
 ```
 
 That will remove all the planks from the whitelist for "extraplanks:planks". Blacklists are run first, then whitelists.
 
-Use the files well.
+Use the files well. They can be pretty powerful.
