@@ -11,12 +11,7 @@ public abstract class BedPart {
 
     public abstract Type getPartType();
 
-    public abstract boolean hasBlock();
-
     public abstract Item getPartItem();
-
-    @Nullable
-    public abstract Block getPartBlock();
 
 
     public enum Type {

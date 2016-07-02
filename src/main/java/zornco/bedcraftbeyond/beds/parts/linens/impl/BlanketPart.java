@@ -23,21 +23,9 @@ public class BlanketPart extends BedPart implements IColorablePart.IColorableIte
     }
 
     @Override
-    public boolean hasBlock() {
-        return false;
-    }
-
-    @Override
     public Item getPartItem() {
         return ModContent.Items.blanket;
     }
-
-    @Nullable
-    @Override
-    public Block getPartBlock() {
-        return null;
-    }
-
 
     @Override
     public Color getPartColor(ItemStack stack) {

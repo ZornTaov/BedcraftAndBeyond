@@ -11,13 +11,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.common.discovery.ModCandidate;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import zornco.bedcraftbeyond.beds.base.BlockBedBase;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
+import zornco.bedcraftbeyond.beds.parts.IBedPart;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.core.config.ConfigSettings;
 
-public class ItemDrawer extends Item implements ICapabilityProvider {
+public class ItemDrawer extends Item implements ICapabilityProvider, IBedPart {
 
     private ItemStackHandler items = new ItemStackHandler(ConfigSettings.DRAWER_ITEM_LIMIT);
 
@@ -44,15 +49,21 @@ public class ItemDrawer extends Item implements ICapabilityProvider {
     @Override
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         IBlockState state = worldIn.getBlockState(pos).getActualState(worldIn, pos);
-        if(!(state.getBlock() instanceof IDrawerHolder)) return EnumActionResult.FAIL;
+        if(!(state.getBlock() instanceof BlockBedBase)) return EnumActionResult.FAIL;
 
-        ItemStack accepted = ((IDrawerHolder) state.getBlock()).acceptDrawer(stack, playerIn, hand, worldIn, pos, true);
-        if(accepted == null){
-            ((IDrawerHolder) state.getBlock()).acceptDrawer(stack, playerIn, hand, worldIn, pos, false);
-            playerIn.setHeldItem(hand, null);
+        BlockBedBase bed = (BlockBedBase) state.getBlock();
+        ItemStack accepted = bed.addPart(worldIn, state, pos, stack, true);
+        if(accepted == null || accepted.stackSize < stack.stackSize){
+            ItemStack drawerStackCopy =  bed.addPart(worldIn, state, pos, stack, false);
+            playerIn.setHeldItem(hand, drawerStackCopy);
             return EnumActionResult.SUCCESS;
         }
 
         return EnumActionResult.FAIL;
+    }
+
+    @Override
+    public BedPart getPartReference() {
+        return ModContent.BedParts.drawer;
     }
 }

@@ -26,9 +26,15 @@ public class DrawerHandler {
 
     public ItemStack addDrawer(ItemStack drawer, boolean simulate){
         if(!canAccept()) return drawer;
-        ItemStack accepted = inventory.insertItem(filled, drawer, simulate);
+
+        ItemStack copy = drawer.copy();
+        ItemStack originalCopy = drawer.copy();
+        copy.stackSize = 1;
+
+        ItemStack accepted = inventory.insertItem(filled, copy, simulate);
+        if(accepted == null) originalCopy.stackSize--;
         if(accepted == null && !simulate) filled++;
-        return accepted;
+        return originalCopy.stackSize < 1 ? null : originalCopy;
     }
 
 }

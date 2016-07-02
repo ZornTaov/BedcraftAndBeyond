@@ -6,13 +6,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import zornco.bedcraftbeyond.beds.base.BlockBedBase;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.ModContent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlockStoneBed extends zornco.bedcraftbeyond.beds.base.BlockBedBase {
+public class BlockStoneBed extends BlockBedBase {
 
     public BlockStoneBed() {
         setCreativeTab(BedCraftBeyond.BEDS_TAB);
@@ -24,6 +25,11 @@ public class BlockStoneBed extends zornco.bedcraftbeyond.beds.base.BlockBedBase 
             .withProperty(OCCUPIED, false));
 
         GameRegistry.register(this);
+    }
+
+    @Override
+    public ItemStack addPart(IBlockAccess world, IBlockState state, BlockPos pos, ItemStack stack, boolean simulate) {
+        return stack.copy();
     }
 
     @Override

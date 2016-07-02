@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeHell;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public abstract class BlockBedBase extends Block {
         setCreativeTab(BedCraftBeyond.BEDS_TAB);
     }
 
+    //region Overrides and Bed stuff
     @Override
     public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
         return true;
@@ -104,18 +106,6 @@ public abstract class BlockBedBase extends Block {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         return this.onBedActivated(world, pos, state, player);
-    }
-
-    public TileEntity getTileForBed(IBlockAccess world, IBlockState state, BlockPos pos){
-        if(state.getValue(HEAD))
-            return world.getTileEntity(pos);
-
-        if (!(state.getBlock() instanceof BlockBedBase)) return null;
-        BlockPos actualTileHolder = pos.offset(state.getValue(FACING));
-
-        TileEntity realHolder = world.getTileEntity(actualTileHolder);
-        if (realHolder == null || !(realHolder instanceof TileGenericBed)) return null;
-        return realHolder;
     }
 
     protected boolean onBedActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn) {
@@ -271,4 +261,29 @@ public abstract class BlockBedBase extends Block {
     public EnumPushReaction getMobilityFlag(IBlockState state) {
         return EnumPushReaction.BLOCK;
     }
+
+    //endregion
+
+    public TileEntity getTileForBed(IBlockAccess world, IBlockState state, BlockPos pos){
+        if(state.getValue(HEAD))
+            return world.getTileEntity(pos);
+
+        if (!(state.getBlock() instanceof BlockBedBase)) return null;
+        BlockPos actualTileHolder = pos.offset(state.getValue(FACING));
+
+        TileEntity realHolder = world.getTileEntity(actualTileHolder);
+        if (realHolder == null || !(realHolder instanceof TileGenericBed)) return null;
+        return realHolder;
+    }
+
+    /**
+     * Tries to add a given part to a bed.
+     *
+     * @param world
+     * @param state
+     * @param pos
+     * @param stack
+     * @param simulate If true, the process is only simulated.
+     */
+    public abstract ItemStack addPart(IBlockAccess world, IBlockState state, BlockPos pos, ItemStack stack, boolean simulate);
 }
