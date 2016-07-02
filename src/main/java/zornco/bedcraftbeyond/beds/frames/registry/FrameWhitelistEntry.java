@@ -124,4 +124,11 @@ public class FrameWhitelistEntry {
         this.meta.remove(range);
         return !this.isWhitelisted(range);
     }
+
+    public int getNumberEntries() {
+        int total = 0;
+        for(Range<Integer> range : meta.asRanges())
+            total += range.upperEndpoint() == range.lowerEndpoint() ? 1 : range.upperEndpoint() - range.lowerEndpoint() + 1;
+        return total;
+    }
 }

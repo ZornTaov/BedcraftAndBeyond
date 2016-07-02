@@ -13,7 +13,7 @@ import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameHelper;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelistEntry;
-import zornco.bedcraftbeyond.beds.parts.EnumBedPart;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
 import zornco.bedcraftbeyond.beds.parts.drawer.DrawerHandler;
 import zornco.bedcraftbeyond.beds.parts.linens.BedLinenUpdate;
 import zornco.bedcraftbeyond.beds.parts.linens.LinenHandler;
@@ -81,8 +81,8 @@ public class TileWoodenBed extends TileGenericBed {
         this.plankType = new ResourceLocation(tags.getString("plankType"));
         this.plankMeta = tags.getInteger("plankMeta");
 
-        updateClients(EnumBedPart.BLANKETS);
-        updateClients(EnumBedPart.SHEETS);
+        updateClients(BedPart.Type.BLANKETS);
+        updateClients(BedPart.Type.SHEETS);
     }
 
     public DrawerHandler getDrawerHandler() {
@@ -170,11 +170,11 @@ public class TileWoodenBed extends TileGenericBed {
         return pack;
     }
 
-    public final void updateClients(EnumBedPart part) {
+    public final void updateClients(BedPart.Type part) {
         if (worldObj == null || worldObj.isRemote) return;
         markDirty();
         if(part.isLinenPart()) {
-            BedLinenUpdate update = new BedLinenUpdate(pos, part.toLinenPart(), linens.getLinenPart(part.toLinenPart(), false));
+            BedLinenUpdate update = new BedLinenUpdate(pos, part, linens.getLinenPart(part, false));
             BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
         }
     }

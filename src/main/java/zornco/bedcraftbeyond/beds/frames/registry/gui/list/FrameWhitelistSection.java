@@ -13,7 +13,6 @@ import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelist;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelistEntry;
 
 import java.awt.*;
-import java.util.Set;
 
 public class FrameWhitelistSection {
 
@@ -23,7 +22,7 @@ public class FrameWhitelistSection {
     private FrameWhitelistEntry entry;
     private int num_slots;
 
-    FrameWhitelistSection(ResourceLocation id, GuiListWhitelist parent) throws FrameException {
+    FrameWhitelistSection(ResourceLocation id, RegistryWhitelistComponent parent) throws FrameException {
         this.entry = parent.whitelist.getEntry(id);
         this.num_slots = 0;
 

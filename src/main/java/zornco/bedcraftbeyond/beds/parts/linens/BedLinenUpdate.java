@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.beds.wooden.BlockWoodenBed;
 import zornco.bedcraftbeyond.beds.wooden.TileWoodenBed;
@@ -17,14 +18,14 @@ import zornco.bedcraftbeyond.beds.wooden.TileWoodenBed;
 public class BedLinenUpdate implements IMessage {
 
     private BlockPos pos;
-    private LinenType part;
+    private BedPart.Type part;
     private PropertyFabricType partType;
     private ItemStack partItem;
 
     @SuppressWarnings("unused")
     public BedLinenUpdate() {}
 
-    public BedLinenUpdate(BlockPos pos, LinenType part, ItemStack partItem) {
+    public BedLinenUpdate(BlockPos pos, BedPart.Type part, ItemStack partItem) {
         this.pos = pos;
         this.part = part;
         this.partType = PropertyFabricType.SOLID_COLOR;
@@ -39,7 +40,7 @@ public class BedLinenUpdate implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         pos = NBTUtil.getPosFromTag(ByteBufUtils.readTag(buf));
-        part = LinenType.valueOf(ByteBufUtils.readUTF8String(buf));
+        part = BedPart.Type.valueOf(ByteBufUtils.readUTF8String(buf));
         partType = PropertyFabricType.valueOf(ByteBufUtils.readUTF8String(buf));
 
         switch (partType) {

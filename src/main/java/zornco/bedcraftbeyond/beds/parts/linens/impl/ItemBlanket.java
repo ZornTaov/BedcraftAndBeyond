@@ -7,16 +7,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import zornco.bedcraftbeyond.beds.parts.linens.ILinenItem;
-import zornco.bedcraftbeyond.beds.parts.linens.LinenType;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
+import zornco.bedcraftbeyond.beds.parts.IBedPart;
 import zornco.bedcraftbeyond.beds.parts.linens.PropertyFabricType;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 
 import java.awt.*;
 import java.util.List;
 
-public class ItemBlanket extends Item implements ILinenItem {
+public class ItemBlanket extends Item implements IBedPart {
 
     public ItemBlanket() {
         setCreativeTab(BedCraftBeyond.BEDS_TAB);
@@ -44,24 +45,19 @@ public class ItemBlanket extends Item implements ILinenItem {
     }
 
     @Override
-    public Color getColor(ItemStack stack) {
-        return ColorHelper.getColorFromStack(stack);
-    }
-
-    @Override
-    public LinenType getLinenType() {
-        return LinenType.BLANKETS;
-    }
-
-    @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         // TODO: Oh, the woes of Mojang and their privates.
         // TextFormatting.valueOf(getColor(stack).toDye().getUnlocalizedName().toUpperCase())
         // getColor(stack).toDye().getTextColor()
-        Color c = getColor(stack);
+        Color c = ColorHelper.getColorFromStack(stack);
         if (c != null) {
             String closest = ColorHelper.getColorNameFromColor(c);
             tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c) + (closest != null ? " (~" + closest + ")" : ""));
         }
+    }
+
+    @Override
+    public BedPart getPartReference() {
+        return ModContent.BedParts.blanket;
     }
 }

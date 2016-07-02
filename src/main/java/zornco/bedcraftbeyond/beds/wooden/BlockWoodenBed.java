@@ -14,21 +14,20 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import zornco.bedcraftbeyond.beds.base.BlockBedBase;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
+import zornco.bedcraftbeyond.beds.parts.IBedPart;
 import zornco.bedcraftbeyond.beds.parts.drawer.DrawerHandler;
 import zornco.bedcraftbeyond.beds.parts.drawer.IDrawerHolder;
-import zornco.bedcraftbeyond.beds.parts.linens.*;
-import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemBlanket;
-import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemSheets;
-import zornco.bedcraftbeyond.core.BcbBlocks;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.beds.parts.linens.LinenHandler;
+import zornco.bedcraftbeyond.beds.parts.linens.PropertyFabricType;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,13 +93,15 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
 
         PlayerInvWrapper wrapper = new PlayerInvWrapper(player.inventory);
         if (heldItem != null) {
-            LinenHandler handler = tile.getLinenHandler();
-            if (heldItem.getItem() instanceof ILinenItem) {
-                LinenType type = ((ILinenItem) heldItem.getItem()).getLinenType();
-                boolean set = handler.setLinenPart(type, heldItem);
-                if(set){
-                    tile.updateClients(type.toBedPart());
-                    if(!player.isCreative())  wrapper.extractItem(player.inventory.currentItem, 1, false);
+            if (heldItem.getItem() instanceof IBedPart) {
+                BedPart partType = ((IBedPart) heldItem.getItem()).getPartReference();
+                if (partType.getPartType().isLinenPart()) {
+                    LinenHandler handler = tile.getLinenHandler();
+                    boolean set = handler.setLinenPart(partType.getPartType(), heldItem);
+                    if (set) {
+                        tile.updateClients(partType.getPartType());
+                        if (!player.isCreative()) wrapper.extractItem(player.inventory.currentItem, 1, false);
+                    }
                 }
             }
         }
@@ -109,9 +110,8 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
             if (player.isSneaking()) {
                 // TODO: Open bed gui here
 
-            } else
-                if(isBed(state, world, pos, player))
-                    onBedActivated(world, pos, state, player);
+            } else if (isBed(state, world, pos, player))
+                onBedActivated(world, pos, state, player);
         }
 
         return true;
@@ -125,8 +125,8 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
 
         zornco.bedcraftbeyond.beds.wooden.TileWoodenBed bed = (zornco.bedcraftbeyond.beds.wooden.TileWoodenBed) getTileForBed(worldIn, state, pos);
         boolean hl = hasBlanketsAndSheets(state, worldIn, pos);
-        state = state.withProperty(BLANKETS, bed.getLinenHandler().getLinenType(LinenType.BLANKETS));
-        state = state.withProperty(SHEETS, bed.getLinenHandler().getLinenType(LinenType.SHEETS));
+        state = state.withProperty(BLANKETS, bed.getLinenHandler().getLinenType(BedPart.Type.BLANKETS));
+        state = state.withProperty(SHEETS, bed.getLinenHandler().getLinenType(BedPart.Type.SHEETS));
         state = state.withProperty(STATUS,
             state.getValue(HEAD) ?
                 (hl ? EnumWoodenFabricStatus.HEAD_LINENS : EnumWoodenFabricStatus.HEAD) :
@@ -139,7 +139,7 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         // TODO: Check accuracy
-        ItemStack stack = new ItemStack(BcbBlocks.woodenBed, 1, 0);
+        ItemStack stack = new ItemStack(ModContent.Blocks.woodenBed, 1, 0);
 
         zornco.bedcraftbeyond.beds.wooden.TileWoodenBed tile = (zornco.bedcraftbeyond.beds.wooden.TileWoodenBed) getTileForBed(world, state, pos);
         stack.setTagCompound(new NBTTagCompound());
@@ -153,7 +153,7 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
         if (!state.getValue(HEAD)) return Collections.emptyList();
 
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
-        ItemStack bedItem = new ItemStack(BcbItems.woodenBed);
+        ItemStack bedItem = new ItemStack(ModContent.Items.woodenBed);
         NBTTagCompound tags = new NBTTagCompound();
         state = getActualState(state, world, pos);
         zornco.bedcraftbeyond.beds.wooden.TileWoodenBed twb = (zornco.bedcraftbeyond.beds.wooden.TileWoodenBed) getTileForBed(world, state, pos);
@@ -164,10 +164,10 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
         drops.add(bedItem);
 
         LinenHandler linens = twb.getLinenHandler();
-        if(linens.getLinenPart(LinenType.BLANKETS, false) != null)
-            drops.add(linens.getLinenPart(LinenType.BLANKETS, true));
-        if(linens.getLinenPart(LinenType.SHEETS, false) != null)
-            drops.add(linens.getLinenPart(LinenType.SHEETS, true));
+        if (linens.getLinenPart(BedPart.Type.BLANKETS, false) != null)
+            drops.add(linens.getLinenPart(BedPart.Type.BLANKETS, true));
+        if (linens.getLinenPart(BedPart.Type.SHEETS, false) != null)
+            drops.add(linens.getLinenPart(BedPart.Type.SHEETS, true));
         return drops;
     }
 
@@ -175,7 +175,7 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         zornco.bedcraftbeyond.beds.wooden.TileWoodenBed twb = (zornco.bedcraftbeyond.beds.wooden.TileWoodenBed) getTileForBed(worldIn, state, pos);
-        if(twb == null) return;
+        if (twb == null) return;
 
         try {
             NBTTagCompound frame = stack.getTagCompound().getCompoundTag("frame");
@@ -186,16 +186,16 @@ public class BlockWoodenBed extends BlockBedBase implements IDrawerHolder {
             worldIn.destroyBlock(pos, true);
         }
 
-        if(worldIn.isRemote) twb.recachePlankColor();
+        if (worldIn.isRemote) twb.recachePlankColor();
     }
 
     @Override
     public ItemStack acceptDrawer(ItemStack stack, EntityPlayer player, EnumHand hand, World w, BlockPos pos, boolean simulate) {
         TileWoodenBed bed = (TileWoodenBed) getTileForBed(w, w.getBlockState(pos), pos);
-        if(bed == null) return stack.copy();
+        if (bed == null) return stack.copy();
 
         DrawerHandler handler = bed.getDrawerHandler();
-        if(!handler.canAccept()) return stack.copy();
+        if (!handler.canAccept()) return stack.copy();
 
         ItemStack accepted = handler.addDrawer(stack.copy(), simulate);
         return accepted;

@@ -5,7 +5,7 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class WrapperStoneFrame extends BlankRecipeWrapper implements IShapedCraf
     @Nonnull
     @Override
     public List getOutputs() {
-        return ImmutableList.of(new ItemStack(BcbItems.stoneBed));
+        return ImmutableList.of(new ItemStack(ModContent.Items.stoneBed));
     }
 
     @Override

@@ -5,7 +5,7 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.wrapper.ICraftingRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -15,12 +15,12 @@ public class WrapperDyedRugs extends BlankRecipeWrapper implements ICraftingReci
     @Nonnull
     @Override
     public List getInputs() {
-        return ImmutableList.of(OreDictionary.getOres("dye"), new ItemStack(BcbItems.rug));
+        return ImmutableList.of(OreDictionary.getOres("dye"), new ItemStack(ModContent.Items.rug));
     }
 
     @Nonnull
     @Override
     public List getOutputs() {
-        return ImmutableList.of(new ItemStack(BcbItems.rug));
+        return ImmutableList.of(new ItemStack(ModContent.Items.rug));
     }
 }

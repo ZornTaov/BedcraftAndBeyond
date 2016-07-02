@@ -14,8 +14,7 @@ import zornco.bedcraftbeyond.beds.base.BlockBedBase;
 import zornco.bedcraftbeyond.beds.parts.linens.LinenColorer;
 import zornco.bedcraftbeyond.beds.wooden.BlockWoodenBed;
 import zornco.bedcraftbeyond.beds.wooden.WoodenBedColorer;
-import zornco.bedcraftbeyond.core.BcbBlocks;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.dyes.DyeColorer;
 import zornco.bedcraftbeyond.rugs.RugColorer;
 import zornco.bedcraftbeyond.core.util.RenderingHelper;
@@ -28,22 +27,22 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void registerModels() {
 
-        ModelLoader.setCustomStateMapper(BcbBlocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED, BlockBedBase.HEAD, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
-        ModelLoader.setCustomStateMapper(BcbBlocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED}).build());
+        ModelLoader.setCustomStateMapper(ModContent.Blocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED, BlockBedBase.HEAD, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
+        ModelLoader.setCustomStateMapper(ModContent.Blocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED}).build());
 
-        RenderingHelper.registerItemModel(BcbItems.scissors);
+        RenderingHelper.registerItemModel(ModContent.Items.scissors);
         for (int i = 0; i < 16; ++i)
-            RenderingHelper.registerItemModel(BcbItems.rug, "inventory", i);
+            RenderingHelper.registerItemModel(ModContent.Items.rug, "inventory", i);
 
-        RenderingHelper.registerItemModel(BcbItems.blanket);
-        RenderingHelper.registerItemModel(BcbItems.sheets);
+        RenderingHelper.registerItemModel(ModContent.BedParts.blanket.getPartItem());
+        RenderingHelper.registerItemModel(ModContent.BedParts.sheet.getPartItem());
 
-        RenderingHelper.registerItemModel(BcbItems.drawerKey);
-        RenderingHelper.registerItemModel(BcbItems.stoneBed);
-        RenderingHelper.registerItemModel(BcbItems.woodenBed, "storage=false,head=true,status=head");
+        RenderingHelper.registerItemModel(ModContent.Items.drawerKey);
+        RenderingHelper.registerItemModel(ModContent.Items.stoneBed);
+        RenderingHelper.registerItemModel(ModContent.Items.woodenBed, "storage=false,head=true,status=head");
 
-        RenderingHelper.registerItemModel(BcbItems.dyeBottle);
-        RenderingHelper.registerItemModel(BcbItems.eyedropper);
+        RenderingHelper.registerItemModel(ModContent.Items.dyeBottle);
+        RenderingHelper.registerItemModel(ModContent.Items.eyedropper);
 
         B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
     }
@@ -56,19 +55,19 @@ public class ClientProxy extends CommonProxy {
 
         // Wooden bed
         WoodenBedColorer woodenColorer = new WoodenBedColorer();
-        itemColors.registerItemColorHandler(woodenColorer, BcbItems.woodenBed);
-        blockColors.registerBlockColorHandler(woodenColorer, BcbBlocks.woodenBed);
+        itemColors.registerItemColorHandler(woodenColorer, ModContent.Items.woodenBed);
+        blockColors.registerBlockColorHandler(woodenColorer, ModContent.Blocks.woodenBed);
 
         // Rugs
         RugColorer rugs = new RugColorer();
-        itemColors.registerItemColorHandler(rugs, BcbItems.rug);
+        itemColors.registerItemColorHandler(rugs, ModContent.Items.rug);
 
         // Dyes - Bottles and eyedropper
         DyeColorer dyes = new DyeColorer();
-        itemColors.registerItemColorHandler(dyes, BcbItems.dyeBottle, BcbItems.eyedropper);
+        itemColors.registerItemColorHandler(dyes, ModContent.Items.dyeBottle, ModContent.Items.eyedropper);
 
         LinenColorer linens = new LinenColorer();
-        itemColors.registerItemColorHandler(linens, BcbItems.blanket, BcbItems.sheets);
+        itemColors.registerItemColorHandler(linens, ModContent.BedParts.blanket.getPartItem(), ModContent.BedParts.sheet.getPartItem());
     }
 
     @Override

@@ -6,8 +6,8 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import zornco.bedcraftbeyond.core.BcbItems;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.core.util.items.ItemHandlerGridHelper;
 import zornco.bedcraftbeyond.core.util.items.ItemHelper;
 
@@ -22,7 +22,7 @@ public class RecipeBedFrameStone implements IRecipe {
         InvWrapper invWrapped = new InvWrapper(inv);
         for(int y = 3; y < 9; y++) invWrapped.extractItem(y, 1, false);
 
-        return new ItemStack(BcbItems.stoneBed, 1);
+        return new ItemStack(ModContent.Items.stoneBed, 1);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class RecipeBedFrameStone implements IRecipe {
     @Nullable
     @Override
     public ItemStack getRecipeOutput() {
-        return new ItemStack(BcbItems.stoneBed, 1);
+        return new ItemStack(ModContent.Items.stoneBed, 1);
     }
 
     @Override

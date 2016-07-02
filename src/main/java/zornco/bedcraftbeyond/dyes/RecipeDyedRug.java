@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.rugs.ItemRug;
 
 public class RecipeDyedRug implements IRecipe {
@@ -82,7 +82,7 @@ public class RecipeDyedRug implements IRecipe {
 
     @Override
     public ItemStack getRecipeOutput() {
-        return new ItemStack(BcbItems.rug, 1);
+        return new ItemStack(ModContent.Items.rug, 1);
     }
 
     @Override

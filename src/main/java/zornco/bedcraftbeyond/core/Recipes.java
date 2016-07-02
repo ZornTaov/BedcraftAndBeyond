@@ -19,18 +19,18 @@ public class Recipes {
         OreDictionary.registerOre("bottleWater", new ItemStack(Items.POTIONITEM, 1, 0));
 
         // Drawer key
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.drawerKey, 1), "xy", 'x', "ingotIron", 'y', "ingotGold"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModContent.Items.drawerKey, 1), "xy", 'x', "ingotIron", 'y', "ingotGold"));
         ++recipesAdded;
 
         // Rug
-        GameRegistry.addRecipe(new ItemStack(BcbItems.rug, 4), "xxx", 'x', new ItemStack(Blocks.WOOL, 1));
+        GameRegistry.addRecipe(new ItemStack(ModContent.Items.rug, 4), "xxx", 'x', new ItemStack(Blocks.WOOL, 1));
         ++recipesAdded;
 
-        GameRegistry.addShapedRecipe(new ItemStack(BcbItems.blanket), "CCC", "CCC", 'C', Blocks.CARPET);
-        GameRegistry.addShapedRecipe(new ItemStack(BcbItems.sheets), "CCC", 'C', Blocks.CARPET);
+        GameRegistry.addShapedRecipe(new ItemStack(ModContent.BedParts.blanket.getPartItem()), "CCC", "CCC", 'C', Blocks.CARPET);
+        GameRegistry.addShapedRecipe(new ItemStack(ModContent.BedParts.sheet.getPartItem()), "CCC", 'C', Blocks.CARPET);
         recipesAdded += 2;
 
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(BcbItems.eyedropper),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModContent.Items.eyedropper),
             "S", "G", "B", 'S', "slabWood", 'G', "blockGlass", 'B', new ItemStack(Items.POTIONITEM, 1, 0)));
         ++recipesAdded;
 

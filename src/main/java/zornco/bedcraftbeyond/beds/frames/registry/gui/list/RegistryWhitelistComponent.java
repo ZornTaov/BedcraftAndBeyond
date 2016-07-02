@@ -13,13 +13,13 @@ import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelistEntry;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class GuiListWhitelist extends GuiScrollingList {
+public class RegistryWhitelistComponent extends GuiScrollingList {
 
     private GuiRegistryList editor;
     FrameWhitelist whitelist;
     private ArrayList<FrameWhitelistSection> sections;
 
-    GuiListWhitelist(GuiRegistryList editor, Minecraft mc, FrameRegistry.EnumFrameType type){
+    RegistryWhitelistComponent(GuiRegistryList editor, Minecraft mc, FrameRegistry.EnumFrameType type){
         super(mc,
             editor.SCROLL_AREA.width, editor.SCROLL_AREA.height,
             editor.SCROLL_AREA.y, editor.SCROLL_AREA.y + editor.SCROLL_AREA.height,

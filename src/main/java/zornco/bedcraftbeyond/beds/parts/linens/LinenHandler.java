@@ -4,6 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import zornco.bedcraftbeyond.beds.IColorablePart;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
+import zornco.bedcraftbeyond.beds.parts.IBedPart;
 import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemBlanket;
 import zornco.bedcraftbeyond.beds.parts.linens.impl.ItemSheets;
 
@@ -22,10 +25,12 @@ public class LinenHandler extends ItemStackHandler {
     public void setBlankets(ItemStack stack){ setStackInSlot(1, stack); }
 
     public boolean hasBothParts(){
-        return hasLinenPart(LinenType.SHEETS) && hasLinenPart(LinenType.BLANKETS);
+        return hasLinenPart(BedPart.Type.SHEETS) && hasLinenPart(BedPart.Type.BLANKETS);
     }
 
-    public PropertyFabricType getLinenType(LinenType type){
+    public PropertyFabricType getLinenType(BedPart.Type type){
+        if(!type.isLinenPart()) return PropertyFabricType.NONE;
+
         ItemStack part = getLinenPart(type, false);
         if (part == null) return PropertyFabricType.NONE;
 
@@ -44,16 +49,19 @@ public class LinenHandler extends ItemStackHandler {
         }
     }
 
-    public Color getLinenColor(LinenType type){
+    public Color getLinenColor(BedPart.Type type){
         ItemStack i = getLinenPart(type, false);
         if (i == null) Color.WHITE.getRGB();
         if (getLinenType(type) != PropertyFabricType.SOLID_COLOR) return Color.WHITE;
 
-        return ((ILinenItem) i.getItem()).getColor(i);
+        BedPart part = ((IBedPart) i.getItem()).getPartReference();
+        if(part instanceof IColorablePart.IColorableItem)
+            return ((IColorablePart.IColorableItem) part).getPartColor(i);
+        return Color.WHITE;
     }
 
     @SuppressWarnings("unused")
-    public boolean hasLinenPart(LinenType part) {
+    public boolean hasLinenPart(BedPart.Type part) {
         switch (part) {
             case SHEETS:
                 return getStackInSlot(0) != null;
@@ -66,7 +74,7 @@ public class LinenHandler extends ItemStackHandler {
         }
     }
 
-    public ItemStack getLinenPart(LinenType part, boolean extract) {
+    public ItemStack getLinenPart(BedPart.Type part, boolean extract) {
         switch (part) {
             case SHEETS:
                 return extractItem(0, 1, !extract);
@@ -79,7 +87,7 @@ public class LinenHandler extends ItemStackHandler {
         }
     }
 
-    public boolean setLinenPart(LinenType part, ItemStack linen) {
+    public boolean setLinenPart(BedPart.Type part, ItemStack linen) {
         if (linen == null || linen.getItem() == null) return false;
         ItemStack linenCopy = ItemHandlerHelper.copyStackWithSize(linen, 1);
         int slot = 0;

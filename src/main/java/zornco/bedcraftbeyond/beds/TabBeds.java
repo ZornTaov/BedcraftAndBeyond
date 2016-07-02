@@ -3,7 +3,7 @@ package zornco.bedcraftbeyond.beds;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.core.ModContent;
 
 public class TabBeds extends CreativeTabs {
 
@@ -13,6 +13,6 @@ public class TabBeds extends CreativeTabs {
 
   @Override
   public Item getTabIconItem() {
-    return BcbItems.rug;
+    return ModContent.Items.rug;
   }
 }

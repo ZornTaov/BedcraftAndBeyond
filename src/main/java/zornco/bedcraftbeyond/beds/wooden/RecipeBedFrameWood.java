@@ -10,9 +10,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
-import zornco.bedcraftbeyond.core.BcbItems;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameHelper;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.core.util.items.ItemHandlerGridHelper;
 import zornco.bedcraftbeyond.core.util.items.ItemHelper;
 
@@ -64,7 +64,7 @@ public class RecipeBedFrameWood implements IRecipe {
         ItemStack wood = wrapped.extractItem(6, 1, true);
 
         if(wood == null) return null;
-        ItemStack bedFrame = new ItemStack(BcbItems.woodenBed, 1);
+        ItemStack bedFrame = new ItemStack(ModContent.Items.woodenBed, 1);
         NBTTagCompound tags = new NBTTagCompound();
         tags.setTag("frame", FrameHelper.getFrameTag(wood));
         bedFrame.setTagCompound(tags);
@@ -80,7 +80,7 @@ public class RecipeBedFrameWood implements IRecipe {
     @Nullable
     @Override
     public ItemStack getRecipeOutput() {
-        return new ItemStack(BcbItems.woodenBed, 1);
+        return new ItemStack(ModContent.Items.woodenBed, 1);
     }
 
     @Override

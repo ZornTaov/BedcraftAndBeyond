@@ -7,7 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class BlockStoneBed extends zornco.bedcraftbeyond.beds.base.BlockBedBase 
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
         if(state.getValue(HEAD))
-            drops.add(new ItemStack(BcbItems.stoneBed));
+            drops.add(new ItemStack(ModContent.Items.stoneBed));
         return drops;
     }
 }

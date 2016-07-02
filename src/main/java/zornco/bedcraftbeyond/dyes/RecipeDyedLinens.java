@@ -6,9 +6,10 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import zornco.bedcraftbeyond.dyes.bottle.ItemDyeBottle;
-import zornco.bedcraftbeyond.beds.parts.linens.ILinenItem;
+import zornco.bedcraftbeyond.beds.parts.BedPart;
+import zornco.bedcraftbeyond.beds.parts.IBedPart;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
+import zornco.bedcraftbeyond.dyes.bottle.ItemDyeBottle;
 
 import java.awt.*;
 
@@ -26,7 +27,8 @@ public class RecipeDyedLinens implements IRecipe {
         for (int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
-            if (stack.getItem() instanceof ILinenItem) {
+            if (stack.getItem() instanceof IBedPart &&
+                ((IBedPart) stack.getItem()).getPartReference().getPartType().isLinenPart()) {
                 if (hasLinen) return false;
                 hasLinen = true;
             }
@@ -53,10 +55,13 @@ public class RecipeDyedLinens implements IRecipe {
         for (int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
-            if (stack.getItem() instanceof ILinenItem) {
-                linen = stack;
-                if (dye != null) break;
-                continue;
+            if (stack.getItem() instanceof IBedPart) {
+                BedPart ref = ((IBedPart) stack.getItem()).getPartReference();
+                if (ref.getPartType().isLinenPart()) {
+                    linen = stack;
+                    if (dye != null) break;
+                    continue;
+                }
             }
 
             if (stack.getItem() instanceof ItemDyeBottle) {

@@ -22,29 +22,24 @@ import java.util.Set;
 
 public class ContainerFrameWhitelistEditor extends Container {
 
-    public ContainerFrameWhitelistEditor(FrameRegistry.EnumFrameType type, EntityPlayer player){
-        SlotGhost ghostSlot = new SlotGhost(new Point(210, 6));
+    public ContainerFrameWhitelistEditor(FrameRegistry.EnumFrameType type, ResourceLocation id, EntityPlayer player){
+
+        Rectangle guiInventoryArea = new Rectangle(0, 100 + 12, (GuiFrameWhitelistEditor.SIZE.width / 2) - 4, 100);
+        Rectangle guiArea = GuiUtils.getInventoryAreaCentered(guiInventoryArea.getSize(), guiInventoryArea.y);
+
+        SlotGhost ghostSlot = new SlotGhost(new Point(10, 10));
         this.addSlotToContainer(ghostSlot);
 
-
-
-        FrameWhitelist list = FrameRegistry.getFrameWhitelist(type);
-
-
-
-
+        GuiUtils.createStandardInventory(player, guiArea.getLocation()).forEach(this::addSlotToContainer);
     }
 
     @Nullable
     @Override
     public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
-        if(slotId < 0) return null;
+        if(slotId > -1 && getSlot(slotId) instanceof SlotGhost)
+            ((SlotGhost) getSlot(slotId)).handleClick(dragType, clickTypeIn, player);
 
-        Slot s = getSlot(slotId);
-        if(!(s instanceof SlotGhost)) return super.slotClick(slotId, dragType, clickTypeIn, player);
-
-        SlotGhost ghost = (SlotGhost) getSlot(slotId);
-        return ghost.handleClick(dragType, clickTypeIn, player);
+        return super.slotClick(slotId, dragType, clickTypeIn, player);
     }
 
     @Nullable

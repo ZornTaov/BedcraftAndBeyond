@@ -11,7 +11,7 @@ public class TabMain extends CreativeTabs {
 	}
 	@Override
 	public Item getTabIconItem() {
-		return BcbItems.drawerKey;
+		return ModContent.Items.drawerKey;
     }
 
 

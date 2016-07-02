@@ -91,7 +91,7 @@ public class BedCraftBeyond {
         long start = System.currentTimeMillis();
 
         /** Recipes **/
-        OreDictionary.registerOre("bed", new ItemStack(BcbItems.woodenBed, 1, OreDictionary.WILDCARD_VALUE));
+        OreDictionary.registerOre("bed", new ItemStack(ModContent.Items.woodenBed, 1, OreDictionary.WILDCARD_VALUE));
         Recipes.addRecipes();
 
         long elapsedTimeMillis = System.currentTimeMillis() - start;

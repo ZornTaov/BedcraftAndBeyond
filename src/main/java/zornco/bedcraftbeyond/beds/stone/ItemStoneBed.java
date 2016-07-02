@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.beds.base.ItemFrame;
-import zornco.bedcraftbeyond.core.BcbBlocks;
+import zornco.bedcraftbeyond.core.ModContent;
 
 public class ItemStoneBed extends ItemFrame {
 
@@ -32,7 +32,7 @@ public class ItemStoneBed extends ItemFrame {
         if (!canPlaceBedHere) return EnumActionResult.FAIL;
 
         try {
-            placeSimpleBedBlocks(worldIn, playerIn, pos.up(), BcbBlocks.stoneBed, stack);
+            placeSimpleBedBlocks(worldIn, playerIn, pos.up(), ModContent.Blocks.stoneBed, stack);
         } catch (Exception e) {
             return EnumActionResult.FAIL;
         }

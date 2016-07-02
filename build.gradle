@@ -16,7 +16,7 @@ plugins {
     id 'com.matthewprenger.cursegradle' version '1.0.7'
 }
 
-version = "2.3.4"
+version = "2.3.5"
 group= "zornco.bedcraftbeyond" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "BedCraftAndBeyond-1.10.2"
 

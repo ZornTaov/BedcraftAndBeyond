@@ -14,7 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -23,9 +22,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.core.BcbBlocks;
 import zornco.bedcraftbeyond.beds.base.BlockBedBase;
 import zornco.bedcraftbeyond.beds.base.ItemFrame;
+import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.core.util.SettingsHelper;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameHelper;
@@ -150,12 +149,12 @@ public class ItemWoodenFrame extends ItemFrame {
             BlockPos btmHalf = pos;
             BlockPos topHalf = btmHalf.offset(player.getHorizontalFacing());
 
-            IBlockState foot = BcbBlocks.woodenBed.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
+            IBlockState foot = ModContent.Blocks.woodenBed.getDefaultState().withProperty(BlockBedBase.FACING, player.getHorizontalFacing())
                 .withProperty(BlockBedBase.HEAD, false);
             if (!placeBedBlock(stack, world, player, btmHalf, foot, true))
                 throw new Exception();
 
-            IBlockState head = BcbBlocks.woodenBed.getDefaultState()
+            IBlockState head = ModContent.Blocks.woodenBed.getDefaultState()
                 .withProperty(BlockBedBase.HEAD, true)
                 .withProperty(BlockBedBase.FACING, player.getHorizontalFacing().getOpposite());
             if (!placeBedBlock(stack, world, player, topHalf, head, true))

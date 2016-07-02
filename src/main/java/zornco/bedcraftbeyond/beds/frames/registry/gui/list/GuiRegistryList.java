@@ -1,19 +1,17 @@
 package zornco.bedcraftbeyond.beds.frames.registry.gui.list;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiErrorScreen;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.client.config.GuiMessageDialog;
 import org.lwjgl.input.Mouse;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelistEntry;
+import zornco.bedcraftbeyond.beds.frames.registry.gui.editor.GuiFrameWhitelistEditor;
+import zornco.bedcraftbeyond.beds.frames.registry.messages.MessageOpenWhitelistEditor;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.gui.GuiHandler;
 
@@ -32,7 +30,7 @@ public class GuiRegistryList extends GuiScreen {
     GuiButton delete;
     GuiButton reset;
 
-    private GuiListWhitelist whitelist;
+    private RegistryWhitelistComponent whitelist;
 
     public GuiRegistryList(EntityPlayer player, FrameRegistry.EnumFrameType TYPE) {
         this.player = player;
@@ -48,7 +46,7 @@ public class GuiRegistryList extends GuiScreen {
 
         Point scrollBottom = new Point(SCROLL_AREA.x, SCROLL_AREA.y + SCROLL_AREA.height);
 
-        whitelist = new GuiListWhitelist(this, mc, TYPE);
+        whitelist = new RegistryWhitelistComponent(this, mc, TYPE);
 
         // ADD DELETE
         // EDIT RESET
@@ -97,10 +95,10 @@ public class GuiRegistryList extends GuiScreen {
 
             case 1:
                 // Edit
-                mc.displayGuiScreen(new GuiMessageDialog(
-                    this, I18n.format(BedCraftBeyond.MOD_ID + ".frames.gui.not_yet_implemented"),
-                    new TextComponentString("Coming soon!"), I18n.format("gui.back")
-                ));
+                MessageOpenWhitelistEditor owe = new MessageOpenWhitelistEditor(whitelist.getSelectedEntry(), TYPE, player.getUniqueID());
+                BedCraftBeyond.NETWORK.sendToServer(owe);
+
+                mc.displayGuiScreen(new GuiFrameWhitelistEditor(this, whitelist.getSelectedEntry(), TYPE));
                 break;
 
             case 2:

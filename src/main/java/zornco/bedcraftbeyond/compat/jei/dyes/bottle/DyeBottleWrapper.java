@@ -5,7 +5,7 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import zornco.bedcraftbeyond.core.BcbItems;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class DyeBottleWrapper extends BlankRecipeWrapper implements IShapedCraft
 
         l.add(null); l.add(OreDictionary.getOres("dyeRed")); l.add(null);
         l.add(OreDictionary.getOres("dyeGreen"));
-        l.add(new ItemStack(BcbItems.eyedropper));
+        l.add(new ItemStack(ModContent.Items.eyedropper));
         l.add(OreDictionary.getOres("dyeBlue"));
         l.add(null); l.add(OreDictionary.getOres("bottleWater")); l.add(null);
         return l;
@@ -36,7 +36,7 @@ public class DyeBottleWrapper extends BlankRecipeWrapper implements IShapedCraft
     @Nonnull
     @Override
     public List getOutputs() {
-        return ImmutableList.of(new ItemStack(BcbItems.dyeBottle));
+        return ImmutableList.of(new ItemStack(ModContent.Items.dyeBottle));
     }
 
     @Override

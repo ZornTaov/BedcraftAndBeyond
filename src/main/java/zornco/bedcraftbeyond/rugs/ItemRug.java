@@ -5,8 +5,8 @@ import net.minecraft.item.*;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import zornco.bedcraftbeyond.core.BcbBlocks;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ public class ItemRug extends ItemBlock {
     public static final String[] rugColorNames = new String[]{"Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "LightGray", "Gray", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange", "White"};
 
     public ItemRug() {
-        super(BcbBlocks.rug);
-        this.setRegistryName(BcbBlocks.rug.getRegistryName());
+        super(ModContent.Blocks.rug);
+        this.setRegistryName(ModContent.Blocks.rug.getRegistryName());
         this.setUnlocalizedName(BedCraftBeyond.MOD_ID + ".rug");
         this.setMaxDamage(0);
         this.setHasSubtypes(true);

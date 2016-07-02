@@ -2,7 +2,7 @@ package zornco.bedcraftbeyond.core.proxy;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import zornco.bedcraftbeyond.core.BcbBlocks;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import java.awt.*;
 
@@ -12,7 +12,7 @@ public abstract class CommonProxy {
     }
 
     public void init() {
-        BcbBlocks.registerTiles();
+        ModContent.TileEntities.registerTiles();
     }
 
     public abstract World getClientWorld();

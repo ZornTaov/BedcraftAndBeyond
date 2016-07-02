@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.core.ModContent;
 
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class BlockRug extends Block {
     public static boolean canConnectRugTo(IBlockAccess par1IBlockAccess, BlockPos pos) {
         Block var5 = par1IBlockAccess.getBlockState(pos).getBlock();
 
-        return (var5 == zornco.bedcraftbeyond.core.BcbBlocks.stoneBed) && !par1IBlockAccess.isAirBlock(pos) ? true : false;
+        return (var5 == ModContent.Blocks.stoneBed) && !par1IBlockAccess.isAirBlock(pos) ? true : false;
 
     }
 
