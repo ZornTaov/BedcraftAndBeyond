@@ -10,10 +10,10 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameFile;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelist;
+import zornco.bedcraftbeyond.frames.registry.FrameException;
+import zornco.bedcraftbeyond.frames.registry.FrameFile;
+import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.frames.registry.FrameWhitelist;
 import zornco.bedcraftbeyond.core.commands.CommandFragment;
 import zornco.bedcraftbeyond.core.config.ConfigHelper;
 

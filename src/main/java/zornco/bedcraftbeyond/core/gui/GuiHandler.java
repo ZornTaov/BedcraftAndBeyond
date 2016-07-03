@@ -7,8 +7,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
-import zornco.bedcraftbeyond.beds.frames.registry.gui.list.GuiRegistryList;
+import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.frames.registry.gui.list.GuiRegistryList;
 import zornco.bedcraftbeyond.core.gui.container.ContainerBlank;
 
 public class GuiHandler implements IGuiHandler {

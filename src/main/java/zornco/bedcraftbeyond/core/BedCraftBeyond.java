@@ -19,14 +19,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import zornco.bedcraftbeyond.beds.TabBeds;
+import zornco.bedcraftbeyond.frames.TabBeds;
 import zornco.bedcraftbeyond.core.network.Registration;
 import zornco.bedcraftbeyond.core.proxy.CommonProxy;
 import zornco.bedcraftbeyond.core.commands.CommandBedcraft;
 import zornco.bedcraftbeyond.core.gui.GuiHandler;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 import zornco.bedcraftbeyond.core.config.ConfigHelper;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameLoader;
+import zornco.bedcraftbeyond.frames.registry.FrameLoader;
 
 
 @Mod(

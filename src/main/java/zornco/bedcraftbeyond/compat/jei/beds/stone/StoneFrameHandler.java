@@ -3,7 +3,7 @@ package zornco.bedcraftbeyond.compat.jei.beds.stone;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
-import zornco.bedcraftbeyond.beds.stone.RecipeBedFrameStone;
+import zornco.bedcraftbeyond.frames.stone.RecipeBedFrameStone;
 
 import javax.annotation.Nonnull;
 

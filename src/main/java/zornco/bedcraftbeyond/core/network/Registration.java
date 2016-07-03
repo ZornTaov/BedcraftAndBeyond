@@ -1,10 +1,10 @@
 package zornco.bedcraftbeyond.core.network;
 
 import net.minecraftforge.fml.relauncher.Side;
-import zornco.bedcraftbeyond.beds.frames.registry.messages.MessageOpenWhitelistEditor;
+import zornco.bedcraftbeyond.frames.registry.messages.MessageOpenWhitelistEditor;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.beds.frames.BedFrameUpdate;
-import zornco.bedcraftbeyond.beds.parts.linens.BedLinenUpdate;
+import zornco.bedcraftbeyond.frames.BedFrameUpdate;
+import zornco.bedcraftbeyond.linens.BedLinenUpdate;
 import zornco.bedcraftbeyond.dyes.eyedropper.MessageEyedropperUpdate;
 
 public class Registration {
