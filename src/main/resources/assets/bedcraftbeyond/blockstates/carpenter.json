@@ -1,0 +1,8 @@
+{
+  "forge_marker": 1,
+  "defaults": { "model": "bedcraftbeyond:carpenter" },
+  "variants": {
+    "normal": [{ }],
+    "inventory": [{}]
+  }
+}

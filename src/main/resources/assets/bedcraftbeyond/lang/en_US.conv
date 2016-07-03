@@ -1,0 +1,104 @@
+tile.bedcraftbeyond {
+	// Beds
+	beds {
+		wooden.name: "Wooden Bed"
+		stone.name: "Stone Bed"
+	}
+
+	// Rugs
+	rug {
+		Black.name: "Black Rug"
+		Red.name: "Red Rug"
+		Green.name: "Green Rug"
+		Brown.name: "Brown Rug"
+		Blue.name: "Blue Rug"
+		Purple.name: "Purple Rug"
+		Cyan.name: "Cyan Rug"
+		LightGray.name: "Light Gray Rug"
+		Gray.name: "Gray Rug"
+		Pink.name: "Pink Rug"
+		Lime.name: "Lime Rug"
+		Yellow.name: "Yellow Rug"
+		LightBlue.name: "Light Blue Rug"
+		Magenta.name: "Magenta Rug"
+		Orange.name: "Orange Rug"
+		White.name: "White Rug"
+	}
+
+	carpenter.name: "Carpenter"
+}
+
+// Items
+item.bedcraftbeyond {
+	beds {
+		wooden.name: "Wooden Bed"
+		drawer.name: "Bed Drawer"
+		stone.name: "Stone Bed"
+	}
+
+	scissors.name: "Scissors"
+	drawerKey.name: "Drawer Key"
+	dyeBottle.name: "Bottle of Dye"
+	eyedropper.name: "Eyedropper"
+	template {
+	    name: "Template"
+	    blank: "Blank Template"
+	}
+
+	linens {
+		blanket.name: "Blanket"
+		sheets.name: "Sheets"
+	}
+}
+
+// Creative Tabs
+itemGroup.bedcraftbeyond {
+	~: "BedCraft and Beyond"
+	beds: "BedCraft Beds"
+}
+
+bedcraftbeyond.frames {
+	// Commands - Frames / Errors and Messages
+	messages {
+		reset_complete: "Reset whitelist for type %s."
+		reset_entry_complete: "Reset whitelist for entry %s under type %s."
+		frame_valid: "Block %s (meta %s) is a valid frame type for %s."
+		frame_invalid: "Block %s (meta %s) is NOT a valid frame type for %s."
+	}
+
+	errors {
+    	parsing {
+	        no_type: "Could not parse frame type for entry %s: it does not exist."
+            invalid_type: "Could not parse frame type for entry %s. Frame type '%s' is invalid."
+	    }
+
+	    invalid_name: "Invalid registry name (%s): Block does not exist or is not registered."
+		invalid_meta: "Invalid metadata for whitelist entry '%s': '%d'."
+		already_added: "Entry %s is already added to the whitelist for type %s."
+		already_added_meta: "Entry %s already has meta %s added to its whitelist for type %s."
+		not_valid_entry: "Invalid frame entry: %s is not in the valid frame list."
+		unknown_frame_type: "Unknown frame type."
+		no_frame_type: "No frame type selected."
+		invalid_frame: "Frame is invalid. Please destroy and recraft."
+	}
+
+	// Frames Messages - Blacklisting
+	blacklisted {
+		~: "Successfully whitelisted %s (and its variants) to frame type %s."
+		fail: "Failed to whitelist %s (and its variants) to frame type %s."
+		by_meta {
+			~: "Successfully blacklisted %s (meta %s) to %s frame type."
+			fail: "Failed to blacklist %s (meta %s) to %s frame type."
+		}
+	}
+
+	// Frames Messages - Whitelisting
+	whitelisted {
+		~: "Successfully whitelisted %s (and its variants) to frame type %s."
+		fail: "Failed to whitelist %s (and its variants) to frame type %s."
+		by_meta {
+			~: "Successfully whitelisted %s (meta %s) to frame type %s."
+			fail: "Failed to whitelist %s (meta %s) to frame type %s."
+		}
+	}
+}

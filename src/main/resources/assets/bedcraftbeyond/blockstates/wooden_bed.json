@@ -1,0 +1,27 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "bedcraftbeyond:wooden_bed/frame"
+  },
+  "variants": {
+    "normal": [ { } ],
+    "facing": {
+      "north": { "y": 180 },
+      "south": { },
+      "east": { "y": 270 },
+      "west": { "y": 90 }
+    },
+
+    "status": {
+      "head_linens": { "submodel": "bedcraftbeyond:wooden_bed/head_linens" },
+      "head": {  },
+      "foot_linens": { "submodel": "bedcraftbeyond:wooden_bed/foot_linens" },
+      "foot": { }
+    },
+
+    "storage": {
+      "true": { },
+      "false": { }
+    }
+  }
+}

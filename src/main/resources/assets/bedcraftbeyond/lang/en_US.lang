@@ -1,50 +1,80 @@
-# Blocks
-tile.CbedBlock.name=Colored Bed
-tile.CCbedBlock.name=Colored Chest Bed
-tile.SbedBlock.name=Stone Bed
-tile.bcbwood.zorn.name=Zorn Plank
-tile.bcbwood.xylex.name=Xylex Plank
-tile.rugBlock.Black.name=Black Rug
-tile.rugBlock.Red.name=Red Rug
-tile.rugBlock.Green.name=Green Rug
-tile.rugBlock.Brown.name=Brown Rug
-tile.rugBlock.Blue.name=Blue Rug
-tile.rugBlock.Purple.name=Purple Rug
-tile.rugBlock.Cyan.name=Cyan Rug
-tile.rugBlock.LightGray.name=LightGray Rug
-tile.rugBlock.Gray.name=Gray Rug
-tile.rugBlock.Pink.name=Pink Rug
-tile.rugBlock.Lime.name=Lime Rug
-tile.rugBlock.Yellow.name=Yellow Rug
-tile.rugBlock.LightBlue.name=LightBlue Rug
-tile.rugBlock.Magenta.name=Magenta Rug
-tile.rugBlock.Orange.name=Orange Rug
-tile.rugBlock.White.name=White Rug
+# Beds
+tile.bedcraftbeyond.beds.wooden.name=Wooden Bed
+tile.bedcraftbeyond.beds.stone.name=Stone Bed
+
+# Rugs
+tile.bedcraftbeyond.rug.Black.name=Black Rug
+tile.bedcraftbeyond.rug.Red.name=Red Rug
+tile.bedcraftbeyond.rug.Green.name=Green Rug
+tile.bedcraftbeyond.rug.Brown.name=Brown Rug
+tile.bedcraftbeyond.rug.Blue.name=Blue Rug
+tile.bedcraftbeyond.rug.Purple.name=Purple Rug
+tile.bedcraftbeyond.rug.Cyan.name=Cyan Rug
+tile.bedcraftbeyond.rug.LightGray.name=Light Gray Rug
+tile.bedcraftbeyond.rug.Gray.name=Gray Rug
+tile.bedcraftbeyond.rug.Pink.name=Pink Rug
+tile.bedcraftbeyond.rug.Lime.name=Lime Rug
+tile.bedcraftbeyond.rug.Yellow.name=Yellow Rug
+tile.bedcraftbeyond.rug.LightBlue.name=Light Blue Rug
+tile.bedcraftbeyond.rug.Magenta.name=Magenta Rug
+tile.bedcraftbeyond.rug.Orange.name=Orange Rug
+tile.bedcraftbeyond.rug.White.name=White Rug
+
+tile.bedcraftbeyond.carpenter.name=Carpenter
 
 # Items
-item.CbedItem.name=Colored Bed
-item.CCbedItem.name=Colored Chest Bed
-item.SbedItem.name=Stone Bed
-item.scissorsItem.name=Scissors
-item.drawerKey.name=Drawer Key
-item.rugItem.Black.name=Black Rug
-item.rugItem.Red.name=Red Rug
-item.rugItem.Green.name=Green Rug
-item.rugItem.Brown.name=Brown Rug
-item.rugItem.Blue.name=Blue Rug
-item.rugItem.Purple.name=Purple Rug
-item.rugItem.Cyan.name=Cyan Rug
-item.rugItem.LightGray.name=LightGray Rug
-item.rugItem.Gray.name=Gray Rug
-item.rugItem.Pink.name=Pink Rug
-item.rugItem.Lime.name=Lime Rug
-item.rugItem.Yellow.name=Yellow Rug
-item.rugItem.LightBlue.name=LightBlue Rug
-item.rugItem.Magenta.name=Magenta Rug
-item.rugItem.Orange.name=Orange Rug
-item.rugItem.White.name=White Rug
+item.bedcraftbeyond.beds.wooden.name=Wooden Bed
+item.bedcraftbeyond.beds.drawer.name=Bed Drawer
+item.bedcraftbeyond.beds.stone.name=Stone Bed
 
-# GUI
+item.bedcraftbeyond.scissors.name=Scissors
+item.bedcraftbeyond.drawerKey.name=Drawer Key
+item.bedcraftbeyond.dyeBottle.name=Bottle of Dye
+item.bedcraftbeyond.eyedropper.name=Eyedropper
+item.bedcraftbeyond.template.name=Template
+item.bedcraftbeyond.template.blank=Blank Template
+item.bedcraftbeyond.linens.blanket.name=Blanket
+item.bedcraftbeyond.linens.sheets.name=Sheets
 
-# Other
-itemGroup.bedcraftbeyond=Bed Craft and Beyond
+
+# Creative Tabs
+itemGroup.bedcraftbeyond=BedCraft and Beyond
+itemGroup.bedcraftbeyond.beds=BedCraft Beds
+
+# Commands - Frames / Errors and Messages
+bedcraftbeyond.frames.messages.reset_complete=Reset whitelist for type %s.
+bedcraftbeyond.frames.messages.reset_entry_complete=Reset whitelist for entry %s under type %s.
+bedcraftbeyond.frames.messages.frame_valid=Block %s (meta %s) is a valid frame type for %s.
+bedcraftbeyond.frames.messages.frame_invalid=Block %s (meta %s) is NOT a valid frame type for %s.
+
+bedcraftbeyond.frames.errors.parsing.no_type=Could not parse frame type for entry %s: entry 'type' field not found.
+bedcraftbeyond.frames.errors.parsing.invalid_type=Could not parse frame type for entry %s. Frame type '%s' is invalid.
+
+bedcraftbeyond.frames.errors.invalid_name=Invalid registry name (%s): Block does not exist or is not registered.
+bedcraftbeyond.frames.errors.invalid_meta=Invalid metadata for whitelist entry '%s': '%d'.
+bedcraftbeyond.frames.errors.already_added=Entry %s is already added to the whitelist for type %s.
+bedcraftbeyond.frames.errors.already_added_meta=Entry %s already has meta %s added to its whitelist for type %s.
+bedcraftbeyond.frames.errors.not_valid_entry=Invalid frame entry: %s is not in the valid frame list.
+bedcraftbeyond.frames.errors.unknown_frame_type=Unknown frame type.
+bedcraftbeyond.frames.errors.no_frame_type=No frame type selected.
+bedcraftbeyond.frames.errors.invalid_frame=Frame is invalid. Please destroy and recraft.
+
+# Frames Messages - Blacklisting
+bedcraftbeyond.frames.blacklisted=Successfully whitelisted %s (and its variants) to frame type %s.
+bedcraftbeyond.frames.blacklisted.fail=Failed to whitelist %s (and its variants) to frame type %s.
+bedcraftbeyond.frames.blacklisted.by_meta=Successfully blacklisted %s (meta %s) to %s frame type.
+bedcraftbeyond.frames.blacklisted.by_meta.fail=Failed to blacklist %s (meta %s) to %s frame type.
+
+
+# Frames Messages - Whitelisting
+bedcraftbeyond.frames.whitelisted=Successfully whitelisted %s (and its variants) to frame type %s.
+bedcraftbeyond.frames.whitelisted.fail=Failed to whitelist %s (and its variants) to frame type %s.
+bedcraftbeyond.frames.whitelisted.by_meta=Successfully whitelisted %s (meta %s) to frame type %s.
+bedcraftbeyond.frames.whitelisted.by_meta.fail=Failed to whitelist %s (meta %s) to frame type %s.
+
+
+bedcraftbeyond.frames.gui.reset_entry=Reset Entry
+bedcraftbeyond.frames.gui.delete_entry=Delete Entry
+bedcraftbeyond.frames.gui.edit_entry=Edit Entry
+bedcraftbeyond.frames.gui.add_entry=Add Entry
+bedcraftbeyond.frames.gui.not_yet_implemented=Not Yet Implemented.

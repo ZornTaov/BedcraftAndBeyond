@@ -1,0 +1,7 @@
+{
+  "parent": "bedcraftbeyond:item/item_base",
+  "textures": {
+    "layer0": "bedcraftbeyond:items/eyedropper0",
+    "layer1": "bedcraftbeyond:items/eyedropper1"
+  }
+}

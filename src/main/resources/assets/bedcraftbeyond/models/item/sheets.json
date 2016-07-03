@@ -1,0 +1,6 @@
+{
+  "parent": "bedcraftbeyond:item/item_base",
+  "textures": {
+    "layer0": "bedcraftbeyond:items/sheets"
+  }
+}

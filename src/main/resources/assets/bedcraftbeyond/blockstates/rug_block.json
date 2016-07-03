@@ -1,0 +1,51 @@
+{
+    "forge_marker": 1,
+    "defaults": {
+        "textures": {
+            "texture": "blocks/wool_colored_white",
+            "particle": "#texture",
+            "wool": "#texture",
+            "bottom": "#texture",
+            "top": "#texture",
+            "side": "#texture"
+        },
+        "model": "bedcraftbeyond:rug/carpet",
+        "transform": "forge:default-block",
+        "uvlock": true
+    },
+    "variants": {
+        "color": {
+            "white": { "textures": {"texture": "blocks/wool_colored_white"}},
+            "orange": { "textures": {"texture": "blocks/wool_colored_orange"}},
+            "magenta": { "textures": {"texture": "blocks/wool_colored_magenta"}},
+            "light_blue": { "textures": {"texture": "blocks/wool_colored_light_blue"}},
+            "yellow": { "textures": {"texture": "blocks/wool_colored_yellow"}},
+            "lime": { "textures": {"texture": "blocks/wool_colored_lime"}},
+            "pink": { "textures": {"texture": "blocks/wool_colored_pink"}},
+            "gray": { "textures": {"texture": "blocks/wool_colored_gray"}},
+            "silver": { "textures": {"texture": "blocks/wool_colored_silver"}},
+            "cyan": { "textures": {"texture": "blocks/wool_colored_cyan"}},
+            "purple": { "textures": {"texture": "blocks/wool_colored_purple"}},
+            "blue": { "textures": {"texture": "blocks/wool_colored_blue"}},
+            "brown": { "textures": {"texture": "blocks/wool_colored_brown"}},
+            "green": { "textures": {"texture": "blocks/wool_colored_green"}},
+            "red": { "textures": {"texture": "blocks/wool_colored_red"}},
+            "black": { "textures": {"texture": "blocks/wool_colored_black"}}
+        },
+        "shape": {
+            "slab": { "model": "bedcraftbeyond:rug/carpet_slab" },
+            "straight": { "model": "bedcraftbeyond:rug/stairs" },
+            "inner_left": { "model": "bedcraftbeyond:rug/inner_stairs_left" },
+            "inner_right": { "model": "bedcraftbeyond:rug/inner_stairs_right" },
+            "outer_left": { "model": "bedcraftbeyond:rug/outer_stairs_left" },
+            "outer_right": { "model": "bedcraftbeyond:rug/outer_stairs_right" },
+            "block": { }
+        },
+        "facing": {
+            "east": { },
+            "south": { "y": 90 },
+            "west": { "y": 180 },
+            "north": { "y": 270 }
+        }
+    }
+}
