@@ -7,6 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -16,17 +17,30 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.items.wrapper.PlayerInvWrapper;
-import zornco.bedcraftbeyond.frames.base.BlockBedBase;
-import zornco.bedcraftbeyond.frames.registry.FrameException;
-import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.parts.IPart;
-import zornco.bedcraftbeyond.linens.LinenHandler;
-import zornco.bedcraftbeyond.linens.PropertyFabricType;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.ModContent;
+import zornco.bedcraftbeyond.core.gui.GuiHandler;
+import zornco.bedcraftbeyond.core.util.items.ItemHandlerCrafting;
+import zornco.bedcraftbeyond.frames.base.BlockBedBase;
+import zornco.bedcraftbeyond.frames.registry.FrameException;
+import zornco.bedcraftbeyond.linens.LinenHandler;
+import zornco.bedcraftbeyond.linens.PropertyFabricType;
+import zornco.bedcraftbeyond.parts.IPart;
+import zornco.bedcraftbeyond.parts.IPartAcceptor;
+import zornco.bedcraftbeyond.parts.Part;
+import zornco.bedcraftbeyond.storage.CapabilityStorageHandler;
+import zornco.bedcraftbeyond.storage.IStorageHandler;
+import zornco.bedcraftbeyond.storage.MessageOpenStorage;
+import zornco.bedcraftbeyond.storage.MessageStorageUpdate;
 
+import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +49,7 @@ import java.util.List;
  * A colored bed has sheets and blankets that are separately dyeable.
  * It works the same as a regular bed otherwise.
  */
-public class BlockWoodenBed extends BlockBedBase {
+public class BlockWoodenBed extends BlockBedBase implements IPartAcceptor {
 
     public static PropertyBool HAS_STORAGE = PropertyBool.create("storage");
     public static PropertyEnum<EnumWoodenFabricStatus> STATUS = PropertyEnum.create("status", EnumWoodenFabricStatus.class);
@@ -63,44 +77,6 @@ public class BlockWoodenBed extends BlockBedBase {
         return new BlockStateContainer(this, HEAD, OCCUPIED, FACING, HAS_STORAGE, STATUS, BLANKETS, SHEETS);
     }
 
-    @Override
-    public ItemStack addPart(IBlockAccess world, IBlockState state, BlockPos pos, ItemStack stack, boolean simulate) {
-        if(!(stack.getItem() instanceof IPart)) return stack.copy();
-        Part part = ((IPart) stack.getItem()).getPartReference();
-        Part.Type type = part.getPartType();
-
-        TileWoodenBed twb = (TileWoodenBed) getTileForBed(world, state, pos);
-
-        // Drawers and storage
-        if(type == Part.Type.STORAGE) {
-            ItemStack accepted = twb.getDrawerHandler().addDrawer(stack, simulate);
-            if((accepted == null || accepted.stackSize < stack.stackSize) && !simulate)
-                twb.updateClients(part.getPartType());
-
-            return accepted;
-        }
-
-        // Blankets and sheets
-        if(type.isLinenPart()) {
-            boolean hasPart = twb.getLinenHandler().hasLinenPart(type);
-            if(hasPart) return stack.copy();
-            if(!simulate){
-                twb.getLinenHandler().setLinenPart(part.getPartType(), stack);
-                twb.updateClients(part.getPartType());
-            }
-
-            if(stack.stackSize > 1) {
-                ItemStack copy = stack.copy();
-                copy.stackSize--;
-                return copy;
-            }
-
-            if(stack.stackSize == 1) return null;
-        }
-
-        return stack.copy();
-    }
-
     private boolean hasBlanketsAndSheets(IBlockState state, IBlockAccess world, BlockPos pos) {
         TileWoodenBed tile = (TileWoodenBed) getTileForBed(world, state, pos);
         return tile.getLinenHandler().hasBothParts();
@@ -121,34 +97,53 @@ public class BlockWoodenBed extends BlockBedBase {
         zornco.bedcraftbeyond.frames.wooden.TileWoodenBed tile = (zornco.bedcraftbeyond.frames.wooden.TileWoodenBed) getTileForBed(world, state, pos);
 
         if (tile == null) return true;
-        if (world.isRemote) return true;
-
         state = getActualState(state, world, pos);
-        // Add/remove blankets and sheets
 
+        if (heldItem == null) {
+            if (hitY < .5) {
+                // TODO: Drawer locking?
+                String storageID = state.getValue(HEAD) ? "head" : "foot";
+                IStorageHandler handler = (IStorageHandler) tile.getCapability((Capability) CapabilityStorageHandler.INSTANCE, side);
+                if(!handler.isSlotFilled(storageID)) return true;
 
-        PlayerInvWrapper wrapper = new PlayerInvWrapper(player.inventory);
-        if (heldItem != null) {
-            if (heldItem.getItem() instanceof IPart) {
-                ItemStack acceptedPart = addPart(world, state, pos, heldItem, true);
-                if(acceptedPart == null || acceptedPart.stackSize < heldItem.stackSize) {
-                    addPart(world, state, pos, heldItem, false);
-                    player.setHeldItem(hand, acceptedPart);
+                player.getEntityData().setString("storageID", storageID);
+                player.getEntityData().setInteger("side", side.getIndex());
+
+                player.openGui(BedCraftBeyond.INSTANCE, GuiHandler.ID_STORAGE, world, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
+                return true;
+            }
+
+            if (hitY >= .5 && hitY < .7) {
+                if (!player.isSneaking() && hasBlanketsAndSheets(state, world, pos)) {
+                    onBedActivated(world, pos, state, player);
                     return true;
                 }
             }
+
+            return false;
         }
 
-        if (heldItem == null) {
-            if (player.isSneaking()) {
-                // TODO: Open bed gui here
-            } else if (isBed(state, world, pos, player))
-                onBedActivated(world, pos, state, player);
+        // Manipulation after this point- if we're on the client, exit early.
+        if(world.isRemote) return true;
+
+        Part.Type partType = Part.getPartType(heldItem);
+        if (partType == Part.Type.INVALID || partType == Part.Type.UNKNOWN) return false;
+        if(!canAcceptPart(world, state, pos, side, new Vector3f(hitX,hitY,hitZ),heldItem)) return false;
+
+        if(partType == Part.Type.STORAGE && hitY < 0.5f){
+            ItemStack acceptedPart = addPart(world, state, pos, side, new Vector3f(hitX, hitY, hitZ), heldItem);
+            player.setHeldItem(hand, acceptedPart);
+            return true;
         }
 
-        return true;
+        if(partType.isLinenPart() && hitY > 0.5f){
+            ItemStack acceptedPart = addPart(world, state, pos, side, new Vector3f(hitX, hitY, hitZ), heldItem);
+            player.setHeldItem(hand, acceptedPart);
+            return true;
+        }
+
+        return false;
     }
-
 
     @SuppressWarnings("deprecation")
     @Override
@@ -222,4 +217,67 @@ public class BlockWoodenBed extends BlockBedBase {
     }
 
 
+    @Override
+    public boolean canAcceptPart(World world, IBlockState state, BlockPos pos, EnumFacing side, Vector3f hit, ItemStack stack) {
+        Part.Type type = Part.getPartType(stack);
+        if (type.isUnknownOrInvalid()) return false;
+
+        TileWoodenBed twb = (TileWoodenBed) getTileForBed(world, state, pos);
+        switch (type) {
+            case STORAGE:
+                if(!twb.hasCapability(CapabilityStorageHandler.INSTANCE, side)) return false;
+                IStorageHandler handler = (IStorageHandler) twb.getCapability((Capability) CapabilityStorageHandler.INSTANCE, side);
+
+                return !handler.isSlotFilled(state.getValue(HEAD) ? "head" : "foot");
+
+            case BLANKETS:
+            case SHEETS:
+                return !twb.getLinenHandler().hasLinenPart(type);
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public ItemStack addPart(World world, IBlockState state, BlockPos pos, EnumFacing side, Vector3f hit, ItemStack stack) {
+        if (!canAcceptPart(world, state, pos, side, hit, stack)) return stack.copy();
+
+        Part part = ((IPart) stack.getItem()).getPartReference();
+        Part.Type type = part.getPartType();
+
+        TileWoodenBed twb = (TileWoodenBed) getTileForBed(world, state, pos);
+
+        // Drawers and storage
+        if (type == Part.Type.STORAGE) {
+            IStorageHandler handler = (IStorageHandler) twb.getCapability((Capability) CapabilityStorageHandler.INSTANCE, side);
+            String area = state.getValue(HEAD) ? "head" : "foot";
+
+            if(handler.isSlotFilled(area)) return stack.copy();
+            ItemStack pushed = handler.fillSlot(area, stack);
+
+            if (pushed == null || pushed.stackSize < stack.stackSize){
+                MessageStorageUpdate update = new MessageStorageUpdate(twb.getPos(), area, side, ItemHandlerHelper.copyStackWithSize(stack, 1));
+                BedCraftBeyond.NETWORK.sendToAllAround(update,
+                    new NetworkRegistry.TargetPoint(world.provider.getDimension(),
+                        pos.getX(), pos.getY(), pos.getZ(), 20));
+            }
+
+            return pushed;
+        }
+
+        // Blankets and sheets
+        if (type.isLinenPart()) {
+            boolean hasPart = twb.getLinenHandler().hasLinenPart(type);
+            if (hasPart) return stack.copy();
+            twb.getLinenHandler().setLinenPart(type, stack);
+            twb.updateClients(type);
+
+            if (stack.stackSize > 1)
+                return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - 1);
+
+            if (stack.stackSize == 1) return null;
+        }
+
+        return stack.copy();
+    }
 }

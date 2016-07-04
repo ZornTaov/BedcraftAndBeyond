@@ -27,6 +27,7 @@ import zornco.bedcraftbeyond.core.gui.GuiHandler;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 import zornco.bedcraftbeyond.core.config.ConfigHelper;
 import zornco.bedcraftbeyond.frames.registry.FrameLoader;
+import zornco.bedcraftbeyond.storage.CapabilityStorageHandler;
 
 
 @Mod(
@@ -79,6 +80,8 @@ public class BedCraftBeyond {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
 
         GuiHandler.INSTANCE = new GuiHandler();
+
+        CapabilityStorageHandler.register();
     }
 
     @SuppressWarnings({"unchecked", "unused"})

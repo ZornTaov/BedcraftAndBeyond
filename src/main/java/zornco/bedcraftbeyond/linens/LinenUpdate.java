@@ -4,30 +4,28 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import zornco.bedcraftbeyond.parts.Part;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.frames.wooden.TileWoodenBed;
+import zornco.bedcraftbeyond.parts.Part;
 
-public class BedLinenUpdate implements IMessage {
+public class LinenUpdate implements IMessage {
 
     private BlockPos pos;
     private Part.Type part;
-    private PropertyFabricType partType;
     private ItemStack partItem;
 
     @SuppressWarnings("unused")
-    public BedLinenUpdate() {}
+    public LinenUpdate() {}
 
-    public BedLinenUpdate(BlockPos pos, Part.Type part, ItemStack partItem) {
+    public LinenUpdate(BlockPos pos, Part.Type part, ItemStack partItem) {
         this.pos = pos;
         this.part = part;
-        this.partType = PropertyFabricType.SOLID_COLOR;
         this.partItem = partItem;
     }
 
@@ -40,23 +38,7 @@ public class BedLinenUpdate implements IMessage {
     public void fromBytes(ByteBuf buf) {
         pos = NBTUtil.getPosFromTag(ByteBufUtils.readTag(buf));
         part = Part.Type.valueOf(ByteBufUtils.readUTF8String(buf));
-        partType = PropertyFabricType.valueOf(ByteBufUtils.readUTF8String(buf));
-
-        switch (partType) {
-            case SOLID_COLOR:
-                partItem = ByteBufUtils.readItemStack(buf);
-                break;
-
-            case RAINBOW:
-            case TEXTURED:
-
-                break;
-
-            case NONE:
-
-                break;
-        }
-
+        partItem = ByteBufUtils.readItemStack(buf);
     }
 
     /**
@@ -68,19 +50,10 @@ public class BedLinenUpdate implements IMessage {
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeTag(buf, NBTUtil.createPosTag(pos));
         ByteBufUtils.writeUTF8String(buf, part.name());
-        ByteBufUtils.writeUTF8String(buf, partType.name());
-
-        switch (partType) {
-            case SOLID_COLOR:
-                ByteBufUtils.writeItemStack(buf, partItem);
-                break;
-
-            default:
-                break;
-        }
+        ByteBufUtils.writeItemStack(buf, partItem);
     }
 
-    public static class Handler implements IMessageHandler<BedLinenUpdate, IMessage> {
+    public static class Handler implements IMessageHandler<LinenUpdate, IMessage> {
 
         public Handler() {
         }
@@ -94,21 +67,13 @@ public class BedLinenUpdate implements IMessage {
          * @return an optional return message
          */
         @Override
-        public IMessage onMessage(BedLinenUpdate message, MessageContext ctx) {
+        public IMessage onMessage(LinenUpdate message, MessageContext ctx) {
             World w = BedCraftBeyond.PROXY.getClientWorld();
             IBlockState curState = w.getBlockState(message.pos);
-            TileWoodenBed twb = (TileWoodenBed) w.getTileEntity(message.pos);
-            if(twb == null) return null;
+            TileEntity tile = w.getTileEntity(message.pos);
+            if(tile == null || !(tile instanceof ILinenHolder)) return null;
 
-            LinenHandler handler = twb.getLinenHandler();
-            switch (message.partType) {
-                case SOLID_COLOR:
-                    handler.setLinenPart(message.part, message.partItem);
-                    break;
-
-                default:
-                    handler.setLinenPart(message.part, null);
-            }
+            ((ILinenHolder) tile).getLinenHandler().setLinenPart(message.part, message.partItem);
 
             IBlockState newState = w.getBlockState(message.pos).getActualState(w, message.pos);
             w.notifyBlockUpdate(message.pos, curState, newState, 2);

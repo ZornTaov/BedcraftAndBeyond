@@ -275,14 +275,5 @@ public abstract class BlockBedBase extends Block {
         return realHolder;
     }
 
-    /**
-     * Tries to add a given part to a bed.
-     *
-     * @param world
-     * @param state
-     * @param pos
-     * @param stack
-     * @param simulate If true, the process is only simulated.
-     */
-    public abstract ItemStack addPart(IBlockAccess world, IBlockState state, BlockPos pos, ItemStack stack, boolean simulate);
+
 }

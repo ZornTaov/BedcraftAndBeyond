@@ -28,11 +28,6 @@ public class BlockStoneBed extends BlockBedBase {
     }
 
     @Override
-    public ItemStack addPart(IBlockAccess world, IBlockState state, BlockPos pos, ItemStack stack, boolean simulate) {
-        return stack.copy();
-    }
-
-    @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ArrayList<ItemStack> drops = new ArrayList<ItemStack>();
         if(state.getValue(HEAD))

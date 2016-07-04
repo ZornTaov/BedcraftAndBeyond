@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond.core.proxy;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.core.ModContent;
@@ -18,4 +19,6 @@ public abstract class CommonProxy {
     public abstract World getClientWorld();
 
     public abstract Color getColorFromTexture(ItemStack stack);
+
+    public abstract EntityPlayer getPlayer();
 }

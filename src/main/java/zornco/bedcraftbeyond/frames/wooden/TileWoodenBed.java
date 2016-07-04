@@ -1,21 +1,29 @@
 package zornco.bedcraftbeyond.frames.wooden;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.items.CapabilityItemHandler;
+import zornco.bedcraftbeyond.core.util.items.ItemHandlerCrafting;
 import zornco.bedcraftbeyond.frames.base.TileGenericBed;
 import zornco.bedcraftbeyond.frames.BedFrameUpdate;
 import zornco.bedcraftbeyond.frames.registry.FrameException;
 import zornco.bedcraftbeyond.frames.registry.FrameHelper;
 import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
 import zornco.bedcraftbeyond.frames.registry.FrameWhitelistEntry;
+import zornco.bedcraftbeyond.linens.ILinenHolder;
 import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.storage.drawer.DrawerHandler;
-import zornco.bedcraftbeyond.linens.BedLinenUpdate;
+import zornco.bedcraftbeyond.storage.CapabilityStorageHandler;
+import zornco.bedcraftbeyond.storage.IStorageHandler;
+import zornco.bedcraftbeyond.storage.StorageHandler;
+import zornco.bedcraftbeyond.linens.LinenUpdate;
 import zornco.bedcraftbeyond.linens.LinenHandler;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
@@ -23,24 +31,24 @@ import java.awt.*;
 
 // This tile is only to be used ONCE on beds!
 // Place it on the head of the bed. Use BlockWoodenBed.getTileEntity anywhere on a bed to fetch this instance.
-public class TileWoodenBed extends TileGenericBed {
+public class TileWoodenBed extends TileGenericBed implements ILinenHolder {
 
     private Color plankColor;
     public ResourceLocation plankType;
     protected int plankMeta;
 
     protected LinenHandler linens;
-    protected DrawerHandler drawers;
+    protected StorageHandler storage;
 
     @SuppressWarnings("unused")
     public TileWoodenBed() {
-        drawers = new DrawerHandler(2);
+        storage = new DrawerStorage();
         linens = new LinenHandler();
     }
 
     public TileWoodenBed(World w) {
         super(w);
-        drawers = new DrawerHandler(2);
+        storage = new DrawerStorage();
         linens = new LinenHandler();
     }
 
@@ -83,10 +91,6 @@ public class TileWoodenBed extends TileGenericBed {
 
         updateClients(Part.Type.BLANKETS);
         updateClients(Part.Type.SHEETS);
-    }
-
-    public DrawerHandler getDrawerHandler() {
-        return this.drawers;
     }
 
     //region Planks
@@ -173,9 +177,40 @@ public class TileWoodenBed extends TileGenericBed {
     public final void updateClients(Part.Type part) {
         if (worldObj == null || worldObj.isRemote) return;
         markDirty();
-        if(part.isLinenPart()) {
-            BedLinenUpdate update = new BedLinenUpdate(pos, part, linens.getLinenPart(part, false));
-            BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+
+        switch (part){
+            case BLANKETS:
+            case SHEETS:
+                LinenUpdate update = new LinenUpdate(pos, part, linens.getLinenPart(part, false));
+                BedCraftBeyond.NETWORK.sendToAllAround(update, new NetworkRegistry.TargetPoint(worldObj.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+                break;
+        }
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        if(capability == CapabilityStorageHandler.INSTANCE &&
+            (facing != EnumFacing.UP && facing != EnumFacing.DOWN))
+                return true;
+
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if(capability == CapabilityStorageHandler.INSTANCE){
+            if(facing == EnumFacing.UP || facing == EnumFacing.DOWN) return null;
+            return (T) storage;
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    private class DrawerStorage extends StorageHandler {
+
+        public DrawerStorage() {
+            super(2);
+            this.registeredSlots = ImmutableList.of("head", "foot");
         }
     }
 }
