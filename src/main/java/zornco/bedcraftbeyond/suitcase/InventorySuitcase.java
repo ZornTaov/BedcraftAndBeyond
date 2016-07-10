@@ -14,7 +14,7 @@ import net.minecraftforge.common.util.Constants;
 public class InventorySuitcase implements IInventory
 {
 
-	private String name = I18n.format("inventory.suitcase", new Object[0]);
+	//private String name = I18n.format("inventory.suitcase", new Object[0]);
 	
 	/** Provides NBT Tag Compound to reference */
 	private final ItemStack invItem;
@@ -93,13 +93,13 @@ public class InventorySuitcase implements IInventory
 	@Override
 	public String getName()
 	{
-		return name;
+		return "inventory.suitcase";
 	}
 
 	@Override
 	public boolean hasCustomName()
 	{
-		return name.length() > 0;
+		return false;
 	}
 
 	@Override
