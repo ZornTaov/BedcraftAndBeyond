@@ -21,6 +21,17 @@ public class Recipes {
         // Drawer key
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModContent.Items.drawerKey, 1), "xy", 'x', "ingotIron", 'y', "ingotGold"));
         ++recipesAdded;
+        
+        // Suitcase
+		GameRegistry.addRecipe(new ItemStack(ModContent.Items.suitcase, 1), 
+				"www",
+				"wcw",
+				"rsr",
+				'w', new ItemStack(Blocks.WOOL, 1),
+				'c', new ItemStack(Blocks.CHEST, 1),
+				'r', new ItemStack(Blocks.STONE, 1),
+				's', new ItemStack(Items.STICK, 1)
+		);
 
         // Rug
         GameRegistry.addRecipe(new ItemStack(ModContent.Items.rug, 4), "xxx", 'x', new ItemStack(Blocks.WOOL, 1));

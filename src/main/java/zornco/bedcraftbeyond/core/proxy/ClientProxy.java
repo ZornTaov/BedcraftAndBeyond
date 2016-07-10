@@ -39,6 +39,7 @@ public class ClientProxy extends CommonProxy {
 
         RenderingHelper.registerItemModel(ModContent.Items.drawerKey);
         RenderingHelper.registerItemModel(ModContent.Items.stoneBed);
+        RenderingHelper.registerItemModel(ModContent.Items.suitcase);
         RenderingHelper.registerItemModel(ModContent.Items.woodenBed, "storage=false,head=true,status=head");
 
         RenderingHelper.registerItemModel(ModContent.Items.dyeBottle);
