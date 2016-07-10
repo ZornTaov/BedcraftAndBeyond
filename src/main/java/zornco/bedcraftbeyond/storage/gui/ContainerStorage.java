@@ -12,7 +12,7 @@ public class ContainerStorage extends Container {
 
     public ContainerStorage(EntityPlayer player, IStorageHandler storage, String storageID){
         StoragePart part = storage.getSlotPart(storageID);
-        part.layoutSlots(player, storage.getSlotItemStack(storageID, false)).forEach(this::addSlotToContainer);
+        // part.layoutSlots(player, storage.getSlotItemStack(storageID, false)).forEach(this::addSlotToContainer);
     }
 
     @Override

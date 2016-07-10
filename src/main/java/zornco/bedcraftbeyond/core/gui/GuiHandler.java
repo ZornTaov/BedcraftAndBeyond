@@ -49,12 +49,11 @@ public class GuiHandler implements IGuiHandler {
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        BlockPos pos = new BlockPos(x,y,z);
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, BlockPos pos) {
         switch(ID){
             case ID_EYEDROPPER:
-                EnumHand hand = getHandFromCoord(x);
-                return new GuiEyedropper(player, hand, player.getHeldItem(hand));
+                EnumHand hand = getHandFromCoord(pos.getX());
+                return null;
 
             case ID_STORAGE:
                 if(!player.getEntityData().hasKey("storageID")) return null;
@@ -63,8 +62,8 @@ public class GuiHandler implements IGuiHandler {
                 String storageID = player.getEntityData().getString("storageID");
                 EnumFacing side = EnumFacing.getFront(player.getEntityData().getInteger("side"));
 
-                player.getEntityData().removeTag("side");
-                player.getEntityData().removeTag("storageID");
+                // player.getEntityData().removeTag("side");
+                // player.getEntityData().removeTag("storageID");
 
                 TileEntity entity = world.getTileEntity(pos);
                 if(!entity.hasCapability(CapabilityStorageHandler.INSTANCE, side)) return null;
@@ -82,9 +81,11 @@ public class GuiHandler implements IGuiHandler {
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        BlockPos pos = new BlockPos(x,y,z);
+    public Object getClientGuiElement(int ID, EntityPlayer player, World world, BlockPos pos) {
         switch(ID){
+            case ID_EYEDROPPER:
+                return new GuiEyedropper(player, getHandFromCoord(x), player.getHeldItem(getHandFromCoord(pos.getX())));
+
             case ID_STORAGE:
                 if(!player.getEntityData().hasKey("storageID")) return null;
                 if(!player.getEntityData().hasKey("side")) return null;
@@ -92,8 +93,8 @@ public class GuiHandler implements IGuiHandler {
                 String storageID = player.getEntityData().getString("storageID");
                 EnumFacing side = EnumFacing.getFront(player.getEntityData().getInteger("side"));
 
-                player.getEntityData().removeTag("side");
-                player.getEntityData().removeTag("storageID");
+                // player.getEntityData().removeTag("side");
+                // player.getEntityData().removeTag("storageID");
 
                 TileEntity entity = world.getTileEntity(pos);
                 if(!entity.hasCapability(CapabilityStorageHandler.INSTANCE, side)) return null;
