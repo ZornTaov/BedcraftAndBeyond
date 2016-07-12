@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage.tinyDrawer;
+package zornco.bedcraftbeyond.storage.drawers.standard;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,10 +8,10 @@ import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 import zornco.bedcraftbeyond.storage.gui.GuiStorage;
 
-public class GuiTinyDrawer extends GuiStorage {
+public class GuiDrawer extends GuiStorage {
 
-    public GuiTinyDrawer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
-        super(player, handler, id, new ContainerTinyDrawer(player, tile, handler, id));
+    public GuiDrawer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
+        super(player, handler, id, new ContainerDrawer(player, tile, handler, id));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage.drawer;
+package zornco.bedcraftbeyond.storage.drawers.reinforced;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,16 +8,16 @@ import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 import zornco.bedcraftbeyond.storage.gui.GuiStorage;
 
-public class GuiDrawer extends GuiStorage {
+public class GuiReinforcedDrawer extends GuiStorage {
 
-    public GuiDrawer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
-        super(player, handler, id, new ContainerDrawer(player, tile, handler, id));
+    public GuiReinforcedDrawer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
+        super(player, handler, id, new ContainerReinforcedDrawer(player, tile, handler, id));
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         drawDefaultBackground();
-        mc.getTextureManager().bindTexture(new ResourceLocation(BedCraftBeyond.MOD_ID, "textures/gui/bed_drawer.png"));
+        mc.getTextureManager().bindTexture(new ResourceLocation(BedCraftBeyond.MOD_ID, "textures/gui/reinforced_drawer.png"));
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(guiLeft, guiTop, 1);

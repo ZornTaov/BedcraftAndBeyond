@@ -32,7 +32,6 @@ tile.bedcraftbeyond {
 item.bedcraftbeyond {
 	beds {
 		wooden.name: "Wooden Bed"
-		drawer.name: "Bed Drawer"
 		stone.name: "Stone Bed"
 	}
 
@@ -48,6 +47,11 @@ item.bedcraftbeyond {
 	linens {
 		blanket.name: "Blanket"
 		sheets.name: "Sheets"
+	}
+
+	drawers {
+	    standard.name: "Drawer"
+	    reinforced.name: "Reinforced Drawer"
 	}
 }
 
@@ -68,7 +72,7 @@ bedcraftbeyond.frames {
 
 	errors {
     	parsing {
-	        no_type: "Could not parse frame type for entry %s: it does not exist."
+	        no_type: "Could not parse frame type for entry %s: entry 'type' field not found."
             invalid_type: "Could not parse frame type for entry %s. Frame type '%s' is invalid."
 	    }
 
@@ -100,5 +104,13 @@ bedcraftbeyond.frames {
 			~: "Successfully whitelisted %s (meta %s) to frame type %s."
 			fail: "Failed to whitelist %s (meta %s) to frame type %s."
 		}
+	}
+
+	gui {
+	    reset_entry: "Reset Entry"
+	    delete_entry: "Delete Entry"
+        edit_entry: "Edit Entry"
+        add_entry: "Add Entry"
+        not_yet_implemented: "Not Yet Implemented."
 	}
 }

@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage.drawer;
+package zornco.bedcraftbeyond.storage.drawers.reinforced;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -10,7 +10,7 @@ import zornco.bedcraftbeyond.storage.StoragePart;
 
 import java.awt.*;
 
-public class DrawerPart extends StoragePart {
+public class ReinforcedDrawerPart extends StoragePart {
 
     @Override
     public Type getPartType() {
@@ -19,26 +19,26 @@ public class DrawerPart extends StoragePart {
 
     @Override
     public Item getPartItem() {
-        return ModContent.Items.drawer;
+        return ModContent.Items.reinforcedDrawer;
     }
 
     @Override
     public int getInventorySize() {
-        return 9;
+        return 18;
     }
 
     @Override
     public Dimension getGuiSize() {
-        return new Dimension(176, 132);
+        return new Dimension(176, 153);
     }
 
     @Override
     public Object createGUI(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
-        return new GuiDrawer(player, tile, handler, id);
+        return new GuiReinforcedDrawer(player, tile, handler, id);
     }
 
     @Override
     public Container createContainer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
-        return new ContainerDrawer(player, tile, handler, id);
+        return new ContainerReinforcedDrawer(player, tile, handler, id);
     }
 }

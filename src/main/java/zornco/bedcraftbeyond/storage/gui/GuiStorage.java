@@ -1,8 +1,11 @@
 package zornco.bedcraftbeyond.storage.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.ItemStack;
 import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 import zornco.bedcraftbeyond.storage.StoragePart;
 
@@ -13,7 +16,6 @@ public class GuiStorage extends GuiContainer {
     private String id;
     private StoragePart partRef;
     private IStorageHandler handler;
-
     public GuiStorage(EntityPlayer player, IStorageHandler handler, String storageID, Container container) {
         super(container);
 
@@ -24,6 +26,16 @@ public class GuiStorage extends GuiContainer {
 
         this.id = storageID;
         this.handler = handler;
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        ItemStack storageItem = handler.getSlotItemStack(id, false);
+        String name = storageItem.getDisplayName();
+
+        GlStateManager.translate(0,0,100);
+        fontRendererObj.drawString(name, 8, 6, Color.darkGray.getRGB(), false);
+        GlStateManager.translate(0,0,-100);
     }
 
     @Override

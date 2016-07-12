@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage.drawer;
+package zornco.bedcraftbeyond.storage.drawers.standard;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

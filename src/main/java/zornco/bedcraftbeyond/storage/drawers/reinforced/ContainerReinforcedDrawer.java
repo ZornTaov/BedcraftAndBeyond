@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage.tinyDrawer;
+package zornco.bedcraftbeyond.storage.drawers.reinforced;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -10,11 +10,11 @@ import zornco.bedcraftbeyond.storage.gui.ContainerStorage;
 
 import java.awt.*;
 
-public class ContainerTinyDrawer extends ContainerStorage {
+public class ContainerReinforcedDrawer extends ContainerStorage {
 
     private IStorageHandler storageHandler;
     private String storageID;
-    public ContainerTinyDrawer(EntityPlayer player, TileEntity tile, IStorageHandler storage, String storageID) {
+    public ContainerReinforcedDrawer(EntityPlayer player, TileEntity tile, IStorageHandler storage, String storageID) {
         super(player, tile, storage, storageID);
 
         this.storageHandler = storage;
@@ -22,7 +22,7 @@ public class ContainerTinyDrawer extends ContainerStorage {
 
         IItemHandler handler = storage.getSlotItemHandler(storageID);
         if(handler == null) return;
-        this.addSlotToContainer(new SlotItemHandler(handler, 0, 8 + (4 * 18), 20));
-        GuiUtils.createStandardInventory(player, new Point(7,50)).forEach(this::addSlotToContainer);
+        GuiUtils.createSlotGrid(handler, 0, new Dimension(9,2), new Point(7,19)).forEach(this::addSlotToContainer);
+        GuiUtils.createStandardInventory(player, new Point(7,70)).forEach(this::addSlotToContainer);
     }
 }
