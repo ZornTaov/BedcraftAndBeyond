@@ -2,24 +2,28 @@ package zornco.bedcraftbeyond.core.proxy;
 
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.b3d.B3DLoader;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.frames.base.BlockBedBase;
-import zornco.bedcraftbeyond.linens.LinenColorer;
-import zornco.bedcraftbeyond.frames.wooden.BlockWoodenBed;
-import zornco.bedcraftbeyond.frames.wooden.WoodenBedColorer;
 import zornco.bedcraftbeyond.core.ModContent;
-import zornco.bedcraftbeyond.dyes.DyeColorer;
-import zornco.bedcraftbeyond.rugs.RugColorer;
 import zornco.bedcraftbeyond.core.util.RenderingHelper;
 import zornco.bedcraftbeyond.core.util.TextureHelper;
+import zornco.bedcraftbeyond.dyes.DyeColorer;
+import zornco.bedcraftbeyond.frames.base.BlockBedBase;
+import zornco.bedcraftbeyond.frames.wooden.BlockWoodenBed;
+import zornco.bedcraftbeyond.frames.wooden.WoodenBedColorer;
+import zornco.bedcraftbeyond.linens.LinenColorer;
+import zornco.bedcraftbeyond.rugs.RugColorer;
+import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 
 import java.awt.*;
 
@@ -90,5 +94,12 @@ public class ClientProxy extends CommonProxy {
     @Override
     public EntityPlayer getPlayer() {
         return Minecraft.getMinecraft().thePlayer;
+    }
+
+    @Override
+    public void openStorage(IStorageHandler handler, BlockPos tilePos, String id) {
+        Minecraft mc = Minecraft.getMinecraft();
+        TileEntity tile = mc.theWorld.getTileEntity(tilePos);
+        mc.displayGuiScreen((GuiContainer) handler.getSlotPart(id).createGUI(mc.thePlayer, tile, handler, id));
     }
 }

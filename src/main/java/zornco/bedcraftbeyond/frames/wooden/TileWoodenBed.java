@@ -3,15 +3,15 @@ package zornco.bedcraftbeyond.frames.wooden;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.items.CapabilityItemHandler;
-import zornco.bedcraftbeyond.core.util.items.ItemHandlerCrafting;
 import zornco.bedcraftbeyond.frames.base.TileGenericBed;
 import zornco.bedcraftbeyond.frames.BedFrameUpdate;
 import zornco.bedcraftbeyond.frames.registry.FrameException;
@@ -20,9 +20,8 @@ import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
 import zornco.bedcraftbeyond.frames.registry.FrameWhitelistEntry;
 import zornco.bedcraftbeyond.linens.ILinenHolder;
 import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.storage.CapabilityStorageHandler;
-import zornco.bedcraftbeyond.storage.IStorageHandler;
-import zornco.bedcraftbeyond.storage.StorageHandler;
+import zornco.bedcraftbeyond.storage.handling.CapabilityStorageHandler;
+import zornco.bedcraftbeyond.storage.handling.StorageHandler;
 import zornco.bedcraftbeyond.linens.LinenUpdate;
 import zornco.bedcraftbeyond.linens.LinenHandler;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
@@ -65,6 +64,8 @@ public class TileWoodenBed extends TileGenericBed implements ILinenHolder {
 
         if (plankType != null) tags.setString("plankType", plankType.toString());
         tags.setInteger("plankMeta", plankMeta);
+        NBTTagList storageTag = storage.serializeNBT();
+        tags.setTag("storage", storageTag);
         return tags;
     }
 
@@ -88,6 +89,11 @@ public class TileWoodenBed extends TileGenericBed implements ILinenHolder {
         if (tags.hasKey("plankColor")) this.plankColor = new Color(tags.getInteger("plankColor"));
         this.plankType = new ResourceLocation(tags.getString("plankType"));
         this.plankMeta = tags.getInteger("plankMeta");
+
+        if(tags.hasKey("storage")) {
+            NBTTagList storageTags = tags.getTagList("storage", Constants.NBT.TAG_COMPOUND);
+            storage.deserializeNBT(storageTags);
+        }
 
         updateClients(Part.Type.BLANKETS);
         updateClients(Part.Type.SHEETS);
@@ -189,9 +195,8 @@ public class TileWoodenBed extends TileGenericBed implements ILinenHolder {
 
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if(capability == CapabilityStorageHandler.INSTANCE &&
-            (facing != EnumFacing.UP && facing != EnumFacing.DOWN))
-                return true;
+        if(capability == CapabilityStorageHandler.INSTANCE && facing.getHorizontalIndex() != -1)
+            return true;
 
         return super.hasCapability(capability, facing);
     }
@@ -207,9 +212,7 @@ public class TileWoodenBed extends TileGenericBed implements ILinenHolder {
     }
 
     private class DrawerStorage extends StorageHandler {
-
         public DrawerStorage() {
-            super(2);
             this.registeredSlots = ImmutableList.of("head", "foot");
         }
     }

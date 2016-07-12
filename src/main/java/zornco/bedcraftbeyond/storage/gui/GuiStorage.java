@@ -1,13 +1,9 @@
 package zornco.bedcraftbeyond.storage.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import zornco.bedcraftbeyond.parts.IPart;
-import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.storage.IStorageHandler;
-import zornco.bedcraftbeyond.storage.StorageHandler;
+import net.minecraft.inventory.Container;
+import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 import zornco.bedcraftbeyond.storage.StoragePart;
 
 import java.awt.*;
@@ -18,8 +14,8 @@ public class GuiStorage extends GuiContainer {
     private StoragePart partRef;
     private IStorageHandler handler;
 
-    public GuiStorage(EntityPlayer player, IStorageHandler handler, String storageID) {
-        super(new ContainerStorage(player, handler, storageID));
+    public GuiStorage(EntityPlayer player, IStorageHandler handler, String storageID, Container container) {
+        super(container);
 
         this.partRef = handler.getSlotPart(storageID);
         Dimension size = partRef.getGuiSize();
@@ -31,25 +27,7 @@ public class GuiStorage extends GuiContainer {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         drawDefaultBackground();
-
-        mc.getTextureManager().bindTexture(partRef.getGuiBackground());
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(guiLeft, guiTop, 1);
-        drawTexturedModalRect(0,0,0,0,xSize,ySize);
-
-        GlStateManager.popMatrix();
     }
 }

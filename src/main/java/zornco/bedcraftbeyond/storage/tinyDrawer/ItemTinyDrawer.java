@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage.drawer;
+package zornco.bedcraftbeyond.storage.tinyDrawer;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -13,13 +13,13 @@ import zornco.bedcraftbeyond.parts.IPart;
 import zornco.bedcraftbeyond.parts.Part;
 import zornco.bedcraftbeyond.storage.ItemInventory;
 
-public class ItemDrawer extends Item implements IPart {
+public class ItemTinyDrawer extends Item implements IPart {
 
-    public ItemDrawer() {
+    public ItemTinyDrawer() {
         setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(4);
-        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.drawer");
-        setRegistryName(BedCraftBeyond.MOD_ID, "drawer");
+        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.drawerTiny");
+        setRegistryName(BedCraftBeyond.MOD_ID, "drawerTiny");
 
         GameRegistry.register(this);
     }
@@ -32,12 +32,12 @@ public class ItemDrawer extends Item implements IPart {
 
     @Override
     public Part getPartReference() {
-        return ModContent.BedParts.drawer;
+        return ModContent.BedParts.drawerTiny;
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound oldCapNbt) {
-        return new ItemInventory(9);
+        return new ItemInventory(1);
     }
 
 

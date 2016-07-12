@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage.drawer;
+package zornco.bedcraftbeyond.storage.tinyDrawer;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -10,7 +10,7 @@ import zornco.bedcraftbeyond.storage.StoragePart;
 
 import java.awt.*;
 
-public class DrawerPart extends StoragePart {
+public class TinyDrawerPart extends StoragePart {
 
     @Override
     public Type getPartType() {
@@ -19,12 +19,12 @@ public class DrawerPart extends StoragePart {
 
     @Override
     public Item getPartItem() {
-        return ModContent.Items.drawer;
+        return ModContent.Items.tinyDrawer;
     }
 
     @Override
     public int getInventorySize() {
-        return 9;
+        return 1;
     }
 
     @Override
@@ -34,11 +34,11 @@ public class DrawerPart extends StoragePart {
 
     @Override
     public Object createGUI(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
-        return new GuiDrawer(player, tile, handler, id);
+        return new GuiTinyDrawer(player, tile, handler, id);
     }
 
     @Override
     public Container createContainer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
-        return new ContainerDrawer(player, tile, handler, id);
+        return new ContainerTinyDrawer(player, tile, handler, id);
     }
 }

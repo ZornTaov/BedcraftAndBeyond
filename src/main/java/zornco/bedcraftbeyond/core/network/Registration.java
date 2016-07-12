@@ -6,8 +6,8 @@ import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.frames.BedFrameUpdate;
 import zornco.bedcraftbeyond.linens.LinenUpdate;
 import zornco.bedcraftbeyond.dyes.eyedropper.MessageEyedropperUpdate;
-import zornco.bedcraftbeyond.storage.MessageOpenStorage;
-import zornco.bedcraftbeyond.storage.MessageStorageUpdate;
+import zornco.bedcraftbeyond.storage.handling.MessageOpenStorage;
+import zornco.bedcraftbeyond.storage.handling.MessageStorageUpdate;
 
 public class Registration {
 

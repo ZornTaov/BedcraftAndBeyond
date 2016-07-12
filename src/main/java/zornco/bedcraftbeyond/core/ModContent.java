@@ -1,10 +1,12 @@
 package zornco.bedcraftbeyond.core;
 
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.frames.base.TileGenericBed;
+import zornco.bedcraftbeyond.parts.Part;
 import zornco.bedcraftbeyond.storage.drawer.DrawerPart;
 import zornco.bedcraftbeyond.storage.drawer.ItemDrawer;
-import zornco.bedcraftbeyond.storage.drawer.ItemDrawerKey;
+import zornco.bedcraftbeyond.storage.ItemDrawerKey;
 import zornco.bedcraftbeyond.linens.impl.BlanketPart;
 import zornco.bedcraftbeyond.linens.impl.ItemBlanket;
 import zornco.bedcraftbeyond.linens.impl.ItemSheets;
@@ -19,6 +21,8 @@ import zornco.bedcraftbeyond.dyes.eyedropper.ItemEyedropper;
 import zornco.bedcraftbeyond.rugs.BlockRug;
 import zornco.bedcraftbeyond.rugs.ItemRug;
 import zornco.bedcraftbeyond.rugs.ItemScissors;
+import zornco.bedcraftbeyond.storage.tinyDrawer.ItemTinyDrawer;
+import zornco.bedcraftbeyond.storage.tinyDrawer.TinyDrawerPart;
 
 public class ModContent {
 
@@ -45,17 +49,20 @@ public class ModContent {
         public static ItemDyeBottle dyeBottle = new ItemDyeBottle();
         public static ItemEyedropper eyedropper = new ItemEyedropper();
 
-        // Bed Parts - Do not initialize here, it's done with BedParts
-        public static ItemDrawer drawer;
+        // Storage
+        public static ItemDrawer drawer = new ItemDrawer();
+        public static ItemTinyDrawer tinyDrawer = new ItemTinyDrawer();
+
+        // Linens - Handled by the parts
         public static ItemBlanket blanket;
         public static ItemSheets sheets;
     }
 
     public static class BedParts {
-        // These also register their blocks and items.
         public static DrawerPart drawer = new DrawerPart();
         public static BlanketPart blanket = new BlanketPart();
         public static SheetPart sheet = new SheetPart();
+        public static TinyDrawerPart drawerTiny = new TinyDrawerPart();
     }
 
     public static class TileEntities {

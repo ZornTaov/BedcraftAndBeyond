@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage;
+package zornco.bedcraftbeyond.storage.handling;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
@@ -12,7 +12,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 public class CapabilityStorageHandler {
 
     @CapabilityInject(IStorageHandler.class)
-    public static Capability<CapabilityStorageHandler> INSTANCE = null;
+    public static Capability<IStorageHandler> INSTANCE = null;
 
     public static void register(){
         CapabilityManager.INSTANCE.register(IStorageHandler.class, new Capability.IStorage<IStorageHandler>() {
@@ -37,7 +37,7 @@ public class CapabilityStorageHandler {
                 });
             }
         }, () -> {
-            return new StorageHandler(1);
+            return new StorageHandler();
         });
     }
 }

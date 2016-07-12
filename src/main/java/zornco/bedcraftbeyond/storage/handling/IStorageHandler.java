@@ -1,8 +1,9 @@
-package zornco.bedcraftbeyond.storage;
+package zornco.bedcraftbeyond.storage.handling;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import zornco.bedcraftbeyond.storage.StoragePart;
 
 public interface IStorageHandler {
 

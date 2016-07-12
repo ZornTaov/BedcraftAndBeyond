@@ -27,7 +27,7 @@ import zornco.bedcraftbeyond.core.gui.GuiHandler;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 import zornco.bedcraftbeyond.core.config.ConfigHelper;
 import zornco.bedcraftbeyond.frames.registry.FrameLoader;
-import zornco.bedcraftbeyond.storage.CapabilityStorageHandler;
+import zornco.bedcraftbeyond.storage.handling.CapabilityStorageHandler;
 
 
 @Mod(

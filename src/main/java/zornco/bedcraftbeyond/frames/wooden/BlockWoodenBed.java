@@ -7,7 +7,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -18,16 +17,11 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.ModContent;
-import zornco.bedcraftbeyond.core.gui.GuiHandler;
-import zornco.bedcraftbeyond.core.util.items.ItemHandlerCrafting;
 import zornco.bedcraftbeyond.frames.base.BlockBedBase;
 import zornco.bedcraftbeyond.frames.registry.FrameException;
 import zornco.bedcraftbeyond.linens.LinenHandler;
@@ -35,10 +29,10 @@ import zornco.bedcraftbeyond.linens.PropertyFabricType;
 import zornco.bedcraftbeyond.parts.IPart;
 import zornco.bedcraftbeyond.parts.IPartAcceptor;
 import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.storage.CapabilityStorageHandler;
-import zornco.bedcraftbeyond.storage.IStorageHandler;
-import zornco.bedcraftbeyond.storage.MessageOpenStorage;
-import zornco.bedcraftbeyond.storage.MessageStorageUpdate;
+import zornco.bedcraftbeyond.storage.handling.CapabilityStorageHandler;
+import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
+import zornco.bedcraftbeyond.storage.handling.MessageStorageUpdate;
+import zornco.bedcraftbeyond.storage.handling.StoragePacketHandler;
 
 import javax.vecmath.Vector3f;
 import java.util.ArrayList;
@@ -106,10 +100,7 @@ public class BlockWoodenBed extends BlockBedBase implements IPartAcceptor {
                 IStorageHandler handler = (IStorageHandler) tile.getCapability((Capability) CapabilityStorageHandler.INSTANCE, side);
                 if(!handler.isSlotFilled(storageID)) return true;
 
-                player.getEntityData().setString("storageID", storageID);
-                player.getEntityData().setInteger("side", side.getIndex());
-
-                player.openGui(BedCraftBeyond.INSTANCE, GuiHandler.ID_STORAGE, world, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
+                StoragePacketHandler.openStorage(world, player, tile.getPos(), side, handler, storageID);
                 return true;
             }
 
@@ -132,13 +123,13 @@ public class BlockWoodenBed extends BlockBedBase implements IPartAcceptor {
 
         if(partType == Part.Type.STORAGE && hitY < 0.5f){
             ItemStack acceptedPart = addPart(world, state, pos, side, new Vector3f(hitX, hitY, hitZ), heldItem);
-            player.setHeldItem(hand, acceptedPart);
+            if(!player.isCreative()) player.setHeldItem(hand, acceptedPart);
             return true;
         }
 
         if(partType.isLinenPart() && hitY > 0.5f){
             ItemStack acceptedPart = addPart(world, state, pos, side, new Vector3f(hitX, hitY, hitZ), heldItem);
-            player.setHeldItem(hand, acceptedPart);
+            if(!player.isCreative()) player.setHeldItem(hand, acceptedPart);
             return true;
         }
 

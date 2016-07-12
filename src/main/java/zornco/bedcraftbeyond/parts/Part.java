@@ -10,6 +10,7 @@ public abstract class Part {
     public abstract Type getPartType();
 
     public abstract Item getPartItem();
+    public int getPartMeta() { return 0; }
 
     public enum Type {
         BLANKETS,

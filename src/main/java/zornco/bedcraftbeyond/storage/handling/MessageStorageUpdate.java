@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.storage;
+package zornco.bedcraftbeyond.storage.handling;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
