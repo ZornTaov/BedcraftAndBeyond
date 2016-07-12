@@ -20,6 +20,7 @@ import zornco.bedcraftbeyond.dyes.eyedropper.ItemEyedropper;
 import zornco.bedcraftbeyond.rugs.BlockRug;
 import zornco.bedcraftbeyond.rugs.ItemRug;
 import zornco.bedcraftbeyond.rugs.ItemScissors;
+import zornco.bedcraftbeyond.suitcase.ItemSuitcase;
 
 public class ModContent {
 
@@ -41,6 +42,9 @@ public class ModContent {
         public static ItemStoneBed stoneBed = new ItemStoneBed(Blocks.stoneBed);
         public static ItemRug rug = new ItemRug();
         public static ItemScissors scissors = new ItemScissors();
+        
+        // Suitcase stuff
+        public static ItemSuitcase suitcase = new ItemSuitcase();
 
         // Dying
         public static ItemDyeBottle dyeBottle = new ItemDyeBottle();

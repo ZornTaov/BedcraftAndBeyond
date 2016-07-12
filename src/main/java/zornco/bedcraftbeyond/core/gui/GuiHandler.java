@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
 import zornco.bedcraftbeyond.beds.frames.registry.gui.list.GuiRegistryList;
 import zornco.bedcraftbeyond.core.gui.container.ContainerBlank;
+import zornco.bedcraftbeyond.suitcase.*;
 
 public class GuiHandler implements IGuiHandler {
 
@@ -18,6 +19,7 @@ public class GuiHandler implements IGuiHandler {
 
     public static final int ID_FRAMES_LIST = 2;
     public static final int ID_FRAMES_EDIT = 3;
+    public static final int GUI_SUITCASE = 4;
 
     /**
      * If this is set and you want to handle main hand, send X = 1.
@@ -40,6 +42,8 @@ public class GuiHandler implements IGuiHandler {
                 return ((IServerGui) held.getItem()).getServerGui(world, new BlockPos(x, y, z), player);
             case ID_FRAMES_LIST:
                 return new ContainerBlank();
+	        case GUI_SUITCASE:
+				return new ContainerSuitcase(player, player.inventory, new InventorySuitcase(player.getActiveItemStack()));
         }
 
         return null;
@@ -62,6 +66,8 @@ public class GuiHandler implements IGuiHandler {
             case ID_FRAMES_LIST:
                 FrameRegistry.EnumFrameType type = FrameRegistry.EnumFrameType.values()[x];
                 return new GuiRegistryList(player, type);
+    		case GUI_SUITCASE:
+    			return new GuiSuitcase((ContainerSuitcase) new ContainerSuitcase(player, player.inventory, new InventorySuitcase(player.getActiveItemStack())));
         }
 
         return null;
