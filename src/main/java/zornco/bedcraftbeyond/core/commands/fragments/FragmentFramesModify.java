@@ -9,11 +9,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelistEntry;
+import zornco.bedcraftbeyond.frames.registry.FrameWhitelistEntry;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.commands.CommandFragment;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameException;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.frames.registry.FrameException;
+import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
 
 import java.util.Collections;
 import java.util.List;

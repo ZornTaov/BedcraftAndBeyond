@@ -54,11 +54,11 @@ public class Recipes {
         GameRegistry.addRecipe(new zornco.bedcraftbeyond.dyes.RecipeDyedRug());
         RecipeSorter.register(BedCraftBeyond.MOD_ID + ":rug)dyes", zornco.bedcraftbeyond.dyes.RecipeDyedRug.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
-        GameRegistry.addRecipe(new zornco.bedcraftbeyond.beds.stone.RecipeBedFrameStone());
-        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_wood", zornco.bedcraftbeyond.beds.stone.RecipeBedFrameStone.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+        GameRegistry.addRecipe(new zornco.bedcraftbeyond.frames.stone.RecipeBedFrameStone());
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_wood", zornco.bedcraftbeyond.frames.stone.RecipeBedFrameStone.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
 
-        GameRegistry.addRecipe(new zornco.bedcraftbeyond.beds.wooden.RecipeBedFrameWood());
-        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_stone", zornco.bedcraftbeyond.beds.wooden.RecipeBedFrameWood.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
+        GameRegistry.addRecipe(new zornco.bedcraftbeyond.frames.wooden.RecipeBedFrameWood());
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_stone", zornco.bedcraftbeyond.frames.wooden.RecipeBedFrameWood.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");
     }
 
 }

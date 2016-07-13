@@ -6,7 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.commands.CommandFragment;
 import zornco.bedcraftbeyond.core.gui.GuiHandler;
