@@ -55,4 +55,6 @@ public interface IStorageHandler {
     ItemStack fillSlot(String slotName, ItemStack stack);
 
     StoragePart getSlotPart(String storageID);
+
+    ImmutableList<ItemStack> getItems();
 }

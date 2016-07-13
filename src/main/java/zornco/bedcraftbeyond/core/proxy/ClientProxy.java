@@ -50,6 +50,9 @@ public class ClientProxy extends CommonProxy {
         RenderingHelper.registerItemModel(ModContent.Items.dyeBottle);
         RenderingHelper.registerItemModel(ModContent.Items.eyedropper);
 
+        RenderingHelper.registerItemModel(ModContent.Items.drawer);
+        RenderingHelper.registerItemModel(ModContent.Items.reinforcedDrawer);
+
         B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
     }
 

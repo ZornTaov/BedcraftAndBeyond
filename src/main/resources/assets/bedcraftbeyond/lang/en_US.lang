@@ -27,19 +27,19 @@ item.bedcraftbeyond.beds.wooden.name=Wooden Bed
 item.bedcraftbeyond.beds.stone.name=Stone Bed
 
 item.bedcraftbeyond.scissors.name=Scissors
-item.bedcraftbeyond.suitcase.name=Suitcase
 item.bedcraftbeyond.drawerKey.name=Drawer Key
 item.bedcraftbeyond.dyeBottle.name=Bottle of Dye
 item.bedcraftbeyond.eyedropper.name=Eyedropper
+item.bedcraftbeyond.suitcase.name=Suitcase
 item.bedcraftbeyond.template.name=Template
 item.bedcraftbeyond.template.blank=Blank Template
 
 item.bedcraftbeyond.linens.blanket.name=Blanket
 item.bedcraftbeyond.linens.sheets.name=Sheets
 
-inventory.suitcase=Suitcase
-item.bedcraftbeyond.drawers.standard.name=Drawer
-item.bedcraftbeyond.drawers.reinforced.name=Reinforced Drawer
+item.bedcraftbeyond.storage.drawers.standard.name=Drawer
+item.bedcraftbeyond.storage.drawers.reinforced.name=Reinforced Drawer
+
 
 
 # Creative Tabs

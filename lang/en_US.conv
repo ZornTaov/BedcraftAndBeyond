@@ -39,6 +39,7 @@ item.bedcraftbeyond {
 	drawerKey.name: "Drawer Key"
 	dyeBottle.name: "Bottle of Dye"
 	eyedropper.name: "Eyedropper"
+	suitcase.name: "Suitcase"
 	template {
 	    name: "Template"
 	    blank: "Blank Template"
@@ -49,9 +50,11 @@ item.bedcraftbeyond {
 		sheets.name: "Sheets"
 	}
 
-	drawers {
-	    standard.name: "Drawer"
-	    reinforced.name: "Reinforced Drawer"
+	storage {
+	    drawers {
+	        standard.name: "Drawer"
+	        reinforced.name: "Reinforced Drawer"
+	    }
 	}
 }
 

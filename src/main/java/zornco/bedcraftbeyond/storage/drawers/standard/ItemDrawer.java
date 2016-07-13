@@ -18,7 +18,7 @@ public class ItemDrawer extends Item implements IPart {
     public ItemDrawer() {
         setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(4);
-        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".beds.drawer");
+        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".storage.drawers.standard");
         setRegistryName(BedCraftBeyond.MOD_ID, "drawer");
 
         GameRegistry.register(this);

@@ -186,6 +186,8 @@ public class BlockWoodenBed extends BlockBedBase implements IPartAcceptor {
             drops.add(linens.getLinenPart(Part.Type.BLANKETS, true));
         if (linens.getLinenPart(Part.Type.SHEETS, false) != null)
             drops.add(linens.getLinenPart(Part.Type.SHEETS, true));
+
+        drops.addAll(twb.storage.getItems());
         return drops;
     }
 

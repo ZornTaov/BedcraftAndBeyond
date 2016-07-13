@@ -84,6 +84,11 @@ public class StorageHandler implements IStorageHandler, INBTSerializable<NBTTagL
     }
 
     @Override
+    public ImmutableList<ItemStack> getItems() {
+        return ImmutableList.copyOf(storage.values());
+    }
+
+    @Override
     public NBTTagList serializeNBT() {
         NBTTagList compound = new NBTTagList();
         for(Map.Entry<String, ItemStack> part : storage.entrySet()) {
