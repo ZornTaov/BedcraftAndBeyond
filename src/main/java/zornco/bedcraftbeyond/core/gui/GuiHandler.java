@@ -1,45 +1,54 @@
 package zornco.bedcraftbeyond.core.gui;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
-import zornco.bedcraftbeyond.beds.frames.registry.gui.list.GuiRegistryList;
+import zornco.bedcraftbeyond.dyes.eyedropper.GuiEyedropper;
+import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.frames.registry.gui.list.GuiRegistryList;
 import zornco.bedcraftbeyond.core.gui.container.ContainerBlank;
 import zornco.bedcraftbeyond.suitcase.*;
 
 public class GuiHandler implements IGuiHandler {
 
     public static GuiHandler INSTANCE;
-    public static final int BLOCK_ID = 0;
-
+    public static final int ID_EYEDROPPER = 1;
     public static final int ID_FRAMES_LIST = 2;
     public static final int ID_FRAMES_EDIT = 3;
     public static final int GUI_SUITCASE = 4;
 
-    /**
-     * If this is set and you want to handle main hand, send X = 1.
-     */
-    public static final int ITEM_ID = 1;
+    public static int getCoordinateFromHand(EnumHand hand){
+        switch (hand){
+            case MAIN_HAND:
+                return 1;
+            case OFF_HAND:
+                return 0;
+        }
+
+        return -1;
+    }
+
+    private EnumHand getHandFromCoord(int coord){
+        switch (coord){
+            case 0:
+                return EnumHand.OFF_HAND;
+            case 1:
+                return EnumHand.MAIN_HAND;
+            default:
+                return EnumHand.MAIN_HAND;
+        }
+    }
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        BlockPos pos = new BlockPos(x, y, z);
         switch(ID){
-            case BLOCK_ID:
-                BlockPos bp = new BlockPos(x,y,z);
-                IBlockState state = world.getBlockState(bp);
-                if(state.getBlock() instanceof IServerGui)
-                    return ((IServerGui) state.getBlock()).getServerGui(world, bp, player);
+            case ID_EYEDROPPER:
+                EnumHand hand = getHandFromCoord(pos.getX());
                 return null;
-            case ITEM_ID:
-                ItemStack held = player.getHeldItem(x == 1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
-                if(held == null) return null;
-                if(!(held.getItem() instanceof IServerGui)) return null;
-                return ((IServerGui) held.getItem()).getServerGui(world, new BlockPos(x, y, z), player);
+
             case ID_FRAMES_LIST:
                 return new ContainerBlank();
 	        case GUI_SUITCASE:
@@ -51,17 +60,10 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        BlockPos pos = new BlockPos(x, y, z);
         switch(ID){
-            case BLOCK_ID:
-                BlockPos bp = new BlockPos(x,y,z);
-                IBlockState state = world.getBlockState(bp);
-                if(!(state.getBlock() instanceof IClientGui)) return null;
-                return ((IClientGui) state.getBlock()).getClientGui(world, bp, player);
-            case ITEM_ID:
-                ItemStack held = player.getHeldItem(x == 1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND);
-                if(held == null) return null;
-                if(!(held.getItem() instanceof IClientGui)) return null;
-                return ((IClientGui) held.getItem()).getClientGui(world, new BlockPos(x, y, z), player);
+            case ID_EYEDROPPER:
+                return new GuiEyedropper(player, getHandFromCoord(x), player.getHeldItem(getHandFromCoord(pos.getX())));
 
             case ID_FRAMES_LIST:
                 FrameRegistry.EnumFrameType type = FrameRegistry.EnumFrameType.values()[x];

@@ -9,9 +9,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameLoader;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameRegistry;
-import zornco.bedcraftbeyond.beds.frames.registry.FrameWhitelist;
+import zornco.bedcraftbeyond.frames.registry.FrameLoader;
+import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
+import zornco.bedcraftbeyond.frames.registry.FrameWhitelist;
 
 import java.util.*;
 

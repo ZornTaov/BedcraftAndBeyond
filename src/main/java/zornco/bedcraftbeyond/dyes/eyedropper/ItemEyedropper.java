@@ -11,14 +11,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.core.gui.IClientGui;
 import zornco.bedcraftbeyond.core.gui.GuiHandler;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 
 import java.awt.*;
 import java.util.List;
 
-public class ItemEyedropper extends Item implements IClientGui {
+public class ItemEyedropper extends Item {
 
     public ItemEyedropper(){
         setCreativeTab(BedCraftBeyond.MAIN_TAB);
@@ -33,7 +32,7 @@ public class ItemEyedropper extends Item implements IClientGui {
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         if(playerIn.isSneaking()){
             playerIn.openGui(BedCraftBeyond.INSTANCE,
-                GuiHandler.ITEM_ID,
+                GuiHandler.ID_EYEDROPPER,
                 worldIn,
                 hand == EnumHand.MAIN_HAND ? 1 : 0,
                 0, 0);
@@ -50,12 +49,6 @@ public class ItemEyedropper extends Item implements IClientGui {
         if(!stack.getTagCompound().hasKey("color")) return;
         Color c = ColorHelper.getColorFromStack(stack);
         tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c));
-    }
-
-    @Override
-    public Object getClientGui(World w, BlockPos pos, EntityPlayer player) {
-        EnumHand hand = pos.getX() == 1 ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
-        return new GuiEyedropper(player, hand, player.getHeldItem(hand));
     }
 
     public static Color getCurrentColor(ItemStack stack){

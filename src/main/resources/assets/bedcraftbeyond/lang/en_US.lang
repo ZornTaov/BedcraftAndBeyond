@@ -24,21 +24,23 @@ tile.bedcraftbeyond.carpenter.name=Carpenter
 
 # Items
 item.bedcraftbeyond.beds.wooden.name=Wooden Bed
-item.bedcraftbeyond.beds.drawer.name=Bed Drawer
 item.bedcraftbeyond.beds.stone.name=Stone Bed
 
 item.bedcraftbeyond.scissors.name=Scissors
-item.bedcraftbeyond.suitcase.name=Suitcase
 item.bedcraftbeyond.drawerKey.name=Drawer Key
 item.bedcraftbeyond.dyeBottle.name=Bottle of Dye
 item.bedcraftbeyond.eyedropper.name=Eyedropper
+item.bedcraftbeyond.suitcase.name=Suitcase
 item.bedcraftbeyond.template.name=Template
 item.bedcraftbeyond.template.blank=Blank Template
+
 item.bedcraftbeyond.linens.blanket.name=Blanket
 item.bedcraftbeyond.linens.sheets.name=Sheets
 
-# GUI
-inventory.suitcase=Suitcase
+item.bedcraftbeyond.storage.drawers.standard.name=Drawer
+item.bedcraftbeyond.storage.drawers.reinforced.name=Reinforced Drawer
+
+
 
 # Creative Tabs
 itemGroup.bedcraftbeyond=BedCraft and Beyond
@@ -81,3 +83,4 @@ bedcraftbeyond.frames.gui.delete_entry=Delete Entry
 bedcraftbeyond.frames.gui.edit_entry=Edit Entry
 bedcraftbeyond.frames.gui.add_entry=Add Entry
 bedcraftbeyond.frames.gui.not_yet_implemented=Not Yet Implemented.
+

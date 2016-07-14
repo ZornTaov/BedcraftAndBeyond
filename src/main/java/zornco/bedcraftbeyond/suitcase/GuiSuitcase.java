@@ -8,21 +8,19 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class GuiSuitcase extends GuiContainer
-{
+public class GuiSuitcase extends GuiContainer {
 
     private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
-	private final InventorySuitcase inventory;
+    private final InventorySuitcase inventory;
 
     public GuiSuitcase(ContainerSuitcase containerSuitcase) {
 
-		super(containerSuitcase);
-		this.inventory = containerSuitcase.inventory;
-	}
+        super(containerSuitcase);
+        this.inventory = containerSuitcase.inventory;
+    }
 
-	@Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
-    {
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color(1, 1, 1, 1);
         this.mc.getTextureManager().bindTexture(CHEST_GUI_TEXTURE);
 
@@ -31,10 +29,9 @@ public class GuiSuitcase extends GuiContainer
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
-    {
-    	String s = this.inventory.getDisplayName().getUnformattedText();
-    	mc.fontRendererObj.drawString(s, this.xSize / 2 - mc.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-    	mc.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 4, 4210752);
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        String s = this.inventory.getDisplayName().getUnformattedText();
+        mc.fontRendererObj.drawString(s, this.xSize / 2 - mc.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+        mc.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 4, 4210752);
     }
 }
