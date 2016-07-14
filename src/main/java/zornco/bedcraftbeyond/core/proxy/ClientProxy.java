@@ -1,5 +1,6 @@
 package zornco.bedcraftbeyond.core.proxy;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -21,6 +22,7 @@ import zornco.bedcraftbeyond.dyes.DyeColorer;
 import zornco.bedcraftbeyond.frames.base.BlockBedBase;
 import zornco.bedcraftbeyond.frames.wooden.BlockWoodenBed;
 import zornco.bedcraftbeyond.frames.wooden.WoodenBedColorer;
+import zornco.bedcraftbeyond.grill.BlockGrill;
 import zornco.bedcraftbeyond.linens.LinenColorer;
 import zornco.bedcraftbeyond.rugs.RugColorer;
 import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
@@ -34,6 +36,7 @@ public class ClientProxy extends CommonProxy {
 
         ModelLoader.setCustomStateMapper(ModContent.Blocks.woodenBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED, BlockBedBase.HEAD, BlockWoodenBed.SHEETS, BlockWoodenBed.BLANKETS}).build());
         ModelLoader.setCustomStateMapper(ModContent.Blocks.stoneBed, (new StateMap.Builder()).ignore(new IProperty[]{BlockBedBase.OCCUPIED}).build());
+        ModelLoader.setCustomStateMapper(ModContent.Blocks.grill, (new StateMap.Builder()).ignore(new IProperty[]{BlockGrill.HAS_FOOD}).build());
 
         RenderingHelper.registerItemModel(ModContent.Items.scissors);
         for (int i = 0; i < 16; ++i)
@@ -53,6 +56,8 @@ public class ClientProxy extends CommonProxy {
         RenderingHelper.registerItemModel(ModContent.Items.drawer);
         RenderingHelper.registerItemModel(ModContent.Items.reinforcedDrawer);
 
+        RenderingHelper.registerBlockModelAsItem(ModContent.Blocks.grill, 0, "not used? :I"); //TODO <-----
+        
         B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
     }
 

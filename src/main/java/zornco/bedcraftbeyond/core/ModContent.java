@@ -14,6 +14,7 @@ import zornco.bedcraftbeyond.frames.stone.ItemStoneBed;
 import zornco.bedcraftbeyond.frames.wooden.BlockWoodenBed;
 import zornco.bedcraftbeyond.frames.wooden.ItemWoodenFrame;
 import zornco.bedcraftbeyond.frames.wooden.TileWoodenBed;
+import zornco.bedcraftbeyond.grill.BlockGrill;
 import zornco.bedcraftbeyond.dyes.bottle.ItemDyeBottle;
 import zornco.bedcraftbeyond.dyes.eyedropper.ItemEyedropper;
 import zornco.bedcraftbeyond.rugs.BlockRug;
@@ -31,6 +32,8 @@ public class ModContent {
         public static BlockStoneBed stoneBed = new zornco.bedcraftbeyond.frames.stone.BlockStoneBed();
 
         public static BlockRug rug = new BlockRug();
+        
+        public static BlockGrill grill = new BlockGrill();
     }
 
     public static class Items {
