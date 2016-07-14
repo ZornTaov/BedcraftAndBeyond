@@ -40,7 +40,8 @@ item.bedcraftbeyond.linens.sheets.name=Sheets
 item.bedcraftbeyond.storage.drawers.standard.name=Drawer
 item.bedcraftbeyond.storage.drawers.reinforced.name=Reinforced Drawer
 
-
+# Inventory Titles
+inventory.suitcase=Suitcase
 
 # Creative Tabs
 itemGroup.bedcraftbeyond=BedCraft and Beyond
