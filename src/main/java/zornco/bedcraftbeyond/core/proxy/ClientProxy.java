@@ -56,7 +56,8 @@ public class ClientProxy extends CommonProxy {
         RenderingHelper.registerItemModel(ModContent.Items.drawer);
         RenderingHelper.registerItemModel(ModContent.Items.reinforcedDrawer);
 
-        RenderingHelper.registerBlockModelAsItem(ModContent.Blocks.grill, 0, "not used? :I"); //TODO <-----
+        RenderingHelper.registerBlockModelAsItem(ModContent.Blocks.grill, 0, "inventory", "short");
+        RenderingHelper.registerBlockModelAsItem(ModContent.Blocks.grill, 1, "inventory", "tall");
         
         B3DLoader.INSTANCE.addDomain(BedCraftBeyond.MOD_ID);
     }

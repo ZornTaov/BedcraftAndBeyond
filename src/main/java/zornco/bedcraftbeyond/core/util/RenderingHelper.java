@@ -7,12 +7,16 @@ import net.minecraftforge.client.model.ModelLoader;
 
 public class RenderingHelper {
 
-  public static void registerBlockModelAsItem(final Block block, int meta, final String blockName) {
-    registerBlockModelAsItem(block, meta, blockName, "inventory");
+  public static void registerBlockModelAsItem(final Block block, int meta) {
+    registerBlockModelAsItem(block, meta, "inventory");
+  }
+  public static void registerBlockModelAsItem(final Block block, int meta, final String variantName) {
+    registerBlockModelAsItem(block, meta, variantName, "");
   }
 
-  public static void registerBlockModelAsItem(final Block block, int meta, final String blockName, final String variantName) {
-    registerItemModel(Item.getItemFromBlock(block), variantName, meta);
+  public static void registerBlockModelAsItem(final Block block, int meta, final String variantName, final String blockName) {
+	  Item item = Item.getItemFromBlock(block);
+	  ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName() + (blockName.equals("") ? "" : ("_" + blockName)), variantName));
   }
 
   public static void registerItemModel(final Item item){

@@ -25,7 +25,8 @@ tile.bedcraftbeyond {
 		White.name: "White Rug"
 	}
 
-	carpenter.name: "Carpenter"
+    carpenter.name: "Carpenter"
+    grill.name: "Grill"
 }
 
 // Items

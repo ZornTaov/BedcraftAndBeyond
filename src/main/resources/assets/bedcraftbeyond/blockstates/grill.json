@@ -1,10 +1,27 @@
 {
     "forge_marker": 1,
-    "defaults": { "model": "bedcraftbeyond:grill" },
+    "defaults": { "model": "bedcraftbeyond:grill_short" },
     "variants": {
         "lit": { 
-            "true": { "submodel": "fire_floor1" },
+            "true": { 
+                "submodel": 
+                {
+                    "fire0": 
+                    {
+                        "model": "fire_floor0",
+                        "transform": {
+                            "scale": [1.0, 0.5, 1.0]
+                        }
+                    }
+                }
+            },
+            "false": { }
+        },
+        "tall": {
+            "true": { 
+                "model": "bedcraftbeyond:grill_tall"
+            },
             "false": { }
         }
-	}
+    }
 }
