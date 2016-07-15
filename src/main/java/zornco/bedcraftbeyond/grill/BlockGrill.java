@@ -1,6 +1,7 @@
 package zornco.bedcraftbeyond.grill;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
@@ -16,17 +17,24 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,7 +46,8 @@ public class BlockGrill extends Block {
 	public static final PropertyBool LIT = PropertyBool.create("lit");
 	public static final PropertyBool HAS_FOOD = PropertyBool.create("has_food");
 
-    protected static AxisAlignedBB AABB = new AxisAlignedBB(2D/16D, 0.0D, 2D/16D, 14D/16D, 5D/16D, 14D/16D);
+    protected static AxisAlignedBB AABBShort = BlockGrill.makeAxisAlignedBB(2, 0, 2, 14, 11, 14);
+    protected static AxisAlignedBB AABBTall = BlockGrill.makeAxisAlignedBB(2, 0, 2, 14, 15, 14);
     
 	public BlockGrill() {
 		super(Material.IRON);
@@ -63,7 +72,50 @@ public class BlockGrill extends Block {
             }
         }).setRegistryName(this.getRegistryName()));
 	}
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if(heldItem != null && heldItem.getItem() == Items.FLINT_AND_STEEL)
+		{
+			if (hitY < AABBShort.maxY) {
+	            worldIn.setBlockState(pos, state.withProperty(LIT, true), 3);
 
+	            if (heldItem.getItem() == Items.FLINT_AND_STEEL)
+	            {
+	                heldItem.damageItem(1, playerIn);
+	            }
+	            if (!worldIn.isRemote)
+	            	worldIn.playSound((EntityPlayer)null, (double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)((float)pos.getZ() + 0.5F), SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			}
+			return true;
+		}
+		return false;
+	}
+
+    /**
+     * How many world ticks before ticking
+     */
+    public int tickRate(World worldIn)
+    {
+        return 60;
+    }
+
+    public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand)
+    {
+    	if (state.getValue(LIT)) {
+    		if(!state.getValue(HAS_FOOD))
+    		{
+    			if(worldIn.rand.nextInt(10) > 7)
+    				worldIn.setBlockState(pos, state.withProperty(LIT, false), 3);
+    		}
+    		else
+    			;//cook food
+		}
+        worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn) + worldIn.rand.nextInt(10));
+    }
+    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+    {
+        worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn) + worldIn.rand.nextInt(10));
+    }
 	@Override
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
 
@@ -75,7 +127,10 @@ public class BlockGrill extends Block {
 	
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return AABB;
+    	if (state.getValue(TALL)) 
+    		return AABBTall;
+    	else
+    		return AABBShort;
     }
 
     @Override
@@ -143,5 +198,9 @@ public class BlockGrill extends Block {
         if (state.getValue(LIT)) meta |= 2;
         if (state.getValue(HAS_FOOD)) meta |= 4;
         return meta;
+    }
+    public static AxisAlignedBB makeAxisAlignedBB(int x1, int y1, int z1, int x2, int y2, int z2)
+    {
+    	return new AxisAlignedBB(x1/16D, y1/16D, z1/16D, x2/16D, y2/16D, z2/16D);
     }
 }
