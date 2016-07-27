@@ -10,6 +10,7 @@ import com.google.common.base.Function;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockStone;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -21,11 +22,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMultiTexture;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -39,9 +43,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.core.ModContent;
 
-public class BlockGrill extends Block {
+public class BlockGrill extends Block implements ITileEntityProvider {
 
+	//-------------------------------------------------------------------------------
+    // Setup
 	public static final PropertyBool TALL = PropertyBool.create("tall");
 	public static final PropertyBool LIT = PropertyBool.create("lit");
 	public static final PropertyBool HAS_FOOD = PropertyBool.create("has_food");
@@ -73,6 +80,17 @@ public class BlockGrill extends Block {
         }).setRegistryName(this.getRegistryName()));
 	}
 	@Override
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+
+        for (int i = 0; i < 2; ++i)
+        {
+            list.add(new ItemStack(itemIn, 1, i));
+        }
+	}
+	
+	//-------------------------------------------------------------------------------
+    // World Interact
+	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if(heldItem != null && heldItem.getItem() == Items.FLINT_AND_STEEL)
 		{
@@ -90,6 +108,11 @@ public class BlockGrill extends Block {
 		}
 		return false;
 	}
+
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+    {
+        return new ItemStack(ModContent.Blocks.grill, 1, state.getValue(TALL)?0:1);
+    }
 
     /**
      * How many world ticks before ticking
@@ -116,14 +139,29 @@ public class BlockGrill extends Block {
     {
         worldIn.scheduleUpdate(pos, this, this.tickRate(worldIn) + worldIn.rand.nextInt(10));
     }
+    
+    //-------------------------------------------------------------------------------
+    // Tile Entity
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
-
-        for (int i = 0; i < 2; ++i)
-        {
-            list.add(new ItemStack(itemIn, 1, i));
-        }
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileGrill();
 	}
+
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+
+        if (tileentity instanceof TileGrill)
+        {
+            InventoryHelper.dropInventoryItems(worldIn, pos, (TileGrill)tileentity);
+            worldIn.updateComparatorOutputLevel(pos, this);
+        }
+
+        super.breakBlock(worldIn, pos, state);
+    }
+    
+    //-------------------------------------------------------------------------------
+    // Rendering
 	
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
@@ -132,7 +170,10 @@ public class BlockGrill extends Block {
     	else
     		return AABBShort;
     }
-
+    public static AxisAlignedBB makeAxisAlignedBB(int x1, int y1, int z1, int x2, int y2, int z2)
+    {
+    	return new AxisAlignedBB(x1/16D, y1/16D, z1/16D, x2/16D, y2/16D, z2/16D);
+    }
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
@@ -157,16 +198,19 @@ public class BlockGrill extends Block {
     public boolean isFullCube(IBlockState state) {
         return false;
     }
-    
-    @Override
-    protected BlockStateContainer createBlockState() {
-    	return new BlockStateContainer(this, new IProperty[]{TALL, LIT, HAS_FOOD});
-    }
 
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;
+    }
+
+    
+    //-------------------------------------------------------------------------------
+    // State
+    @Override
+    protected BlockStateContainer createBlockState() {
+    	return new BlockStateContainer(this, new IProperty[]{TALL, LIT, HAS_FOOD});
     }
 
     /**
@@ -199,8 +243,18 @@ public class BlockGrill extends Block {
         if (state.getValue(HAS_FOOD)) meta |= 4;
         return meta;
     }
-    public static AxisAlignedBB makeAxisAlignedBB(int x1, int y1, int z1, int x2, int y2, int z2)
-    {
-    	return new AxisAlignedBB(x1/16D, y1/16D, z1/16D, x2/16D, y2/16D, z2/16D);
-    }
+	public static void setState(boolean burning, World worldObj, BlockPos pos) {
+
+        IBlockState iblockstate = worldObj.getBlockState(pos);
+        TileEntity tileentity = worldObj.getTileEntity(pos);
+
+        worldObj.setBlockState(pos, ModContent.Blocks.grill.getDefaultState().withProperty(LIT, burning), 3);
+        
+
+        if (tileentity != null)
+        {
+            tileentity.validate();
+            worldObj.setTileEntity(pos, tileentity);
+        }
+	}
 }
