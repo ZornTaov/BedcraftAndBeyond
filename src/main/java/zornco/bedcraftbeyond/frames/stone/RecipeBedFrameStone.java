@@ -27,9 +27,17 @@ public class RecipeBedFrameStone implements IRecipe {
 
     @Override
     public boolean matches(InventoryCrafting inv, World w) {
+        if(inv.getWidth() < 3 || inv.getHeight() < 3) return false;
         InvWrapper wrapped = new InvWrapper(inv);
-        IItemHandler slabTest = ItemHandlerGridHelper.getItemsWrapped(wrapped, new Dimension(3,3), new Rectangle(0,1, 3,1));
-        IItemHandler stoneTest = ItemHandlerGridHelper.getItemsWrapped(wrapped, new Dimension(3,3), new Rectangle(0,2, 3,1));
+        IItemHandler stoneTest, slabTest;
+        try {
+	        slabTest = ItemHandlerGridHelper.getItemsWrapped(wrapped, new Dimension(3,3), new Rectangle(0,1, 3,1));
+	        stoneTest = ItemHandlerGridHelper.getItemsWrapped(wrapped, new Dimension(3,3), new Rectangle(0,2, 3,1));
+        }
+
+        catch (IndexOutOfBoundsException iob){
+            return false;
+        }
 
         if(slabTest.getSlots() < 3 || stoneTest.getSlots() < 3) return false;
         if(!ItemHelper.areItemStacksEqual(slabTest)) return false;
