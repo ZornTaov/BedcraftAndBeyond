@@ -45,6 +45,13 @@ public class Recipes {
             "S", "G", "B", 'S', "slabWood", 'G', "blockGlass", 'B', new ItemStack(Items.POTIONITEM, 1, 0)));
         ++recipesAdded;
 
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModContent.Items.drawer),
+            "SCS", "LLL", 'S', "stick", 'C', Blocks.CHEST, 'L', "slabWood"));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModContent.Items.reinforcedDrawer),
+            "IDI", 'I', "ingotIron", 'D', ModContent.Items.drawer));
+        recipesAdded += 2;
+
         GameRegistry.addRecipe(new zornco.bedcraftbeyond.dyes.RecipeDyedLinens());
         RecipeSorter.register(BedCraftBeyond.MOD_ID + ":linen_dyes", zornco.bedcraftbeyond.dyes.RecipeDyedLinens.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
