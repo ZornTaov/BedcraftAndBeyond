@@ -118,7 +118,9 @@ public class BlockRug extends Block {
 
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
-        if (!worldIn.isSideSolid(pos.down(), EnumFacing.DOWN) || !isBlockValid(worldIn.getBlockState(pos.down()).getBlock())) {
+        boolean solidBelow = worldIn.isSideSolid(pos.down(), EnumFacing.UP);
+        boolean slabOrStair = isBlockValid(worldIn.getBlockState(pos.down()).getBlock());
+        if (!solidBelow && !slabOrStair) {
             this.dropBlockAsItem(worldIn, pos, state, 0);
             worldIn.setBlockToAir(pos);
         }

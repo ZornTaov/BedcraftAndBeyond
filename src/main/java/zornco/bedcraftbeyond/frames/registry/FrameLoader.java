@@ -188,7 +188,7 @@ public class FrameLoader {
         if (ConfigSettings.ADD_OREDICT_WOODEN)
             addFramesFromOredictEntries(FrameRegistry.EnumFrameType.WOOD, "plankWood");
         if (ConfigSettings.ADD_OREDICT_STONE)
-            addFramesFromOredictEntries(FrameRegistry.EnumFrameType.STONE, "blockStone");
+            addFramesFromOredictEntries(FrameRegistry.EnumFrameType.STONE, "stone");
 
         l.info("Loading frames from config files..");
         File framesDir = Paths.get(ConfigHelper.modConfigDir.getPath(), "frames").toFile();
