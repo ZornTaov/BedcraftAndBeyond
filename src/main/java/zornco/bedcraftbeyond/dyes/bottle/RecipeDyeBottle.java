@@ -11,6 +11,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.ArrayUtils;
 import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.core.util.CraftingTableLayout;
+import zornco.bedcraftbeyond.dyes.IColoredItem;
 import zornco.bedcraftbeyond.dyes.eyedropper.ItemEyedropper;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 
@@ -52,7 +53,7 @@ public class RecipeDyeBottle implements IRecipe {
         InvWrapper wrapped = new InvWrapper(inv);
         ItemStack bottle = new ItemStack(ModContent.Items.dyeBottle, 1);
         ItemStack eyedropper = wrapped.extractItem(CraftingTableLayout.CENTER, 1, true);
-        Color cur = ItemEyedropper.getCurrentColor(eyedropper);
+        Color cur = ((IColoredItem) eyedropper.getItem()).getColorFromStack(eyedropper);
         if(!bottle.hasTagCompound()) bottle.setTagCompound(new NBTTagCompound());
         NBTTagCompound colorTag = ColorHelper.getTagForColor(cur);
         bottle.getTagCompound().setTag("color", colorTag);

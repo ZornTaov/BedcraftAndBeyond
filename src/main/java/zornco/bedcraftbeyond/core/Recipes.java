@@ -37,8 +37,8 @@ public class Recipes {
         GameRegistry.addRecipe(new ItemStack(ModContent.Items.rug, 4), "xxx", 'x', new ItemStack(Blocks.WOOL, 1));
         ++recipesAdded;
 
-        GameRegistry.addShapedRecipe(new ItemStack(ModContent.BedParts.blanket.getPartItem()), "CCC", "CCC", 'C', Blocks.CARPET);
-        GameRegistry.addShapedRecipe(new ItemStack(ModContent.BedParts.sheet.getPartItem()), "CCC", 'C', Blocks.CARPET);
+        GameRegistry.addShapedRecipe(new ItemStack(ModContent.Items.blanket), "CCC", "CCC", 'C', Blocks.CARPET);
+        GameRegistry.addShapedRecipe(new ItemStack(ModContent.Items.sheets), "CCC", 'C', Blocks.CARPET);
         recipesAdded += 2;
 
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(ModContent.Items.eyedropper),
@@ -59,7 +59,7 @@ public class Recipes {
         RecipeSorter.register(BedCraftBeyond.MOD_ID + ":dye_bottles", RecipeDyeBottle.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         GameRegistry.addRecipe(new zornco.bedcraftbeyond.dyes.RecipeDyedRug());
-        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":rug)dyes", zornco.bedcraftbeyond.dyes.RecipeDyedRug.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.register(BedCraftBeyond.MOD_ID + ":rug_dyes", zornco.bedcraftbeyond.dyes.RecipeDyedRug.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         GameRegistry.addRecipe(new zornco.bedcraftbeyond.frames.stone.RecipeBedFrameStone());
         RecipeSorter.register(BedCraftBeyond.MOD_ID + ":frame_wood", zornco.bedcraftbeyond.frames.stone.RecipeBedFrameStone.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped");

@@ -14,7 +14,7 @@ public class ContainerReinforcedDrawer extends ContainerStorage {
 
     private IStorageHandler storageHandler;
     private String storageID;
-    public ContainerReinforcedDrawer(EntityPlayer player, TileEntity tile, IStorageHandler storage, String storageID) {
+    public ContainerReinforcedDrawer(EntityPlayer player, TileEntity tile, IStorageHandler storage, String storageID) throws Exception {
         super(player, tile, storage, storageID);
 
         this.storageHandler = storage;

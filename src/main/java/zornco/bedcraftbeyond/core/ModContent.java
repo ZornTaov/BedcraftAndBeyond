@@ -2,13 +2,10 @@ package zornco.bedcraftbeyond.core;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.frames.base.TileGenericBed;
-import zornco.bedcraftbeyond.storage.drawers.standard.DrawerPart;
 import zornco.bedcraftbeyond.storage.drawers.standard.ItemDrawer;
 import zornco.bedcraftbeyond.storage.ItemDrawerKey;
-import zornco.bedcraftbeyond.linens.impl.BlanketPart;
-import zornco.bedcraftbeyond.linens.impl.ItemBlanket;
-import zornco.bedcraftbeyond.linens.impl.ItemSheets;
-import zornco.bedcraftbeyond.linens.impl.SheetPart;
+import zornco.bedcraftbeyond.linens.impl.ItemColoredBlanket;
+import zornco.bedcraftbeyond.linens.impl.ItemColoredSheets;
 import zornco.bedcraftbeyond.frames.stone.BlockStoneBed;
 import zornco.bedcraftbeyond.frames.stone.ItemStoneBed;
 import zornco.bedcraftbeyond.frames.wooden.BlockWoodenBed;
@@ -21,7 +18,6 @@ import zornco.bedcraftbeyond.rugs.ItemRug;
 import zornco.bedcraftbeyond.rugs.ItemScissors;
 import zornco.bedcraftbeyond.suitcase.ItemSuitcase;
 import zornco.bedcraftbeyond.storage.drawers.reinforced.ItemReinforcedDrawer;
-import zornco.bedcraftbeyond.storage.drawers.reinforced.ReinforcedDrawerPart;
 
 public class ModContent {
 
@@ -56,15 +52,8 @@ public class ModContent {
         public static ItemReinforcedDrawer reinforcedDrawer = new ItemReinforcedDrawer();
 
         // Linens - Handled by the parts
-        public static ItemBlanket blanket;
-        public static ItemSheets sheets;
-    }
-
-    public static class BedParts {
-        public static DrawerPart drawer = new DrawerPart();
-        public static BlanketPart blanket = new BlanketPart();
-        public static SheetPart sheet = new SheetPart();
-        public static ReinforcedDrawerPart drawerReinforced = new ReinforcedDrawerPart();
+        public static ItemColoredBlanket blanket = new ItemColoredBlanket();
+        public static ItemColoredSheets sheets = new ItemColoredSheets();
     }
 
     public static class TileEntities {

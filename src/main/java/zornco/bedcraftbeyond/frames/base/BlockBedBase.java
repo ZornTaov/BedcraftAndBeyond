@@ -81,27 +81,6 @@ public abstract class BlockBedBase extends Block {
         super.breakBlock(worldIn, pos, state);
     }
 
-    protected void onBlockDestroyed(World world, BlockPos pos, IBlockState state){
-        BlockPos other = pos.offset(state.getValue(FACING));
-        IBlockState stateOther = world.getBlockState(other);
-        if(stateOther.getBlock() instanceof BlockBedBase)
-            world.destroyBlock(other, false);
-    }
-
-    @Override
-    public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
-        IBlockState state = worldIn.getBlockState(pos);
-        state = state.getActualState(worldIn, pos);
-        onBlockDestroyed(worldIn, pos, state);
-    }
-
-    @Override
-    public void onBlockDestroyedByPlayer(World worldIn, BlockPos pos, IBlockState state) {
-        BedCraftBeyond.LOGGER.debug("player destroyed");
-        state = state.getActualState(worldIn, pos);
-        onBlockDestroyed(worldIn, pos, state);
-    }
-
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         return this.onBedActivated(world, pos, state, player);
@@ -131,6 +110,8 @@ public abstract class BlockBedBase extends Block {
                 }
 
                 worldIn.setBlockState(pos, state.withProperty(OCCUPIED, false), 4);
+                BlockPos other = pos.offset(state.getValue(FACING));
+
                 bedTile.readFromNBT(tileBackup);
             }
 
@@ -275,5 +256,13 @@ public abstract class BlockBedBase extends Block {
         return realHolder;
     }
 
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        if(!state.getValue(HEAD)) {
+            IBlockState otherState = worldIn.getBlockState(pos.offset(state.getValue(FACING)));
+            state = state.withProperty(OCCUPIED, otherState.getValue(OCCUPIED));
+        }
 
+        return state;
+    }
 }

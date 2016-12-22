@@ -13,11 +13,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.gui.GuiHandler;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
+import zornco.bedcraftbeyond.dyes.IColoredItem;
 
 import java.awt.*;
 import java.util.List;
 
-public class ItemEyedropper extends Item {
+public class ItemEyedropper extends Item implements IColoredItem {
 
     public ItemEyedropper(){
         setCreativeTab(BedCraftBeyond.MAIN_TAB);
@@ -47,12 +48,8 @@ public class ItemEyedropper extends Item {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
         if(!stack.getTagCompound().hasKey("color")) return;
-        Color c = ColorHelper.getColorFromStack(stack);
+        Color c = getColorFromStack(stack);
         tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c));
-    }
-
-    public static Color getCurrentColor(ItemStack stack){
-        return ColorHelper.getColorFromStack(stack);
     }
 
     @Override

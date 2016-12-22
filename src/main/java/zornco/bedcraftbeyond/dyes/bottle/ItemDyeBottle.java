@@ -8,11 +8,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
+import zornco.bedcraftbeyond.dyes.IColoredItem;
 
 import java.awt.*;
 import java.util.List;
 
-public class ItemDyeBottle extends Item {
+public class ItemDyeBottle extends Item implements IColoredItem {
 
     public ItemDyeBottle() {
         setCreativeTab(BedCraftBeyond.MAIN_TAB);
@@ -26,7 +27,7 @@ public class ItemDyeBottle extends Item {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        Color c = ColorHelper.getColorFromStack(stack);
+        Color c = getColorFromStack(stack);
         if (c != null) {
             String closest = ColorHelper.getColorNameFromColor(c);
             tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c) + (closest != null ? " (~" + closest + ")" : ""));

@@ -3,7 +3,7 @@ package zornco.bedcraftbeyond.storage.handling;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import zornco.bedcraftbeyond.storage.StoragePart;
+import zornco.bedcraftbeyond.storage.IStorageItem;
 
 public interface IStorageHandler {
 
@@ -23,7 +23,7 @@ public interface IStorageHandler {
      * @param extract
      * @return
      */
-    ItemStack getSlotItemStack(String name, boolean extract);
+    ItemStack getSlotItemstack(String name, boolean extract);
 
     /**
      * Get a storage handler with a given name.
@@ -33,6 +33,8 @@ public interface IStorageHandler {
      */
     IItemHandler getSlotItemHandler(String name);
 
+    IStorageItem getSlotItem(String name) throws Exception;
+
     /**
      * Set a storage item for a given slot.
      *
@@ -40,7 +42,7 @@ public interface IStorageHandler {
      * @param stack
      * @return
      */
-    boolean setNamedSlot(String name, ItemStack stack);
+    boolean setSlotItem(String name, ItemStack stack);
 
     /**
      * Tells whether or not a slot is filled or not.
@@ -51,10 +53,6 @@ public interface IStorageHandler {
     boolean isSlotFilled(String name);
 
     ImmutableList<String> getSlotNames();
-
-    ItemStack fillSlot(String slotName, ItemStack stack);
-
-    StoragePart getSlotPart(String storageID);
 
     ImmutableList<ItemStack> getItems();
 }

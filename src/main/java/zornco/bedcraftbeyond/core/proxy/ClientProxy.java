@@ -39,8 +39,8 @@ public class ClientProxy extends CommonProxy {
         for (int i = 0; i < 16; ++i)
             RenderingHelper.registerItemModel(ModContent.Items.rug, "inventory", i);
 
-        RenderingHelper.registerItemModel(ModContent.BedParts.blanket.getPartItem());
-        RenderingHelper.registerItemModel(ModContent.BedParts.sheet.getPartItem());
+        RenderingHelper.registerItemModel(ModContent.Items.blanket);
+        RenderingHelper.registerItemModel(ModContent.Items.sheets);
 
         RenderingHelper.registerItemModel(ModContent.Items.drawerKey);
         RenderingHelper.registerItemModel(ModContent.Items.stoneBed);
@@ -76,7 +76,7 @@ public class ClientProxy extends CommonProxy {
         itemColors.registerItemColorHandler(dyes, ModContent.Items.dyeBottle, ModContent.Items.eyedropper);
 
         LinenColorer linens = new LinenColorer();
-        itemColors.registerItemColorHandler(linens, ModContent.BedParts.blanket.getPartItem(), ModContent.BedParts.sheet.getPartItem());
+        itemColors.registerItemColorHandler(linens, ModContent.Items.blanket, ModContent.Items.sheets);
     }
 
     @Override
@@ -101,9 +101,9 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void openStorage(IStorageHandler handler, BlockPos tilePos, String id) {
+    public void openStorage(IStorageHandler handler, BlockPos tilePos, String id) throws Exception {
         Minecraft mc = Minecraft.getMinecraft();
         TileEntity tile = mc.theWorld.getTileEntity(tilePos);
-        mc.displayGuiScreen((GuiContainer) handler.getSlotPart(id).createGUI(mc.thePlayer, tile, handler, id));
+        mc.displayGuiScreen((GuiContainer) handler.getSlotItem(id).createGUI(mc.thePlayer, tile, handler, id));
     }
 }

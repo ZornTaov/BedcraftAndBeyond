@@ -7,23 +7,23 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.parts.IPart;
-import zornco.bedcraftbeyond.linens.PropertyFabricType;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
-import zornco.bedcraftbeyond.core.ModContent;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
+import zornco.bedcraftbeyond.linens.ILinenItem;
+import zornco.bedcraftbeyond.linens.LinenFabricTypes;
+import zornco.bedcraftbeyond.linens.LinenType;
+import zornco.bedcraftbeyond.linens.cap.ILinenHandler;
 
 import java.awt.*;
 import java.util.List;
 
-public class ItemSheets extends Item implements IPart {
+public class ItemColoredBlanket extends Item implements ILinenItem {
 
-    public ItemSheets() {
+    public ItemColoredBlanket() {
         setCreativeTab(BedCraftBeyond.BEDS_TAB);
         setMaxStackSize(16);
-        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.sheets");
-        setRegistryName(BedCraftBeyond.MOD_ID, "sheets");
+        setUnlocalizedName(BedCraftBeyond.MOD_ID + ".linens.blanket");
+        setRegistryName(BedCraftBeyond.MOD_ID, "blanket");
         setHasSubtypes(true);
 
         GameRegistry.register(this);
@@ -34,7 +34,7 @@ public class ItemSheets extends Item implements IPart {
         ItemStack stack = new ItemStack(this);
         NBTTagCompound tags = new NBTTagCompound();
         tags.setTag("color", ColorHelper.getTagForColor(Color.WHITE));
-        tags.setString("type", PropertyFabricType.SOLID_COLOR.name());
+        tags.setString("type", LinenFabricTypes.BlanketTypes.SOLID_COLOR.name());
         stack.setTagCompound(tags);
         subItems.add(stack);
     }
@@ -45,13 +45,16 @@ public class ItemSheets extends Item implements IPart {
         if (!tags.hasKey("color"))
             tags.setTag("color", ColorHelper.getTagForColor(Color.WHITE));
         if (!tags.hasKey("type"))
-            tags.setString("type", PropertyFabricType.SOLID_COLOR.name());
+            tags.setString("type", LinenFabricTypes.BlanketTypes.SOLID_COLOR.name());
         stack.setTagCompound(tags);
     }
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        Color c = ColorHelper.getColorFromStack(stack);
+        // TODO: Oh, the woes of Mojang and their privates.
+        // TextFormatting.valueOf(getColor(stack).toDye().getUnlocalizedName().toUpperCase())
+        // getColor(stack).toDye().getTextColor()
+        Color c = getColorFromStack(stack);
         if (c != null) {
             String closest = ColorHelper.getColorNameFromColor(c);
             tooltip.add("Color: " + ColorHelper.getFormattedColorValues(c) + (closest != null ? " (~" + closest + ")" : ""));
@@ -59,7 +62,7 @@ public class ItemSheets extends Item implements IPart {
     }
 
     @Override
-    public Part getPartReference() {
-        return ModContent.BedParts.sheet;
+    public LinenType getLinenType() {
+        return LinenType.BLANKET;
     }
 }

@@ -1,15 +1,15 @@
 package zornco.bedcraftbeyond.dyes;
 
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemColored;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.parts.IPart;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
 import zornco.bedcraftbeyond.dyes.bottle.ItemDyeBottle;
+import zornco.bedcraftbeyond.linens.ILinenItem;
 
 import java.awt.*;
 
@@ -27,8 +27,7 @@ public class RecipeDyedLinens implements IRecipe {
         for (int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
-            if (stack.getItem() instanceof IPart &&
-                ((IPart) stack.getItem()).getPartReference().getPartType().isLinenPart()) {
+            if (stack.getItem() instanceof ILinenItem) {
                 if (hasLinen) return false;
                 hasLinen = true;
             }
@@ -55,13 +54,10 @@ public class RecipeDyedLinens implements IRecipe {
         for (int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack stack = inv.getStackInSlot(i);
             if (stack == null) continue;
-            if (stack.getItem() instanceof IPart) {
-                Part ref = ((IPart) stack.getItem()).getPartReference();
-                if (ref.getPartType().isLinenPart()) {
-                    linen = stack;
-                    if (dye != null) break;
-                    continue;
-                }
+            if (stack.getItem() instanceof ILinenItem) {
+                linen = stack;
+                if (dye != null) break;
+                continue;
             }
 
             if (stack.getItem() instanceof ItemDyeBottle) {
@@ -72,11 +68,14 @@ public class RecipeDyedLinens implements IRecipe {
         }
 
         if (linen == null || dye == null) return null;
+
         ItemStack linenCopy = linen.copy();
+        IColoredItem linenColor = (ILinenItem) linenCopy.getItem();
+
         linenCopy.stackSize = 1;
         Color blended;
-        Color linenOriginal = ColorHelper.getColorFromStack(linen);
-        Color dyeColor = ColorHelper.getColorFromStack(dye);
+        Color linenOriginal = linenColor.getColorFromStack(linen);
+        Color dyeColor = linenColor.getColorFromStack(dye);
         if (!linenOriginal.equals(Color.WHITE))
             blended = ColorHelper.blendColours(linenOriginal, dyeColor);
         else

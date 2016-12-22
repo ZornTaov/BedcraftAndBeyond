@@ -8,6 +8,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import zornco.bedcraftbeyond.storage.handling.impl.StorageHandler;
 
 public class CapabilityStorageHandler {
 
@@ -21,7 +22,7 @@ public class CapabilityStorageHandler {
                 ImmutableList<String> slots = instance.getSlotNames();
                 NBTTagCompound tags = new NBTTagCompound();
                 slots.stream().filter(slotName -> instance.isSlotFilled(slotName)).forEach(slotName -> {
-                    NBTTagCompound slotNBT = instance.getSlotItemStack(slotName, false).writeToNBT(new NBTTagCompound());
+                    NBTTagCompound slotNBT = instance.getSlotItemstack(slotName, false).writeToNBT(new NBTTagCompound());
                     tags.setTag(slotName, slotNBT);
                 });
 
@@ -33,7 +34,7 @@ public class CapabilityStorageHandler {
                 NBTTagCompound compound = (NBTTagCompound) nbt;
                 instance.getSlotNames().stream().filter(slotName -> compound.hasKey(slotName)).forEach(slotName -> {
                     ItemStack stack = ItemStack.loadItemStackFromNBT(compound.getCompoundTag(slotName));
-                    instance.setNamedSlot(slotName, stack);
+                    instance.setSlotItem(slotName, stack);
                 });
             }
         }, () -> {

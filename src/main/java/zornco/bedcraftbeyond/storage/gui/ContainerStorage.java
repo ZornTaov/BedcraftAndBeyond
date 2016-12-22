@@ -5,18 +5,17 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import zornco.bedcraftbeyond.storage.IStorageItem;
 import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
-import zornco.bedcraftbeyond.storage.StoragePart;
-
 import javax.annotation.Nullable;
 
 public class ContainerStorage extends Container {
 
-    protected StoragePart part;
+    protected IStorageItem storageItem;
     protected TileEntity tile;
     private boolean dirty;
-    public ContainerStorage(EntityPlayer player, TileEntity tile, IStorageHandler storage, String storageID){
-        part = storage.getSlotPart(storageID);
+    public ContainerStorage(EntityPlayer player, TileEntity tile, IStorageHandler storage, String storageID) throws Exception {
+        storageItem = storage.getSlotItem(storageID);
         this.tile = tile;
         dirty = false;
     }

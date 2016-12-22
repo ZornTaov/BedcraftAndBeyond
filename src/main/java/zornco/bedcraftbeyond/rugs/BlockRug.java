@@ -79,7 +79,7 @@ public class BlockRug extends Block {
             case BLOCK:
                 return new AxisAlignedBB(0, 0, 0, 1, 0.0625, 1);
             case SLAB:
-                return new AxisAlignedBB(0, 0.5, 0, 1, 0.5625, 1);
+                return new AxisAlignedBB(0, -0.5D, 0, 1, -0.5D + (.125D / 2), 1);
             default:
                 return new AxisAlignedBB(0, 0, 0, 1, 1, 1);
         }

@@ -8,7 +8,9 @@ public class DyeColorer implements IItemColor {
 
     @Override
     public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-        if (tintIndex == 1) return ColorHelper.getColorFromStack(stack).getRGB();
+        if (tintIndex == 1 && stack.getItem() instanceof IColoredItem)
+            return ((IColoredItem) stack.getItem()).getColorFromStack(stack).getRGB();
+
         return -1;
     }
 

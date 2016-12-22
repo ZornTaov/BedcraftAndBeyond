@@ -1,6 +1,10 @@
 package zornco.bedcraftbeyond.frames.registry;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
@@ -22,14 +26,14 @@ public class FrameWhitelist {
         return entries.keySet();
     }
 
-    public String getTerminalOutput(){
-        if(entries.isEmpty()) return "{{EMPTY}}";
-        String output = "";
-        for(Map.Entry<ResourceLocation, FrameWhitelistEntry> set : entries.entrySet()){
-            output += " " + set.getKey() + ": {" + set.getValue().toString() + "},";
-        }
+    public void writeListToConsole(ICommandSender sender){
+        if(entries.isEmpty()) sender.addChatMessage(new TextComponentTranslation(BedCraftBeyond.MOD_ID + ".errors.no_frames_whitelisted"));
 
-        return output.substring(1, output.length() - 1);
+        for(Map.Entry<ResourceLocation, FrameWhitelistEntry> set : entries.entrySet()){
+            sender.addChatMessage(new TextComponentString(
+                TextFormatting.GREEN + "" + TextFormatting.ITALIC + set.getKey().toString() +
+                    TextFormatting.RESET + ": " + set.getValue().getValidMeta().toString() + "}"));
+        }
     }
 
     /**

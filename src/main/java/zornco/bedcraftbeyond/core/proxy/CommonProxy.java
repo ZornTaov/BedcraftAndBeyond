@@ -24,5 +24,5 @@ public abstract class CommonProxy {
 
     public abstract EntityPlayer getPlayer();
 
-    public abstract void openStorage(IStorageHandler handler, BlockPos tilePos, String id);
+    public abstract void openStorage(IStorageHandler handler, BlockPos tilePos, String id) throws Exception;
 }

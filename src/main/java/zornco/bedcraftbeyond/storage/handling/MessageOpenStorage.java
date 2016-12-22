@@ -63,7 +63,11 @@ public class MessageOpenStorage implements IMessage {
         @Override
         public IMessage onMessage(MessageOpenStorage message, MessageContext ctx) {
             EntityPlayer player = BedCraftBeyond.PROXY.getPlayer();
-            StoragePacketHandler.openStorage(player.worldObj, player, message.tilePos, message.side, message.handler, message.storageID);
+            try {
+                StoragePacketHandler.openStorage(player.worldObj, player, message.tilePos, message.side, message.handler, message.storageID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             player.openContainer.windowId = message.windowID;
             return null;
         }

@@ -6,10 +6,16 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import zornco.bedcraftbeyond.parts.Part;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
+import zornco.bedcraftbeyond.dyes.IColoredItem;
+import zornco.bedcraftbeyond.linens.LinenType;
+import zornco.bedcraftbeyond.linens.cap.CapabilityLinenHandler;
+import zornco.bedcraftbeyond.linens.cap.ILinenHandler;
+
+import java.awt.*;
 
 public class WoodenBedColorer implements IItemColor, IBlockColor {
 
@@ -18,15 +24,21 @@ public class WoodenBedColorer implements IItemColor, IBlockColor {
         state = state.getActualState(world, pos);
         TileWoodenBed bed = (TileWoodenBed) ((BlockWoodenBed) state.getBlock()).getTileForBed(world, state, pos);
         if(bed == null) return 0;
+
+        ILinenHandler linens = bed.getCapability(CapabilityLinenHandler.INSTANCE, EnumFacing.UP);
+        ItemStack stack;
+
         switch (tintIndex) {
             case 0:
                 return bed.getPlankColor().getRGB();
 
             case 1:
-                return bed.getLinenHandler().getLinenColor(Part.Type.SHEETS).getRGB();
+                stack = linens.getSlotItem(LinenType.SHEET, false);
+                return ((IColoredItem) stack.getItem()).getColorFromStack(stack).getRGB();
 
             case 2:
-                return bed.getLinenHandler().getLinenColor(Part.Type.BLANKETS).getRGB();
+                stack = linens.getSlotItem(LinenType.BLANKET, false);
+                return ((IColoredItem) stack.getItem()).getColorFromStack(stack).getRGB();
 
             default:
                 return 0;

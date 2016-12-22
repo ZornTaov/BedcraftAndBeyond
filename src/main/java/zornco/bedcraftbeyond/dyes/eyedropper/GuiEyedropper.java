@@ -15,6 +15,7 @@ import zornco.bedcraftbeyond.core.gui.GuiSized;
 import zornco.bedcraftbeyond.core.gui.input.GuiColorNumberEntry;
 import zornco.bedcraftbeyond.core.gui.input.GuiColorSlider;
 import zornco.bedcraftbeyond.core.util.ColorHelper;
+import zornco.bedcraftbeyond.dyes.IColoredItem;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class GuiEyedropper extends GuiSized {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        MessageEyedropperUpdate meu = new MessageEyedropperUpdate(player, hand, ItemEyedropper.getCurrentColor(this.eyedropper).getRGB());
+        MessageEyedropperUpdate meu = new MessageEyedropperUpdate(player, hand, ((IColoredItem) this.eyedropper.getItem()).getColorFromStack(eyedropper).getRGB());
         BedCraftBeyond.NETWORK.sendToServer(meu);
     }
 
@@ -135,7 +136,7 @@ public class GuiEyedropper extends GuiSized {
 
     public Color getCurrentColor(){
         ItemStack ed = eyedropper;
-        return ColorHelper.getColorFromStack(ed);
+        return ((IColoredItem) ed.getItem()).getColorFromStack(ed);
     }
 
     public void setCurrentColor(Color c){

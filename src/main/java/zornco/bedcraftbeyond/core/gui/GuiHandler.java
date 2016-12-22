@@ -7,7 +7,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import zornco.bedcraftbeyond.dyes.eyedropper.GuiEyedropper;
 import zornco.bedcraftbeyond.frames.registry.FrameRegistry;
-import zornco.bedcraftbeyond.frames.registry.gui.list.GuiRegistryList;
 import zornco.bedcraftbeyond.core.gui.container.ContainerBlank;
 import zornco.bedcraftbeyond.suitcase.*;
 
@@ -49,8 +48,6 @@ public class GuiHandler implements IGuiHandler {
                 EnumHand hand = getHandFromCoord(pos.getX());
                 return null;
 
-            case ID_FRAMES_LIST:
-                return new ContainerBlank();
 	        case GUI_SUITCASE:
 				return new ContainerSuitcase(player, player.inventory, new InventorySuitcase(player.getActiveItemStack()));
         }
@@ -65,9 +62,6 @@ public class GuiHandler implements IGuiHandler {
             case ID_EYEDROPPER:
                 return new GuiEyedropper(player, getHandFromCoord(x), player.getHeldItem(getHandFromCoord(pos.getX())));
 
-            case ID_FRAMES_LIST:
-                FrameRegistry.EnumFrameType type = FrameRegistry.EnumFrameType.values()[x];
-                return new GuiRegistryList(player, type);
     		case GUI_SUITCASE:
     			return new GuiSuitcase((ContainerSuitcase) new ContainerSuitcase(player, player.inventory, new InventorySuitcase(player.getActiveItemStack())));
         }

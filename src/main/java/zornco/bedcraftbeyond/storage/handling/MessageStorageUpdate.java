@@ -13,8 +13,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
-import javax.annotation.Nullable;
-
 public class MessageStorageUpdate implements IMessage {
 
     protected BlockPos pos;
@@ -23,7 +21,7 @@ public class MessageStorageUpdate implements IMessage {
     protected ItemStack stack;
 
     public MessageStorageUpdate(){ }
-    public MessageStorageUpdate(BlockPos pos, String slot, EnumFacing side, @Nullable ItemStack stack){
+    public MessageStorageUpdate(BlockPos pos, String slot, EnumFacing side, ItemStack stack){
         this.pos = pos;
         this.slot = slot;
         this.side = side;
@@ -34,7 +32,8 @@ public class MessageStorageUpdate implements IMessage {
     public void fromBytes(ByteBuf buf) {
         pos = BlockPos.fromLong(buf.readLong());
         slot = ByteBufUtils.readUTF8String(buf);
-        side = EnumFacing.getFront(buf.readInt());
+        int sidei = buf.readInt();
+        this.side = sidei != -99 ? EnumFacing.getFront(sidei) : null;
         stack = ByteBufUtils.readItemStack(buf);
     }
 
@@ -42,7 +41,7 @@ public class MessageStorageUpdate implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeLong(pos.toLong());
         ByteBufUtils.writeUTF8String(buf, slot);
-        buf.writeInt(side.getIndex());
+        buf.writeInt(side != null ? side.getIndex() : -99);
         ByteBufUtils.writeItemStack(buf, stack);
     }
 
@@ -56,7 +55,7 @@ public class MessageStorageUpdate implements IMessage {
             if(!(te.hasCapability(CapabilityStorageHandler.INSTANCE, message.side))) return null;
 
             IStorageHandler handler = (IStorageHandler) te.getCapability((Capability) CapabilityStorageHandler.INSTANCE, message.side);
-            handler.setNamedSlot(message.slot, message.stack);
+            handler.setSlotItem(message.slot, message.stack);
 
             return null;
         }

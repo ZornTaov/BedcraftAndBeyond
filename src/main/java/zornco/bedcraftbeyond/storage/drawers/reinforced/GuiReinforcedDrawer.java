@@ -10,7 +10,7 @@ import zornco.bedcraftbeyond.storage.gui.GuiStorage;
 
 public class GuiReinforcedDrawer extends GuiStorage {
 
-    public GuiReinforcedDrawer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) {
+    public GuiReinforcedDrawer(EntityPlayer player, TileEntity tile, IStorageHandler handler, String id) throws Exception {
         super(player, handler, id, new ContainerReinforcedDrawer(player, tile, handler, id));
     }
 

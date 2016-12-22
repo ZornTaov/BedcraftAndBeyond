@@ -1,27 +1,26 @@
-package zornco.bedcraftbeyond.storage.handling;
+package zornco.bedcraftbeyond.storage.handling.impl;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-import zornco.bedcraftbeyond.parts.Part;
-import zornco.bedcraftbeyond.storage.StoragePart;
+import zornco.bedcraftbeyond.storage.IStorageItem;
+import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class StorageHandler implements IStorageHandler, INBTSerializable<NBTTagList> {
 
-    protected ImmutableList<String> registeredSlots;
+    protected ImmutableList<String> availableSlots;
     private HashMap<String, ItemStack> storage;
 
     public StorageHandler() {
-        this.registeredSlots = ImmutableList.of("default");
+        this.availableSlots = ImmutableList.of("default");
         this.storage = new HashMap<>();
     }
 
@@ -31,7 +30,15 @@ public class StorageHandler implements IStorageHandler, INBTSerializable<NBTTagL
         return storage.get(name).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
     }
 
-    public ItemStack getSlotItemStack(String name, boolean extract) {
+    @Override
+    public IStorageItem getSlotItem(String name) throws Exception {
+        ItemStack stack = getSlotItemstack(name, false);
+        if(stack == null) throw new Exception("Attempted to access an invalid slot in a storage handler without checking if the slot is filled.");
+
+        return (IStorageItem) stack.getItem();
+    }
+
+    public ItemStack getSlotItemstack(String name, boolean extract) {
         if(!hasSlotWithName(name)) return null;
 
         ItemStack stack = storage.get(name).copy();
@@ -40,19 +47,21 @@ public class StorageHandler implements IStorageHandler, INBTSerializable<NBTTagL
     }
 
     public boolean hasSlotWithName(String name) {
-        return registeredSlots.contains(name);
+        return availableSlots.contains(name);
     }
 
-    public boolean setNamedSlot(String name, ItemStack stack) {
+    public boolean setSlotItem(String name, ItemStack stack) {
         if(!hasSlotWithName(name)) return false;
 
-        if(Part.getPartType(stack) != Part.Type.STORAGE) return false;
-        if(!(Part.getPartReference(stack) instanceof StoragePart)) return false;
+        if(!(stack.getItem() instanceof IStorageItem)) return false;
 
         if(!stack.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) return false;
 
-        storage.remove(name);
-        storage.put(name, stack);
+        if(storage.containsKey(name))
+            storage.replace(name, stack);
+        else
+            storage.put(name, stack);
+
         return true;
     }
 
@@ -62,25 +71,7 @@ public class StorageHandler implements IStorageHandler, INBTSerializable<NBTTagL
 
     @Override
     public ImmutableList<String> getSlotNames() {
-        return registeredSlots;
-    }
-
-    @Override
-    public ItemStack fillSlot(String slotName, ItemStack stack) {
-        if(!registeredSlots.contains(slotName)) return stack.copy();
-        if(isSlotFilled(slotName)) return stack.copy();
-
-        ItemStack copy = ItemHandlerHelper.copyStackWithSize(stack, 1);
-        if(!setNamedSlot(slotName, copy)) return stack.copy();
-        return ItemHandlerHelper.copyStackWithSize(stack, stack.stackSize - 1);
-    }
-
-    @Override
-    public StoragePart getSlotPart(String storageID) {
-        if(!hasSlotWithName(storageID)) return null;
-        if(!isSlotFilled(storageID)) return null;
-
-        return (StoragePart) Part.getPartReference(storage.get(storageID));
+        return availableSlots;
     }
 
     @Override
@@ -110,7 +101,7 @@ public class StorageHandler implements IStorageHandler, INBTSerializable<NBTTagL
         for(int storageIndex = 0; storageIndex < nbt.tagCount(); ++storageIndex) {
             NBTTagCompound itemsAt = nbt.getCompoundTagAt(storageIndex);
             ItemStack item = ItemStack.loadItemStackFromNBT(itemsAt.getCompoundTag("item"));
-            setNamedSlot(itemsAt.getString("name"), item);
+            setSlotItem(itemsAt.getString("name"), item);
         }
     }
 }

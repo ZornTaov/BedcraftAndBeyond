@@ -6,7 +6,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.frames.registry.FrameLoader;
@@ -86,6 +85,6 @@ public class FragmentFrames extends zornco.bedcraftbeyond.core.commands.CommandF
         if(type == FrameRegistry.EnumFrameType.UNKNOWN) throw new CommandException(BedCraftBeyond.MOD_ID + ".frames.errors.unknown_frame_type");
 
         FrameWhitelist frames = FrameRegistry.getFrameWhitelist(type);
-        sender.addChatMessage(new TextComponentString(frames.getTerminalOutput()));
+        frames.writeListToConsole(sender);
     }
 }
