@@ -29,18 +29,17 @@ public class BedCraftBeyond {
     public static final String MOD_VERSION = "@VERSION@";
     public static final String MOD_NAME = "BedCraft And Beyond";
 
-
     public static BedCraftBeyond instance;
 
-    //public static Configuration CONFIG;
+    // public static Configuration CONFIG;
     public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
-    
+
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
-	public static final ItemGroup BEDS_TAB = new TabMain();
-    
+    public static final ItemGroup BEDS_TAB = new TabMain();
+
     public BedCraftBeyond() {
-    	instance = this;
+        instance = this;
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -52,9 +51,9 @@ public class BedCraftBeyond {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-	}
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    }
+
+    private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
@@ -67,20 +66,21 @@ public class BedCraftBeyond {
         proxy.init();
     }
 
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
+    private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("bedcraftbeyond", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
+        InterModComms.sendTo("bedcraftbeyond", "helloworld", () -> {
+            LOGGER.info("Hello world from the MDK");
+            return "Hello world";
+        });
     }
 
-    private void processIMC(final InterModProcessEvent event)
-    {
+    private void processIMC(final InterModProcessEvent event) {
         // some example code to receive and process InterModComms from other mods
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.getMessageSupplier().get()).
-                collect(Collectors.toList()));
+        LOGGER.info("Got IMC {}",
+                event.getIMCStream().map(m -> m.getMessageSupplier().get()).collect(Collectors.toList()));
         proxy.init();
     }
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
