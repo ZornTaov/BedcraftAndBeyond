@@ -1,15 +1,14 @@
 package zornco.bedcraftbeyond.core.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 public abstract class SettingsHelper {
 
     public static boolean showingAdvancedTooltips(){
-        if(FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+        if(Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER)
             return false;
-        return Minecraft.getMinecraft().gameSettings.advancedItemTooltips;
+        return Minecraft.getInstance().gameSettings.advancedItemTooltips;
     }
 
 }

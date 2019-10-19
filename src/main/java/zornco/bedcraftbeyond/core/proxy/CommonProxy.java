@@ -1,11 +1,11 @@
 package zornco.bedcraftbeyond.core.proxy;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import zornco.bedcraftbeyond.core.ModContent;
-import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
+//import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 
 import java.awt.*;
 
@@ -22,7 +22,7 @@ public abstract class CommonProxy {
 
     public abstract Color getColorFromTexture(ItemStack stack);
 
-    public abstract EntityPlayer getPlayer();
+    public abstract PlayerEntity getPlayer();
 
-    public abstract void openStorage(IStorageHandler handler, BlockPos tilePos, String id);
+    //public abstract void openStorage(IStorageHandler handler, BlockPos tilePos, String id);
 }

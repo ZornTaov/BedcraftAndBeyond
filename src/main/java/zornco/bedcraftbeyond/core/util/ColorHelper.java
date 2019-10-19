@@ -1,7 +1,7 @@
 package zornco.bedcraftbeyond.core.util;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
@@ -90,17 +90,17 @@ public class ColorHelper {
      * @return
      */
     public static Color getColorFromStack(ItemStack stack, String tagName) {
-        if (!stack.hasTagCompound()) return Color.WHITE;
-        NBTTagCompound tags = stack.getTagCompound();
-        if (!tags.hasKey(tagName)) return Color.WHITE;
-        if (!tags.hasKey(tagName, Constants.NBT.TAG_COMPOUND)) {
+        if (!stack.hasTag()) return Color.WHITE;
+        CompoundNBT tags = stack.getTag();
+        if (!tags.contains(tagName)) return Color.WHITE;
+        if (!tags.contains(tagName, Constants.NBT.TAG_COMPOUND)) {
             try {
-                return new Color(tags.getInteger(tagName));
+                return new Color(tags.getInt(tagName));
             } catch (Exception e) {
                 return Color.WHITE;
             }
         } else {
-            NBTTagCompound color = tags.getCompoundTag(tagName);
+        	CompoundNBT color = tags.getCompound(tagName);
             return getColorFromNBT(color);
         }
     }
@@ -112,10 +112,10 @@ public class ColorHelper {
      * @param compound The root tag that holds color data.
      * @return
      */
-    public static Color getColorFromNBT(NBTTagCompound compound){
+    public static Color getColorFromNBT(CompoundNBT compound){
         if(compound == null) return Color.WHITE;
-        if(!compound.hasKey("r") || !compound.hasKey("g") || !compound.hasKey("b")) return Color.WHITE;
-        return new Color(compound.getInteger("r"), compound.getInteger("g"), compound.getInteger("b"));
+        if(!compound.contains("r") || !compound.contains("g") || !compound.contains("b")) return Color.WHITE;
+        return new Color(compound.getInt("r"), compound.getInt("g"), compound.getInt("b"));
     }
 
     public static String getFormattedColorValues(Color c) {
@@ -128,11 +128,11 @@ public class ColorHelper {
         return String.format("%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
     }
 
-    public static NBTTagCompound getTagForColor(Color c) {
-        NBTTagCompound color = new NBTTagCompound();
-        color.setInteger("r", c.getRed());
-        color.setInteger("g", c.getGreen());
-        color.setInteger("b", c.getBlue());
+    public static CompoundNBT getTagForColor(Color c) {
+    	CompoundNBT color = new CompoundNBT();
+        color.putInt("r", c.getRed());
+        color.putInt("g", c.getGreen());
+        color.putInt("b", c.getBlue());
         return color;
     }
 

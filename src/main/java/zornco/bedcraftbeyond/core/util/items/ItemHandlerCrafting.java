@@ -1,5 +1,5 @@
 package zornco.bedcraftbeyond.core.util.items;
-
+/*
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -80,41 +80,41 @@ public class ItemHandlerCrafting extends InventoryCrafting implements IItemHandl
     }
     //endregion
 
-    /**
+    *//**
      * Gets the ItemStack in the slot specified.
-     */
+     *//*
     @Nullable
     public ItemStack getStackInRowAndColumn(int row, int column) {
         ItemStack stack = ItemHandlerGridHelper.getStackFromPoint(new Point(column, row), size, this);
         return stack;
     }
 
-    /**
+    *//**
      * Removes a stack from the given slot and returns it.
-     */
+     *//*
     @Nullable
     public ItemStack removeStackFromSlot(int index) {
         return handler.extractItem(index, 64, false);
     }
 
-    /**
+    *//**
      * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
-     */
+     *//*
     @Nullable
     public ItemStack decrStackSize(int index, int count) {
         return handler.extractItem(index, count, false);
     }
 
-    /**
+    *//**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
-     */
+     *//*
     public void setInventorySlotContents(int index, @Nullable ItemStack stack) {
         handler.setStackInSlot(index, stack);
     }
 
-    /**
+    *//**
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
-     */
+     *//*
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         if (stack == null)
             return false;
@@ -137,4 +137,4 @@ public class ItemHandlerCrafting extends InventoryCrafting implements IItemHandl
     {
         return size.width;
     }
-}
+}*/

@@ -1,6 +1,7 @@
 package zornco.bedcraftbeyond.core.util.items;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -50,9 +51,9 @@ public abstract class ItemHandlerGridHelper {
         return result;
     }
 
-    public static ItemStack[] getGridItems(IItemHandler handler, Dimension handlerSize, Rectangle area){
+    public static NonNullList<ItemStack> getGridItems(IItemHandler handler, Dimension handlerSize, Rectangle area){
         doChecks(handler, handlerSize, area);
-        List<ItemStack> stacks = new ArrayList<>();
+        NonNullList<ItemStack> stacks = NonNullList.create();
 
         int[] stackIndexes = getGridIndexes(handler, handlerSize, area);
         for(int slotID : stackIndexes) {
@@ -60,11 +61,11 @@ public abstract class ItemHandlerGridHelper {
             stacks.add(stack);
         }
 
-        return stacks.toArray(new ItemStack[stacks.size()]);
+        return stacks;
     }
 
     public static IItemHandler getItemsWrapped(IItemHandler handler, Dimension handlerSize, Rectangle area){
-        ItemStack[] stacks = getGridItems(handler, handlerSize, area);
+    	NonNullList<ItemStack> stacks = getGridItems(handler, handlerSize, area);
         return new ItemStackHandler(stacks);
     }
 }

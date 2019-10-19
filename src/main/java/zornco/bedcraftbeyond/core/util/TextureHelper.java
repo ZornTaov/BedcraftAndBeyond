@@ -9,10 +9,11 @@ import javax.imageio.ImageIO;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
 public class TextureHelper {
@@ -21,33 +22,34 @@ public class TextureHelper {
      * Thanks to BluSunrize/TTFTCUTS
      */
     @SuppressWarnings("deprecation")
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static Color getItemTextureColor(ItemStack item) throws Exception {
         //= item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
         if(item == null || item.getItem() == null) return Color.WHITE;
         try {
 
             Block b = Block.getBlockFromItem(item.getItem());
-            TextureAtlasSprite icon = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes()
-                .getModelForState(Block.getBlockFromItem(item.getItem())
-                    .getStateFromMeta(item.getItemDamage()))
-                        .getParticleTexture();
+            TextureAtlasSprite icon = Minecraft.getInstance().getItemRenderer().getModelWithOverrides(item, null, null).getParticleTexture();
+                //.getModel(item.get)
+                //.getParticleTexture();
+         //       		Block.getBlockFromItem(item.getItem())
+         //           .getStateById(item.getDamage()))
 
             if (!(icon instanceof TextureAtlasSprite))
                 throw new Exception("Icon for the itemstack is not a valid sprite.");
-            if (icon.getIconName().equalsIgnoreCase("missingno"))
+            if (icon.getName().getNamespace().equalsIgnoreCase("missingno"))
                 throw new Exception("Icon does not have a valid sprite- seems to be missing.");
 
-            String iconName = icon.getIconName();
+            String iconName = icon.getName().getNamespace();
             String textureDomain = iconName.substring(0, Math.max(0, iconName.indexOf(':') + 1));
             String texturePath = "textures/" + iconName.substring(Math.max(0, iconName.indexOf(":") + 1)) + ".png";
 
             ResourceLocation resource = new ResourceLocation(textureDomain + texturePath);
 
-            InputStream layer = Minecraft.getMinecraft().getResourceManager().getResource(resource).getInputStream();
+            InputStream layer = Minecraft.getInstance().getResourceManager().getResource(resource).getInputStream();
             BufferedImage buffered = ImageIO.read(layer);
 
-            return ColorHelper.getAverageColor(buffered, new Point(0,0), new Dimension(icon.getIconWidth(), icon.getIconHeight()));
+            return ColorHelper.getAverageColor(buffered, new Point(0,0), new Dimension(icon.getWidth(), icon.getHeight()));
         } catch (Exception e) {
             BedCraftBeyond.LOGGER.error(e);
             throw e;

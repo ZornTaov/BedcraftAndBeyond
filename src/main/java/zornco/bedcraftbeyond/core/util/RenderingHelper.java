@@ -1,13 +1,13 @@
 package zornco.bedcraftbeyond.core.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 
 public class RenderingHelper {
 
-  public static void registerBlockModelAsItem(final Block block, int meta, final String blockName) {
+	/*public static void registerBlockModelAsItem(final Block block, int meta, final String blockName) {
     registerBlockModelAsItem(block, meta, blockName, "inventory");
   }
 
@@ -25,5 +25,5 @@ public class RenderingHelper {
 
   public static void registerItemModel(final Item item, final String variant, final int meta){
     ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), variant));
-  }
+  }*/
 }

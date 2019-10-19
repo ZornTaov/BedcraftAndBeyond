@@ -3,7 +3,7 @@ package zornco.bedcraftbeyond.core.util;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
+/*import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 
 public class ModUtils {
@@ -17,7 +17,7 @@ public class ModUtils {
     }
 
     public static ModContainer getModForRL(ResourceLocation rl) {
-        String modid = rl.getResourceDomain();
+        String modid = rl.getNamespace();
         for (ModContainer container : Loader.instance().getActiveModList()) {
             if (modid.equals(container.getModId())) {
                 return container;
@@ -27,3 +27,4 @@ public class ModUtils {
     }
 
 }
+*/

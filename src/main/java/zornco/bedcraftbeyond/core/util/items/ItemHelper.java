@@ -1,12 +1,13 @@
 package zornco.bedcraftbeyond.core.util.items;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public abstract class ItemHelper {
 
-    public static boolean areItemStacksEqual(ItemStack[] items){
+    public static boolean areItemStacksEqual(NonNullList<ItemStack> items){
         return areItemStacksEqual(new ItemStackHandler(items));
     }
 
