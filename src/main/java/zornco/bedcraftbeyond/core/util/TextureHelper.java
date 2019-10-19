@@ -24,16 +24,20 @@ public class TextureHelper {
     @SuppressWarnings("deprecation")
     @OnlyIn(Dist.CLIENT)
     public static Color getItemTextureColor(ItemStack item) throws Exception {
-        //= item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
-        if(item == null || item.getItem() == null) return Color.WHITE;
+        // =
+        // item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
+        if (item == null || item.getItem() == null)
+            return Color.WHITE;
         try {
 
             Block b = Block.getBlockFromItem(item.getItem());
-            TextureAtlasSprite icon = Minecraft.getInstance().getItemRenderer().getModelWithOverrides(item, null, null).getParticleTexture();
-                //.getModel(item.get)
-                //.getParticleTexture();
-         //       		Block.getBlockFromItem(item.getItem())
-         //           .getStateById(item.getDamage()))
+            TextureAtlasSprite icon = Minecraft.getInstance().getItemRenderer().getModelWithOverrides(item, null, null)
+                    .getParticleTexture();
+
+            // .getModel(item.get)
+            // .getParticleTexture();
+            // Block.getBlockFromItem(item.getItem())
+            // .getStateById(item.getDamage()))
 
             if (!(icon instanceof TextureAtlasSprite))
                 throw new Exception("Icon for the itemstack is not a valid sprite.");
@@ -49,12 +53,12 @@ public class TextureHelper {
             InputStream layer = Minecraft.getInstance().getResourceManager().getResource(resource).getInputStream();
             BufferedImage buffered = ImageIO.read(layer);
 
-            return ColorHelper.getAverageColor(buffered, new Point(0,0), new Dimension(icon.getWidth(), icon.getHeight()));
+            return ColorHelper.getAverageColor(buffered, new Point(0, 0),
+                    new Dimension(icon.getWidth(), icon.getHeight()));
         } catch (Exception e) {
             BedCraftBeyond.LOGGER.error(e);
             throw e;
         }
     }
-
 
 }
