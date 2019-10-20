@@ -5,15 +5,13 @@ import net.minecraft.item.ItemStack;
 
 public class TabMain extends ItemGroup {
 
-	public TabMain()
-	{
-		super(BedCraftBeyond.MOD_ID);
-	}
-	@Override
-	public ItemStack createIcon() {
-		// TODO Auto-generated method stub
-		return new ItemStack(ModContent.Items.drawerKey);
+	public TabMain() {
+		super(BedCraftBeyond.MOD_ID + "_main");
 	}
 
+	@Override
+	public ItemStack createIcon() {
+		return new ItemStack(BedcraftItems.DRAWER_KEY.get());
+	}
 
 }

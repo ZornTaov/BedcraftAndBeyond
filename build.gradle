@@ -122,11 +122,11 @@ dependencies {
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-	compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
-	compileOnly fg.deobf("com.github.glitchfiend.biomesoplenty:BiomesOPlenty:1.14.4-9.0.0.254:api")
+	// compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+	// compileOnly fg.deobf("com.github.glitchfiend.biomesoplenty:BiomesOPlenty:1.14.4-9.0.0.254:api")
 	// at runtime, use the full JEI jar
-	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
-	runtimeOnly fg.deobf("com.github.glitchfiend.biomesoplenty:BiomesOPlenty:1.14.4-9.0.0.254:deobf")
+	// runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+	// runtimeOnly fg.deobf("com.github.glitchfiend.biomesoplenty:BiomesOPlenty:1.14.4-9.0.0.254:deobf")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

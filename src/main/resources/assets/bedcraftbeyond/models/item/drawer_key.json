@@ -1,6 +1,6 @@
 {
 	"parent": "bedcraftbeyond:item/item_base",
 	"textures": {
-		"layer0": "BedCraftBeyond:items/scissors"
+		"layer0": "bedcraftbeyond:items/drawerkey"
 	}
 }
