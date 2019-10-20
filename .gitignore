@@ -67,8 +67,6 @@ Bedcraft.iml
 Bedcraft.ipr
 Bedcraft.iws
 build.gradle
-gradlew
-gradlew.bat
 saves/
 screenshots/
 logs/2016-05-23-2.log.gz
@@ -84,3 +82,5 @@ raw/
 bin/
 src/main/unused/
 gradle.properties
+
+.vscode
