@@ -6,10 +6,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -30,9 +28,11 @@ public class TextureHelper {
             return Color.WHITE;
         try {
 
-            Block b = Block.getBlockFromItem(item.getItem());
-            TextureAtlasSprite icon = Minecraft.getInstance().getItemRenderer().getModelWithOverrides(item, null, null)
-                    .getParticleTexture();
+            // Block b = Block.getBlockFromItem(item.getItem());
+            TextureAtlasSprite icon = Minecraft.getInstance()
+                .getItemRenderer()
+                .getModelWithOverrides(item, null, null)
+                .getParticleTexture();
 
             // .getModel(item.get)
             // .getParticleTexture();

@@ -1,10 +1,5 @@
 package zornco.bedcraftbeyond.core.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.model.ModelLoader;
-
 public class RenderingHelper {
 
 	/*public static void registerBlockModelAsItem(final Block block, int meta, final String blockName) {

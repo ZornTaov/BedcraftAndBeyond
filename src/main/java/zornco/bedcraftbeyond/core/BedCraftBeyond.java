@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.item.ItemGroup;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -31,13 +30,15 @@ public class BedCraftBeyond {
 
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
-    public static final ItemGroup BEDS_TAB = new TabMain();
+
+    public static final ItemGroup MAIN_GROUP = new BedcraftMainGroup();
 
     public BedCraftBeyond() {
         // Register the setup method for modloading
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         BedcraftItems.registerItems(bus);
+        BedcraftBlocks.registerBlocks(bus);
     }
 
     @SubscribeEvent

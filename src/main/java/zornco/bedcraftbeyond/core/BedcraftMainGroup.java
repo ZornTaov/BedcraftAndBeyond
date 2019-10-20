@@ -3,9 +3,9 @@ package zornco.bedcraftbeyond.core;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
-public class TabMain extends ItemGroup {
+public class BedcraftMainGroup extends ItemGroup {
 
-	public TabMain() {
+	public BedcraftMainGroup() {
 		super(BedCraftBeyond.MOD_ID + "_main");
 	}
 
