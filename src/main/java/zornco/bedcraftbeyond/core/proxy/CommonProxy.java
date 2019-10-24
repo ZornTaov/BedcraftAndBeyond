@@ -3,7 +3,6 @@ package zornco.bedcraftbeyond.core.proxy;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import zornco.bedcraftbeyond.core.ModContent;
 //import zornco.bedcraftbeyond.storage.handling.IStorageHandler;
 
 import java.awt.*;
@@ -14,7 +13,6 @@ public abstract class CommonProxy {
     }
 
     public void init() {
-        ModContent.TileEntities.registerTiles();
     }
 
     public abstract World getClientWorld();

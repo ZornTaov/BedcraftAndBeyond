@@ -11,6 +11,9 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.b3d.B3DLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import zornco.bedcraftbeyond.beds.renderer.RainbowBedTER;
+import zornco.bedcraftbeyond.beds.tileentity.RainbowBedTileEntity;
 import zornco.bedcraftbeyond.core.BedCraftBeyond;
 import zornco.bedcraftbeyond.core.util.TextureHelper;
 
@@ -24,7 +27,8 @@ public class ClientProxy extends CommonProxy {
 
     public void init() {
         super.init();
-
+        BedCraftBeyond.LOGGER.info("registered " + RainbowBedTileEntity.class.toString());
+        ClientRegistry.bindTileEntitySpecialRenderer(RainbowBedTileEntity.class, new RainbowBedTER());
         // ItemColors itemColors = Minecraft.getInstance().getItemColors();
         // BlockColors blockColors = Minecraft.getInstance().getBlockColors();
         BedCraftBeyond.LOGGER.info("printing stacks {}", ItemTags.PLANKS.getAllElements().size());

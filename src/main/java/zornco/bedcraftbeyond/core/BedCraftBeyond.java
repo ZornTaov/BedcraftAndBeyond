@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import zornco.bedcraftbeyond.core.proxy.*;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(BedCraftBeyond.MOD_ID)
@@ -25,8 +27,7 @@ public class BedCraftBeyond {
     public static BedCraftBeyond instance;
 
     // public static Configuration CONFIG;
-    // public static CommonProxy proxy = DistExecutor.runForDist(() ->
-    // ClientProxy::new, () -> ServerProxy::new);
+    public static CommonProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
 
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
@@ -39,12 +40,12 @@ public class BedCraftBeyond {
 
         BedcraftItems.registerItems(bus);
         BedcraftBlocks.registerBlocks(bus);
+        proxy.init();
     }
 
     @SubscribeEvent
     public void setup(final FMLCommonSetupEvent event) {
         instance = (BedCraftBeyond) ModLoadingContext.get().getActiveContainer().getMod();
-        // proxy.init();
     }
 
     @SubscribeEvent
