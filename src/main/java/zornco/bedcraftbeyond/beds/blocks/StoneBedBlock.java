@@ -1,4 +1,4 @@
-package zornco.bedcraftbeyond.blocks;
+package zornco.bedcraftbeyond.beds.blocks;
 
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;

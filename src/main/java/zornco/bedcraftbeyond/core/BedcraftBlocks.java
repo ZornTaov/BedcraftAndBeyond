@@ -10,8 +10,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import zornco.bedcraftbeyond.blocks.RainbowBedBlock;
-import zornco.bedcraftbeyond.blocks.StoneBedBlock;
+import zornco.bedcraftbeyond.beds.blocks.StoneBedBlock;
+import zornco.bedcraftbeyond.beds.blocks.RainbowBedBlock;
 
 public final class BedcraftBlocks {
 
