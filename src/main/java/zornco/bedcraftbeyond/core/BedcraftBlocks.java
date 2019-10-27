@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -28,8 +27,8 @@ public final class BedcraftBlocks {
 
     public static final RegistryObject<Block> rainbow_BED = registerBlock("rainbow_bed", () -> new RainbowBedBlock());
 
-    public static final RegistryObject<TileEntityType<?>> Rainbowbedte = withItemAndTileEntity("rainbow_bed",
-    BedcraftBlocks.rainbow_BED.get(), () -> new RainbowBedTileEntity());
+    public static final RegistryObject<TileEntityType<RainbowBedTileEntity>> Rainbowbedte = TILES.register("rainbow_bed",
+    () -> TileEntityType.Builder.create(RainbowBedTileEntity::new, BedcraftBlocks.rainbow_BED.get()).build(null));
 
     public static void registerBlocks(IEventBus bus) {
         BLOCKS.register(bus);
@@ -43,13 +42,4 @@ public final class BedcraftBlocks {
 		return block;
 	}
     
-    private static RegistryObject<TileEntityType<?>> withItemAndTileEntity(String name, 
-        Block block, Supplier<TileEntity> supplier) 
-    {
-        
-        RegistryObject<TileEntityType<?>> tile = TILES.register(name, 
-            () -> TileEntityType.Builder.create(supplier, block).build(null));
-        BedCraftBeyond.LOGGER.info("registered " + name);
-		return tile;
-	}
 }

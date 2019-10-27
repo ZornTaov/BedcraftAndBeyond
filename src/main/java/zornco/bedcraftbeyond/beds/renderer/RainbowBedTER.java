@@ -42,7 +42,6 @@ public class RainbowBedTER extends TileEntityRenderer<RainbowBedTileEntity>{
               this.bindTexture(resourcelocation);
            }
         }
-        BedCraftBeyond.LOGGER.info("derp");
         if (tileEntityIn.hasWorld()) {
            BlockState blockstate = tileEntityIn.getBlockState();
            this.func_199343_a(blockstate.get(RainbowBedBlock.PART) == BedPart.HEAD, x, y, z, blockstate.get(RainbowBedBlock.HORIZONTAL_FACING));

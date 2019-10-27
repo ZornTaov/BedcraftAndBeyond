@@ -3,7 +3,11 @@ package zornco.bedcraftbeyond.core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -40,6 +44,7 @@ public class BedCraftBeyond {
 
         BedcraftItems.registerItems(bus);
         BedcraftBlocks.registerBlocks(bus);
+        bus.addListener(this::doClientStuff);
         proxy.init();
     }
 
@@ -48,11 +53,10 @@ public class BedCraftBeyond {
         instance = (BedCraftBeyond) ModLoadingContext.get().getActiveContainer().getMod();
     }
 
-    @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
         LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
-        // proxy.init();
+        proxy.registerModels();
     }
 
     @SubscribeEvent

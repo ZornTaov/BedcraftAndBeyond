@@ -7,12 +7,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.*;
 import zornco.bedcraftbeyond.beds.blocks.RainbowBedBlock;
+import zornco.bedcraftbeyond.core.BedcraftBlocks;
 
 public class RainbowBedTileEntity extends TileEntity implements ITickableTileEntity {
     private DyeColor color;
 
     public RainbowBedTileEntity() {
-       super(TileEntityType.BED);
+       super(BedcraftBlocks.Rainbowbedte.get());
     }
  
     public RainbowBedTileEntity(DyeColor colorIn) {
