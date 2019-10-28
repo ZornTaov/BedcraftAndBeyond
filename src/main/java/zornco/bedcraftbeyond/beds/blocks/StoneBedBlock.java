@@ -35,7 +35,7 @@ public class StoneBedBlock extends BedBlock {
     }
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-      return BlockRenderType.INVISIBLE;
+      return BlockRenderType.MODEL;
    }
    @Override
    public void onLanded(IBlockReader worldIn, Entity entityIn) {
