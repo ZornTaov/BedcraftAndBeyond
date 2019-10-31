@@ -21,14 +21,11 @@ public class TextureHelper {
      */
     @OnlyIn(Dist.CLIENT)
     public static Color getItemTextureColor(ItemStack item) throws Exception {
-        // =
-        // item.getSpriteNumber()==1?TextureMap.locationItemsTexture:TextureMap.locationBlocksTexture;
         if (item == null || item.getItem() == null)
             return Color.WHITE;
 
         try {
 
-            // Block b = Block.getBlockFromItem(item.getItem());
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 
             IForgeBakedModel model = renderer.getModelWithOverrides(item, null, null);
@@ -43,21 +40,6 @@ public class TextureHelper {
 
             Color[] colors = getColorsFromIcon(icon);
             return ColorHelper.getAverageColor(colors);
-
-            // String iconName = icon.getName().getNamespace();
-            // String textureDomain = iconName.substring(0, Math.max(0,
-            // iconName.indexOf(':') + 1));
-            // String texturePath = "textures/" + iconName.substring(Math.max(0,
-            // iconName.indexOf(":") + 1)) + ".png";
-
-            // ResourceLocation resource = new ResourceLocation(textureDomain +
-            // texturePath);
-
-            // InputStream layer =
-            // Minecraft.getInstance().getResourceManager().getResource(resource).getInputStream();
-            // BufferedImage buffered = ImageIO.read(layer);
-
-            // return ColorHelper.getAverageColor(buffered);
 
         } catch (Exception e) {
             BedCraftBeyond.LOGGER.error(e);
