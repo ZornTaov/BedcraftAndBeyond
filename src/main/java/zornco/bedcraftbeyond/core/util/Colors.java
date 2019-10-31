@@ -3,7 +3,7 @@ package zornco.bedcraftbeyond.core.util;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public abstract class Color {
+public abstract class Colors {
 
 	public static enum RgbColorType {
 		Red, Green, Blue;
@@ -15,13 +15,43 @@ public abstract class Color {
 				throw new IllegalArgumentException("RGB data is not in the expected format.");
 		}
 
+		/**
+		 * Underlays a white background and converts a bit-shifted RBGA value to separate components.
+		 * 
+		 * @param rbga
+		 * @return
+		 */
+		public static float[] fromRBGA(int rbga) {
+			// These bitshifts come from Minecraft's cloud rendering system
+			int alpha = Integer.rotateRight(rbga, 24);
+			int red = Integer.rotateRight(rbga, 16) & 255;
+			int green = Integer.rotateRight(rbga, 8) & 255;
+			int blue = rbga & 255;
+
+			int transform = (255 - alpha) * (255 + alpha);
+			red = red * transform;
+			green = green * transform;
+			blue = blue * transform;
+
+			return fromRGB(red / 255, green / 255, blue / 255);
+		}
+
+		/***
+		 * Creates an array of color information, assuming the floats are values from 0 - 1
+		 * 
+		 * @param red
+		 * @param green
+		 * @param blue
+		 * @return
+		 * 
+		 */
 		public static float[] fromRGB(float red, float green, float blue) {
 			return new float[] { red, green, blue };
 		}
 
 		public static float[] fromHSV(float hue, float saturation, float value) throws IllegalArgumentException {
-			float[] hsv = Color.HSV.fromHSV(hue, saturation, value);
-			return Color.HSV.toRGB(hsv);
+			float[] hsv = Colors.HSV.fromHSV(hue, saturation, value);
+			return Colors.HSV.toRGB(hsv);
 		}
 
 		/**

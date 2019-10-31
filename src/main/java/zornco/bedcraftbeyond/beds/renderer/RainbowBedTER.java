@@ -16,7 +16,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import zornco.bedcraftbeyond.beds.blocks.RainbowBedBlock;
 import zornco.bedcraftbeyond.beds.tileentity.RainbowBedTileEntity;
-import zornco.bedcraftbeyond.core.BedCraftBeyond;
 
 /**
  * RainbowBedTER

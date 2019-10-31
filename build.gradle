@@ -105,6 +105,8 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.14.4-28.1.37'
 
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
@@ -127,6 +129,13 @@ dependencies {
 	// at runtime, use the full JEI jar
 	// runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 	// runtimeOnly fg.deobf("com.github.glitchfiend.biomesoplenty:BiomesOPlenty:1.14.4-9.0.0.254:deobf")
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
